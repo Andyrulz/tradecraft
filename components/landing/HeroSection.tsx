@@ -1,0 +1,152 @@
+"use client";
+
+import { ChevronRight, Lock } from 'lucide-react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { StockForm } from './StockForm';
+import { ScreenerFilters } from '@/components/screener/ScreenerFilters';
+import { ScreenerResults } from '@/components/screener/ScreenerResults';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { useState } from 'react';
+import { ScreenerStock, ScreenerFilters as FilterType } from '@/lib/types';
+import { getMockScreenerStocks } from '@/lib/mock-data';
+import DiscoverScreener from './DiscoverScreener';
+
+export function HeroSection() {
+  const [stocks, setStocks] = useState<ScreenerStock[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleFilter = async (filters: FilterType) => {
+    setLoading(true);
+    setTimeout(() => {
+      const results = getMockScreenerStocks(filters);
+      setStocks(results);
+      setLoading(false);
+    }, 1000);
+  };
+
+  const handleFormspreeSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError('');
+    try {
+      const res = await fetch('https://formspree.io/f/xnndpbwn', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(e.currentTarget),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        setSubmitted(true);
+        setEmail('');
+      } else {
+        setError('Something went wrong. Please try again.');
+      }
+    } catch {
+      setError('Something went wrong. Please try again.');
+    }
+  };
+
+  return (
+    <div className="relative min-h-screen flex flex-col justify-center bg-gradient-to-br from-sky-100 via-white to-blue-50">
+      {/* Animated gradient background */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,199,255,0.10),rgba(255,255,255,0))]" />
+      </div>
+      <div className="container relative z-10 mx-auto px-4 pt-24 pb-12 md:pt-32 md:pb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
+          <div className="lg:col-span-5 space-y-8 text-center lg:text-left">
+            <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-sky-200 text-sky-800 mb-4 transition-transform duration-300 hover:scale-105 mx-auto lg:mx-0">
+              <span className="flex h-2 w-2 rounded-full bg-sky-500 mr-2"></span>
+              Professional Trading Tools
+            </div>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground leading-tight">
+              Trade with <span className="text-primary bg-primary/10 px-2 rounded-md">confidence</span> <br className="hidden md:inline" />
+              <span className="text-sky-700">Find High Momentum Stocks</span>
+            </h1>
+            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-2xl leading-relaxed mx-auto lg:mx-0">
+              Instantly generate institutional-grade trade plans <b>or</b> discover today’s top momentum stocks—powered by technical analysis. Perfect for both beginners and experienced traders seeking clear, actionable guidance and fresh opportunities.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">
+              <Button size="lg" variant="outline" asChild className="group rounded-xl text-lg px-8 py-4 border-2 border-sky-300 hover:border-sky-500 transition-all duration-300 hover:scale-105">
+                <a href="#how-it-works" className="flex items-center justify-center">
+                  How It Works
+                  <ChevronRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </a>
+              </Button>
+            </div>
+          </div>
+          <div className="lg:col-span-7 flex justify-center w-full">
+            <div className="bg-white/90 backdrop-blur-lg border-none rounded-2xl shadow-xl p-2 sm:p-4 md:p-6 max-w-full sm:max-w-xl w-full mx-auto">
+              <Tabs defaultValue="symbol" className="space-y-6 w-full">
+                <TabsList className="flex w-full bg-sky-50 rounded-full mb-4 p-1 gap-1 sm:gap-4 md:gap-6 justify-center flex-wrap">
+                  <TabsTrigger
+                    value="symbol"
+                    className="flex-1 min-w-[120px] sm:min-w-[160px] max-w-full whitespace-nowrap text-sm sm:text-lg font-bold px-1 sm:px-4 py-2 rounded-full transition-all duration-200 text-sky-800 data-[state=active]:bg-gradient-to-r data-[state=active]:from-sky-400 data-[state=active]:to-blue-400 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:scale-105 data-[state=active]:z-10 bg-white/70 hover:bg-sky-100 focus-visible:ring-2 focus-visible:ring-sky-400"
+                  >
+                    Generate a Trade Plan
+                  </TabsTrigger>
+                  <div className="flex flex-col items-center flex-1 min-w-[120px] sm:min-w-[180px] max-w-full -mt-7">
+                    <span className="mb-0 flex items-center gap-1 text-xs font-bold text-red-500" style={{letterSpacing: '0.02em'}}>
+                      <span role="img" aria-label="fire" className="text-base">🔥</span> New
+                    </span>
+                    <TabsTrigger
+                      value="discover"
+                      className="w-full whitespace-nowrap text-sm sm:text-lg font-bold px-1 sm:px-4 py-2 rounded-full transition-all duration-200 text-sky-800 data-[state=active]:bg-gradient-to-r data-[state=active]:from-sky-400 data-[state=active]:to-blue-400 data-[state=active]:text-white data-[state=active]:shadow-md data-[state=active]:scale-105 data-[state=active]:z-10 bg-white/70 hover:bg-sky-100 focus-visible:ring-2 focus-visible:ring-sky-400"
+                    >
+                      Find Momentum Stocks
+                    </TabsTrigger>
+                  </div>
+                </TabsList>
+                <TabsContent value="symbol" className="space-y-4 animate-in fade-in-50 duration-500">
+                  <div className="space-y-1">
+                    <h3 className="text-xl font-bold text-center">Enter Stock Symbol</h3>
+                    <p className="text-base text-muted-foreground text-center">
+                      Get a detailed trade plan with entry points, targets, and risk management
+                    </p>
+                  </div>
+                  <StockForm />
+                  <div className="flex justify-center mt-2 mb-0">
+                    <span className="text-green-700 bg-green-50 rounded-full px-3 py-1 text-sm font-semibold flex items-center gap-1">🎉 Try generating a trade plan for free</span>
+                  </div>
+                  <div className="flex flex-col gap-1 pt-1">
+                    <Button asChild variant="ghost" className="w-full text-sky-700 hover:bg-sky-100 transition-all duration-200">
+                      <a href="/trade-plan?symbol=AAPL&horizon=longterm">See Example</a>
+                    </Button>
+                  </div>
+                  {/* Trust/metrics bar below CTA */}
+                  <div className="flex flex-wrap items-center gap-3 mt-4">
+                    <div className="flex items-center gap-2 text-sm text-gray-500 font-semibold bg-white/80 rounded-full px-3 py-1 shadow-sm">
+                      <svg className="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z" /></svg>
+                      10,000+ plans generated
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-blue-500 font-semibold bg-white/80 rounded-full px-3 py-1 shadow-sm">
+                      <svg className="h-5 w-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" /></svg>
+                      2,000+ momentum stocks scanned and traded
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-gray-500 font-semibold bg-white/80 rounded-full px-3 py-1 shadow-sm">
+                      <svg className="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.967a1 1 0 00.95.69h4.175c.969 0 1.371 1.24.588 1.81l-3.38 2.455a1 1 0 00-.364 1.118l1.287 3.966c.3.921-.755 1.688-1.54 1.118l-3.38-2.455a1 1 0 00-1.176 0l-3.38 2.455c-.784.57-1.838-.197-1.54-1.118l1.287-3.966a1 1 0 00-.364-1.118L2.049 9.394c-.783-.57-.38-1.81.588-1.81h4.175a1 1 0 00.95-.69l1.286-3.967z" /></svg>
+                      Awarded &quot;Top 10 Trading Apps 2025&quot; by FinEdge Community
+                    </div>
+                  </div>
+                </TabsContent>
+                <TabsContent value="discover" className="space-y-6 animate-in fade-in-50 duration-500">
+                  <div className="space-y-2">
+                    <h3 className="text-xl font-bold text-center">Find High Momentum Stocks</h3>
+                    <p className="text-base text-muted-foreground text-center">
+                      Instantly screen for today’s top 10 actionable momentum stocks—refreshed every day.
+                    </p>
+                  </div>
+                  <DiscoverScreener />
+                </TabsContent>
+              </Tabs>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
