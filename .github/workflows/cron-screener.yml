@@ -13,6 +13,7 @@ jobs:
         run: |
           curl -X GET "https://www.tradingsetup.pro/api/momentum-screener/refresh"
       - name: Wait before POST (prevent overlap)
+        shell: bash
         run: sleep 60
       - name: POST refresh endpoint (run screener)
         run: |
