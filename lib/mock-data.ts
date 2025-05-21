@@ -236,7 +236,8 @@ export const getMockTradePlan = (symbol: string, timeHorizon: string): TradePlan
             parameters: { fast: 12, slow: 26, signal: 9 }
           }
         ]
-      }
+      },
+      exchange: 'NASDAQ',
     };
   }
 

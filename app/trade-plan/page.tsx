@@ -942,6 +942,21 @@ export default function TradePlanPage() {
     });
   }, [session, symbol, horizon, fetchTradePlan]);
 
+  // Helper to compute time remaining until quota reset (midnight UTC)
+  function getTimeUntilQuotaReset(dateStr?: string): string {
+    if (!dateStr) return '';
+    // dateStr is in 'YYYY-MM-DD' (UTC)
+    const now = new Date();
+    const utcNow = new Date(now.toISOString().slice(0, 19) + 'Z');
+    const nextMidnightUTC = new Date(dateStr + 'T00:00:00Z');
+    nextMidnightUTC.setUTCDate(nextMidnightUTC.getUTCDate() + 1);
+    const ms = nextMidnightUTC.getTime() - utcNow.getTime();
+    if (ms <= 0) return 'refreshing soon';
+    const hours = Math.floor(ms / (1000 * 60 * 60));
+    const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m`;
+  }
+
   if (quotaExceeded) {
     // Parse upgrade info from error or API fields
     let upgradeMessage, cta, ctaLink;
@@ -987,7 +1002,7 @@ export default function TradePlanPage() {
                   {upgradeMessage ? null : (typeof error === 'string' ? error : 'You have used up your daily quota. Please come back tomorrow.')}
                 </p>
                 <div className="mt-2 text-xs text-blue-800 font-medium bg-blue-100 rounded px-2 py-1">
-                  Requests today: {usageInfo?.request_count} / {usageInfo?.total_requests}
+                  {/* Removed requests today indicator */}
                 </div>
               </div>
               {upgradeMessage && (
@@ -1068,6 +1083,15 @@ export default function TradePlanPage() {
               total_requests: usageInfo?.total_requests ?? 5
             }}
           />
+        )}
+        {/* Show requests used and time until reset if usageInfo is present and quota not exceeded */}
+        {usageInfo && !quotaExceeded && (
+          <div className="mt-4 text-xs text-blue-800 font-medium bg-blue-100 rounded px-2 py-1 inline-block">
+            Requests used: {usageInfo.request_count}
+            {usageInfo.date && (
+              <span className="ml-2 text-blue-700">(Resets in {getTimeUntilQuotaReset(usageInfo.date)})</span>
+            )}
+          </div>
         )}
         <div className="mt-8">
           <TradingRecommendation tradePlan={tradePlan} onTimeframeChange={handleHorizonChange} />

@@ -18,11 +18,11 @@ export function TradePlanHeader({ tradePlan, onTimeframeChange }: TradePlanHeade
     <>
       <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold leading-tight">
-            {tradePlan.companyName}{' '}
-            <span className="text-base text-muted-foreground font-normal">
-              ({tradePlan.symbol})
-            </span>
+          <h1 className="text-2xl font-bold">
+            {tradePlan.companyName}
+            {tradePlan.exchange && (
+              <span className="ml-2 text-base font-normal text-gray-500">({tradePlan.exchange})</span>
+            )}
           </h1>
           <div className="text-sm text-muted-foreground mt-1">
             Current Price:{' '}
@@ -30,12 +30,6 @@ export function TradePlanHeader({ tradePlan, onTimeframeChange }: TradePlanHeade
               {formatNumber(tradePlan.currentPrice)}
             </span>
           </div>
-          {/* Requests Used Counter */}
-          {typeof tradePlan.request_count === 'number' && (
-            <div className="text-xs text-primary mt-1">
-              Requests Used Today: {tradePlan.request_count}
-            </div>
-          )}
         </div>
         {/* Timeframe Selector injected here for top-level control */}
         {typeof onTimeframeChange === 'function' && (

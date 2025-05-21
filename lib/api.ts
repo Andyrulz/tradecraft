@@ -330,6 +330,7 @@ export async function getStockData(symbol: string, retries = 3, horizon: string 
       },
       keyLevels: [], // Add logic if needed
       atr,
+      exchange: tdJson?.meta?.exchange,
       chartData: { annotations: { entry: [], stop: [], targets: [], trailingStops: [] }, indicators: [] }
     };
     setCachedStockData(symbol, tradePlan);

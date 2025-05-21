@@ -19,7 +19,7 @@ const plans = [
 		price: 'Free',
 		description: 'Get started with the basics. Assigned by default to all users.',
 		features: [
-			'5 requests per day',
+			'2 requests per day (resets at midnight UTC)',
 			'No access to momentum screener',
 			'No on-demand support',
 		],
@@ -29,11 +29,11 @@ const plans = [
 	},
 	{
 		name: 'Pro',
-		price: '$6.45/mo',
+		price: '$7.5/mo',
 		description:
 			'For active traders who want more requests and support. Costs less than a single meal out—and you could make 2-5x this in a single trade by following a solid plan.',
 		features: [
-			'100 requests per day',
+			'100 requests per day (resets at midnight UTC)',
 			'No access to momentum screener',
 			'On-demand support via email',
 		],
@@ -43,7 +43,7 @@ const plans = [
 	},
 	{
 		name: 'Premium',
-		price: '$14.65/mo',
+		price: '$16.5/mo',
 		description:
 			'Unlimited access, screener, and premium support. For less than a night at the movies, unlock the screener and make back your subscription in just one good trade.',
 		features: [

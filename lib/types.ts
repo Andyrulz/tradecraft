@@ -119,6 +119,7 @@ export interface TradePlan {
       parameters: Record<string, number>;
     }>;
   };
+  exchange?: string; // Stock exchange, e.g., 'NASDAQ'
 }
 
 // Past Winners Screener types

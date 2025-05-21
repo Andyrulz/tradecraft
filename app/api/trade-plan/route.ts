@@ -115,7 +115,7 @@ export async function POST(request: Request) {
   }
 
   // 6. Enforce quota based on plan
-  let planLimit = 5;
+  let planLimit = 2; // Changed from 5 to 2 for free users
   if (planType === 'pro') planLimit = 100;
   if (planType === 'premium') planLimit = 1000;
   if (usage.request_count >= planLimit) {
@@ -124,7 +124,7 @@ export async function POST(request: Request) {
     let displayLimit = planLimit;
     if (planType === 'free') {
       upgradeMessage =
-        'You have used up your daily quota of 5 trade plans. Upgrade to Pro or Premium for more requests and advanced features. Even one good trade can pay for your subscription!';
+        'You have used up your daily quota of 2 trade plans. Upgrade to Pro or Premium for more requests and advanced features. Even one good trade can pay for your subscription!';
       cta = 'Upgrade Now';
     } else if (planType === 'pro') {
       upgradeMessage =
