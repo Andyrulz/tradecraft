@@ -1,5 +1,6 @@
 'use client';
 
+import Head from 'next/head';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
@@ -88,18 +89,35 @@ export default function PricingPage() {
 
 	return (
 		<main className="min-h-screen bg-gradient-to-br from-sky-50 to-blue-100 py-16">
+			<Head>
+				<title>TradeCraft: AI-Powered Trade Plan Generator & Stock Screener</title>
+				<meta name="description" content="Generate actionable trade plans, analyze stocks, and discover momentum opportunities. Upgrade for more requests, premium support, and advanced features." />
+				<meta property="og:title" content="TradeCraft: AI-Powered Trade Plan Generator & Stock Screener" />
+				<meta property="og:description" content="Generate actionable trade plans, analyze stocks, and discover momentum opportunities. Upgrade for more requests, premium support, and advanced features." />
+				<meta property="og:type" content="website" />
+				<meta property="og:url" content="https://www.tradingsetup.pro/pricing" />
+				<meta property="og:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+				<meta name="twitter:card" content="summary_large_image" />
+				<meta name="twitter:title" content="TradeCraft: AI-Powered Trade Plan Generator & Stock Screener" />
+				<meta name="twitter:description" content="Generate actionable trade plans, analyze stocks, and discover momentum opportunities. Upgrade for more requests, premium support, and advanced features." />
+				<meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+			</Head>
 			<div className="container mx-auto px-4 max-w-5xl">
-				<h1 className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-sky-900">
+				<h1 className="text-4xl md:text-5xl font-extrabold text-center mb-6 text-sky-900">
 					Pricing Plans
 				</h1>
-				<p className="text-center text-lg text-muted-foreground mb-12 max-w-2xl mx-auto">
-					Choose the plan that fits your trading needs. Upgrade or downgrade
-					anytime.
-				</p>
+				<div className="text-center text-lg text-muted-foreground mb-14 max-w-2xl mx-auto space-y-4">
+					<p>
+						<span className="font-semibold text-sky-800">Trade smarter, not harder.</span> Start with the Free plan, or upgrade to unlock more daily trade plans, advanced features, and premium support.
+					</p>
+					<p>
+						<span className="font-semibold text-sky-800">Cancel anytime</span> — no commitments, instant access, and make back your subscription in just one good trade.
+					</p>
+				</div>
 				{loading ? (
 					<div className="text-center py-12">Loading...</div>
 				) : (
-					<div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
 						{plans.map(plan => {
 							const isCurrent = userPlan === plan.name.toLowerCase();
 							const isFree = plan.name.toLowerCase() === 'free';
@@ -111,28 +129,34 @@ export default function PricingPage() {
 								return (
 									<div
 										key={plan.name}
-										className={`rounded-2xl shadow-lg border border-sky-200 bg-white p-8 flex flex-col items-center transition-transform duration-200 hover:scale-105 ${plan.highlight ? 'ring-2 ring-sky-400' : ''}`}
+										className={`rounded-3xl shadow-xl border border-sky-200 bg-white p-10 flex flex-col items-center transition-transform duration-200 hover:scale-105 relative overflow-hidden ${plan.highlight ? 'ring-2 ring-yellow-400' : ''}`}
 									>
-										<h2 className="text-2xl font-bold mb-2 text-sky-800">
+										{plan.highlight && (
+											<div className="absolute top-0 right-0 bg-yellow-400 text-white text-xs font-bold px-4 py-1 rounded-bl-2xl rounded-tr-3xl shadow-md z-10">
+												Best Value
+											</div>
+										)}
+										<h2 className="text-2xl font-bold mb-2 text-sky-800 tracking-tight">
 											{plan.name}
 										</h2>
-										<div className="text-3xl font-extrabold mb-2 text-sky-700">
+										<div className="text-4xl font-extrabold mb-2 text-sky-700">
 											{plan.price}
 										</div>
-										<p className="text-base text-muted-foreground mb-6 text-center">
+										<p className="text-base text-muted-foreground mb-6 text-center min-h-[60px]">
 											{plan.description}
 										</p>
-										<ul className="mb-8 space-y-2 w-full">
+										<ul className="mb-10 space-y-3 w-full">
 											{plan.features.map((feature, i) => (
 												<li
 													key={i}
-													className="flex items-center gap-2 text-sky-900"
+													className="flex items-center gap-3 text-sky-900 text-sm bg-sky-50 rounded-lg px-3 py-2 shadow-sm"
 												>
-													<span className="inline-block h-2 w-2 rounded-full bg-sky-400" />
+													<span className="inline-block h-2.5 w-2.5 rounded-full bg-sky-400" />
 													{feature}
 												</li>
 											))}
 										</ul>
+										{/* CTA logic */}
 										<div className="w-full text-center py-3 rounded-xl font-semibold text-lg bg-sky-100 text-sky-400 cursor-not-allowed opacity-60">
 											Not Available
 										</div>
@@ -145,24 +169,29 @@ export default function PricingPage() {
 								return (
 									<div
 										key={plan.name}
-										className={`rounded-2xl shadow-lg border border-sky-200 bg-white p-8 flex flex-col items-center transition-transform duration-200 hover:scale-105 ${plan.highlight ? 'ring-2 ring-sky-400' : ''}`}
+										className={`rounded-3xl shadow-xl border border-sky-200 bg-white p-10 flex flex-col items-center transition-transform duration-200 hover:scale-105 relative overflow-hidden ${plan.highlight ? 'ring-2 ring-yellow-400' : ''}`}
 									>
-										<h2 className="text-2xl font-bold mb-2 text-sky-800">
+										{plan.highlight && (
+											<div className="absolute top-0 right-0 bg-yellow-400 text-white text-xs font-bold px-4 py-1 rounded-bl-2xl rounded-tr-3xl shadow-md z-10">
+												Best Value
+											</div>
+										)}
+										<h2 className="text-2xl font-bold mb-2 text-sky-800 tracking-tight">
 											{plan.name}
 										</h2>
-										<div className="text-3xl font-extrabold mb-2 text-sky-700">
+										<div className="text-4xl font-extrabold mb-2 text-sky-700">
 											{plan.price}
 										</div>
-										<p className="text-base text-muted-foreground mb-6 text-center">
+										<p className="text-base text-muted-foreground mb-6 text-center min-h-[60px]">
 											{plan.description}
 										</p>
-										<ul className="mb-8 space-y-2 w-full">
+										<ul className="mb-10 space-y-3 w-full">
 											{plan.features.map((feature, i) => (
 												<li
 													key={i}
-													className="flex items-center gap-2 text-sky-900"
+													className="flex items-center gap-3 text-sky-900 text-sm bg-sky-50 rounded-lg px-3 py-2 shadow-sm"
 												>
-													<span className="inline-block h-2 w-2 rounded-full bg-sky-400" />
+													<span className="inline-block h-2.5 w-2.5 rounded-full bg-sky-400" />
 													{feature}
 												</li>
 											))}
@@ -179,15 +208,20 @@ export default function PricingPage() {
 								return (
 									<div
 										key={plan.name}
-										className={`rounded-2xl shadow-lg border border-sky-200 bg-white p-8 flex flex-col items-center transition-transform duration-200 hover:scale-105 ${plan.highlight ? 'ring-2 ring-sky-400' : ''}`}
+										className={`rounded-3xl shadow-xl border border-sky-200 bg-white p-10 flex flex-col items-center transition-transform duration-200 hover:scale-105 relative overflow-hidden ${plan.highlight ? 'ring-2 ring-yellow-400' : ''}`}
 									>
-										<h2 className="text-2xl font-bold mb-2 text-sky-800">{plan.name}</h2>
-										<div className="text-3xl font-extrabold mb-2 text-sky-700">{plan.price}</div>
-										<p className="text-base text-muted-foreground mb-6 text-center">{plan.description}</p>
-										<ul className="mb-8 space-y-2 w-full">
+										{plan.highlight && (
+											<div className="absolute top-0 right-0 bg-yellow-400 text-white text-xs font-bold px-4 py-1 rounded-bl-2xl rounded-tr-3xl shadow-md z-10">
+												Best Value
+											</div>
+										)}
+										<h2 className="text-2xl font-bold mb-2 text-sky-800 tracking-tight">{plan.name}</h2>
+										<div className="text-4xl font-extrabold mb-2 text-sky-700">{plan.price}</div>
+										<p className="text-base text-muted-foreground mb-6 text-center min-h-[60px]">{plan.description}</p>
+										<ul className="mb-10 space-y-3 w-full">
 											{plan.features.map((feature, i) => (
-												<li key={i} className="flex items-center gap-2 text-sky-900">
-													<span className="inline-block h-2 w-2 rounded-full bg-sky-400" />
+												<li key={i} className="flex items-center gap-3 text-sky-900 text-sm bg-sky-50 rounded-lg px-3 py-2 shadow-sm">
+													<span className="inline-block h-2.5 w-2.5 rounded-full bg-sky-400" />
 													{feature}
 												</li>
 											))}
@@ -202,26 +236,31 @@ export default function PricingPage() {
 							return (
 								<div
 									key={plan.name}
-									className={`rounded-2xl shadow-lg border border-sky-200 bg-white p-8 flex flex-col items-center transition-transform duration-200 hover:scale-105 ${
-										plan.highlight ? 'ring-2 ring-sky-400' : ''
+									className={`rounded-3xl shadow-xl border border-sky-200 bg-white p-10 flex flex-col items-center transition-transform duration-200 hover:scale-105 relative overflow-hidden ${
+										plan.highlight ? 'ring-2 ring-yellow-400' : ''
 									}`}
 								>
-									<h2 className="text-2xl font-bold mb-2 text-sky-800">
+									{plan.highlight && (
+										<div className="absolute top-0 right-0 bg-yellow-400 text-white text-xs font-bold px-4 py-1 rounded-bl-2xl rounded-tr-3xl shadow-md z-10">
+											Best Value
+										</div>
+									)}
+									<h2 className="text-2xl font-bold mb-2 text-sky-800 tracking-tight">
 										{plan.name}
 									</h2>
-									<div className="text-3xl font-extrabold mb-2 text-sky-700">
+									<div className="text-4xl font-extrabold mb-2 text-sky-700">
 										{plan.price}
 									</div>
-									<p className="text-base text-muted-foreground mb-6 text-center">
+									<p className="text-base text-muted-foreground mb-6 text-center min-h-[60px]">
 										{plan.description}
 									</p>
-									<ul className="mb-8 space-y-2 w-full">
+									<ul className="mb-10 space-y-3 w-full">
 										{plan.features.map((feature, i) => (
 											<li
 												key={i}
-												className="flex items-center gap-2 text-sky-900"
+												className="flex items-center gap-3 text-sky-900 text-sm bg-sky-50 rounded-lg px-3 py-2 shadow-sm"
 											>
-												<span className="inline-block h-2 w-2 rounded-full bg-sky-400" />
+												<span className="inline-block h-2.5 w-2.5 rounded-full bg-sky-400" />
 												{feature}
 											</li>
 										))}

@@ -12,6 +12,7 @@ import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import Head from 'next/head';
 
 function ScreenerRow({ stock }: { stock: any }) {
   return (
@@ -133,6 +134,19 @@ export default function ScreenerPage() {
 
   return (
     <main className="flex-1 pt-24 pb-12">
+      <Head>
+        <title>TradeCraft Stock Screener</title>
+        <meta name="description" content="Find high-momentum stocks using technical signals, volume, and price action. Filter by sector, market cap, and more. Upgrade for unlimited access." />
+        <meta property="og:title" content="TradeCraft Stock Screener" />
+        <meta property="og:description" content="Find high-momentum stocks using technical signals, volume, and price action. Filter by sector, market cap, and more. Upgrade for unlimited access." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.tradingsetup.pro/screener" />
+        <meta property="og:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="TradeCraft Stock Screener" />
+        <meta name="twitter:description" content="Find high-momentum stocks using technical signals, volume, and price action. Filter by sector, market cap, and more. Upgrade for unlimited access." />
+        <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+      </Head>
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto text-center mb-8">
           <h1 className="text-3xl font-bold tracking-tight mb-3">

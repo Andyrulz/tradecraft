@@ -1,9 +1,38 @@
 import Image from 'next/image';
+import Head from 'next/head';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
 export default function BlogPost2() {
   return (
     <main className="flex-1 pt-24 pb-12">
       <div className="container mx-auto px-4 max-w-3xl">
+        <Breadcrumbs items={[
+          { label: 'Blog', href: '/blog' },
+          { label: 'Top 5 Momentum Indicators I Use for Midcap Trading' }
+        ]} />
+        <Head>
+          <title>TradeCraft Blog: Top 5 Momentum Indicators for Midcap Stocks</title>
+          <meta name="description" content="Discover the top 5 momentum indicators for midcap stocks. Learn how to use TradeCraft to spot high-potential trades." />
+          <meta property="og:title" content="TradeCraft Blog: Top 5 Momentum Indicators for Midcap Stocks" />
+          <meta property="og:description" content="Discover the top 5 momentum indicators for midcap stocks. Learn how to use TradeCraft to spot high-potential trades." />
+          <meta property="og:type" content="article" />
+          <meta property="og:url" content="https://www.tradingsetup.pro/blog/top-5-momentum-indicators-midcap" />
+          <meta property="og:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="TradeCraft Blog: Top 5 Momentum Indicators for Midcap Stocks" />
+          <meta name="twitter:description" content="Discover the top 5 momentum indicators for midcap stocks. Learn how to use TradeCraft to spot high-potential trades." />
+          <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: `{
+            \"@context\": \"https://schema.org\",
+            \"@type\": \"Article\",
+            \"headline\": \"Top 5 Momentum Indicators I Use for Midcap Trading\",
+            \"description\": \"Discover the momentum indicators that consistently help me spot high-potential midcap stocks before they move.\",
+            \"datePublished\": \"2025-04-20\",
+            \"author\": { \"@type\": \"Organization\", \"name\": \"TradeCraft\" },
+            \"image\": \"https://www.tradingsetup.pro/bull-bear.png\",
+            \"publisher\": { \"@type\": \"Organization\", \"name\": \"TradeCraft\", \"logo\": { \"@type\": \"ImageObject\", \"url\": \"https://www.tradingsetup.pro/bull-bear.png\" } }
+          }` }} />
+        </Head>
         <h1 className="text-3xl font-bold mb-4">Top 5 Momentum Indicators I Use for Midcap Trading</h1>
         <p className="text-muted-foreground mb-6">By TradeCraft | May 6, 2025</p>
         <Image src="/blog/momentum-indicators-overview.png" alt="Momentum Indicators Overview" width={800} height={400} className="rounded mb-6" />

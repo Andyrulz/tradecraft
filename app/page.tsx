@@ -5,6 +5,8 @@ import { FeatureSection } from '@/components/landing/FeatureSection';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import TestimonialsSection from '@/components/landing/TestimonialsSection';
 import Link from 'next/link';
+import Head from 'next/head';
+import Image from 'next/image';
 
 const blogPosts = [
 	{
@@ -40,7 +42,68 @@ const blogPosts = [
 export default function Home() {
 	return (
 		<main className="flex-1">
+			<Head>
+        <title>TradeCraft: Smarter Trading Plans, Momentum Screener & Stock Analysis</title>
+        <meta name="description" content="TradeCraft helps traders and investors generate actionable trade plans, screen for momentum stocks, and analyze technical and fundamental data. Start making smarter trades today!" />
+        <meta property="og:title" content="TradeCraft: Smarter Trading Plans, Momentum Screener & Stock Analysis" />
+        <meta property="og:description" content="TradeCraft helps traders and investors generate actionable trade plans, screen for momentum stocks, and analyze technical and fundamental data. Start making smarter trades today!" />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.tradingsetup.pro/" />
+        <meta property="og:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="TradeCraft: Smarter Trading Plans, Momentum Screener & Stock Analysis" />
+        <meta name="twitter:description" content="TradeCraft helps traders and investors generate actionable trade plans, screen for momentum stocks, and analyze technical and fundamental data. Start making smarter trades today!" />
+        <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+        <link rel="canonical" href="https://www.tradingsetup.pro/" />
+        <link rel="icon" href="/favicon.png" />
+        <link rel="apple-touch-icon" href="/favicon.png" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: `{
+          \"@context\": \"https://schema.org\",
+          \"@type\": \"WebSite\",
+          \"url\": \"https://www.tradingsetup.pro/\",
+          \"name\": \"TradeCraft by TradingSetup.pro\",
+          \"description\": \"TradeCraft helps traders and investors generate actionable trade plans, screen for momentum stocks, and analyze technical and fundamental data.\",
+          \"publisher\": {
+            \"@type\": \"Organization\",
+            \"name\": \"TradingSetup.pro\",
+            \"url\": \"https://www.tradingsetup.pro/\",
+            \"logo\": {
+              \"@type\": \"ImageObject\",
+              \"url\": \"https://www.tradingsetup.pro/bull-bear.png\"
+            }
+          },
+          \"potentialAction\": {
+            \"@type\": \"SearchAction\",
+            \"target\": \"https://www.tradingsetup.pro/screener?query={search_term_string}\",
+            \"query-input\": \"required name=search_term_string\"
+          },
+          \"sameAs\": [
+            \"https://twitter.com/TradeCraftPro\"
+          ]
+        }` }} />
+			</Head>
 			<HeroSection />
+      {/* Social Proof & Badges */}
+      <section className="container mx-auto px-4 max-w-4xl py-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
+        {/* Product Hunt Badge (external, keep as <img>) */}
+        <a href="https://www.producthunt.com/posts/tradecraft-2?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-tradecraft-2" target="_blank" rel="noopener noreferrer" aria-label="View TradeCraft on Product Hunt" className="transition-transform hover:scale-105">
+          <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=966567&theme=light&t=1748065742670" alt="TradeCraft - Trade with Confidence and Clarity | Product Hunt" width="250" height="54" style={{ width: 250, height: 54 }} />
+        </a>
+        {/* Medium Badge */}
+        <a href="https://medium.com/@andrew.labyrinthventures" target="_blank" rel="noopener noreferrer" aria-label="Read TradeCraft on Medium" className="transition-transform hover:scale-105">
+          <Image src="/badges/medium-badge.png" alt="Read us on Medium" width={120} height={40} />
+        </a>
+        {/* Gravatar Badge */}
+        <a href="https://gravatar.com/honestlycolorfulda51a20b53" target="_blank" rel="noopener noreferrer" aria-label="View Gravatar Profile" className="transition-transform hover:scale-105">
+          <Image src="https://gravatar.com/avatar/da51a20b53c2e7e2e7e2e7e2e7e2e7e2?s=120" alt="Gravatar Profile" width={40} height={40} style={{ borderRadius: '50%' }} />
+        </a>
+        {/* LinkedIn Badge */}
+        <a href="https://www.linkedin.com/company/trade-craft-pro" target="_blank" rel="noopener noreferrer" aria-label="View TradeCraft on LinkedIn" className="transition-transform hover:scale-105">
+          <Image src="/badges/linkedin-badge.png" alt="LinkedIn Company Page" width={120} height={40} />
+        </a>
+      </section>
 			<FeatureSection />
 			<HowItWorks />
 			<section className="container mx-auto px-4 max-w-4xl py-12">
@@ -49,7 +112,7 @@ export default function Home() {
 					{blogPosts.map(post => (
 						<div key={post.slug} className="border-b pb-6">
 							<h3 className="text-xl font-semibold mb-2">
-								<Link href={`/blog/${post.slug}`}>{post.title}</Link>
+								<Link href={`/blog/${post.slug}`} aria-label={post.title}>{post.title}</Link>
 							</h3>
 							<p className="text-muted-foreground mb-2">
 								{post.summary}
@@ -62,6 +125,7 @@ export default function Home() {
 					<Link
 						href="/blog"
 						className="text-primary underline font-medium"
+						aria-label="View all blog posts"
 					>
 						View all blog posts →
 					</Link>

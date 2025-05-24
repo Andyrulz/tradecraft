@@ -1,9 +1,38 @@
 import Image from 'next/image';
+import Head from 'next/head';
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs';
 
 export default function BlogPost3() {
   return (
     <main className="flex-1 pt-24 pb-12">
       <div className="container mx-auto px-4 max-w-3xl">
+        <Breadcrumbs items={[
+          { label: 'Blog', href: '/blog' },
+          { label: 'Step-by-Step Guide: Creating a Trade Plan with Risk Management' }
+        ]} />
+        <Head>
+          <title>TradeCraft Blog: Step-by-Step Trade Plan & Risk Management</title>
+          <meta name="description" content="A step-by-step guide to building a trade plan and managing risk with TradeCraft. Learn how to protect your capital and maximize returns." />
+          <meta property="og:title" content="TradeCraft Blog: Step-by-Step Trade Plan & Risk Management" />
+          <meta property="og:description" content="A step-by-step guide to building a trade plan and managing risk with TradeCraft. Learn how to protect your capital and maximize returns." />
+          <meta property="og:type" content="article" />
+          <meta property="og:url" content="https://www.tradingsetup.pro/blog/step-by-step-trade-plan-risk-management" />
+          <meta property="og:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+          <meta name="twitter:card" content="summary_large_image" />
+          <meta name="twitter:title" content="TradeCraft Blog: Step-by-Step Trade Plan & Risk Management" />
+          <meta name="twitter:description" content="A step-by-step guide to building a trade plan and managing risk with TradeCraft. Learn how to protect your capital and maximize returns." />
+          <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: `{
+            \"@context\": \"https://schema.org\",
+            \"@type\": \"Article\",
+            \"headline\": \"Step-by-Step Guide: Creating a Trade Plan with Risk Management\",
+            \"description\": \"A practical, step-by-step walkthrough of building a robust trade plan, including risk controls and real-world examples.\",
+            \"datePublished\": \"2025-04-28\",
+            \"author\": { \"@type\": \"Organization\", \"name\": \"TradeCraft\" },
+            \"image\": \"https://www.tradingsetup.pro/bull-bear.png\",
+            \"publisher\": { \"@type\": \"Organization\", \"name\": \"TradeCraft\", \"logo\": { \"@type\": \"ImageObject\", \"url\": \"https://www.tradingsetup.pro/bull-bear.png\" } }
+          }` }} />
+        </Head>
         <h1 className="text-3xl font-bold mb-4">Step-by-Step Guide: Creating a Trade Plan with Risk Management</h1>
         <p className="text-muted-foreground mb-6">By TradeCraft | May 6, 2025</p>
         <Image src="/blog/trade-plan-overview.png" alt="Trade Plan Overview" width={800} height={400} className="rounded mb-6" />

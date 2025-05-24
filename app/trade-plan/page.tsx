@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Share2 } from 'lucide-react';
 import { AdSenseAd } from '@/components/ui/AdSenseAd';
 import { TradePlanHeader } from '@/components/trade-plan/TradePlanHeader';
+import Head from 'next/head';
 
 export default function TradePlanPage() {
   const { data: session, status } = useSession();
@@ -1072,6 +1073,19 @@ export default function TradePlanPage() {
 
   return (
     <main className="flex-1 pt-24 pb-12">
+      <Head>
+        <title>TradeCraft Trade Plan Generator</title>
+        <meta name="description" content="Generate actionable trade plans for any stock. Get entry, stop, targets, and risk management in seconds. Upgrade for more daily requests and premium features." />
+        <meta property="og:title" content="TradeCraft Trade Plan Generator" />
+        <meta property="og:description" content="Generate actionable trade plans for any stock. Get entry, stop, targets, and risk management in seconds. Upgrade for more daily requests and premium features." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.tradingsetup.pro/trade-plan" />
+        <meta property="og:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="TradeCraft Trade Plan Generator" />
+        <meta name="twitter:description" content="Generate actionable trade plans for any stock. Get entry, stop, targets, and risk management in seconds. Upgrade for more daily requests and premium features." />
+        <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+      </Head>
       <div className="container mx-auto px-4">
         {/* Place TradePlanHeader at the top for consistent UX, pass onTimeframeChange */}
         {tradePlan && (
