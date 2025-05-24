@@ -10,7 +10,7 @@ export const metadata = {
 
 export default function BlogPost() {
   return (
-    <main className="flex-1 pt-24 pb-12">
+    <main className="flex-1 pt-[68px] pb-12">
       <div className="container mx-auto px-4 max-w-3xl">
         <Head>
           <title>TradeCraft Blog: How to Spot the Next Leading Momentum Stock</title>

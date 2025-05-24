@@ -988,7 +988,7 @@ export default function TradePlanPage() {
       ctaLink = (globalThis as any).ctaLink;
     }
     return (
-      <main className="flex-1 pt-24 pb-12 bg-gradient-to-br from-blue-50 via-white to-blue-100">
+      <main className="flex-1 pt-[68px] pb-12 bg-gradient-to-br from-blue-50 via-white to-blue-100">
         <div className="container mx-auto px-4 flex flex-col min-h-[60vh] justify-center items-center">
           <div className="max-w-lg w-full">
             <div className="bg-white/90 border border-blue-200 rounded-2xl shadow-lg p-8 flex flex-col items-center animate-fade-in">
@@ -1043,7 +1043,7 @@ export default function TradePlanPage() {
 
   if (loading) {
     return (
-      <main className="flex-1 pt-24 pb-12">
+      <main className="flex-1 pt-[68px] pb-12">
         <div className="container mx-auto px-4 flex flex-col min-h-[60vh] justify-center items-center">
           <h1 className="text-2xl font-bold mb-4">Generating Trade Plan...</h1>
           <p className="mb-6 text-muted-foreground text-center max-w-md">
@@ -1057,7 +1057,7 @@ export default function TradePlanPage() {
 
   if (error) {
     return (
-      <main className="flex-1 pt-24 pb-12">
+      <main className="flex-1 pt-[68px] pb-12">
         <div className="container mx-auto px-4 flex flex-col min-h-[60vh] justify-center items-center">
           <h1 className="text-2xl font-bold mb-4">Error Generating Trade Plan</h1>
           <p className="mb-6 text-muted-foreground text-center max-w-md">
@@ -1072,7 +1072,7 @@ export default function TradePlanPage() {
   }
 
   return (
-    <main className="flex-1 pt-24 pb-12">
+    <main className="flex-1 pt-[68px] pb-12">
       <Head>
         <title>TradeCraft Trade Plan Generator</title>
         <meta name="description" content="Generate actionable trade plans for any stock. Get entry, stop, targets, and risk management in seconds. Upgrade for more daily requests and premium features." />

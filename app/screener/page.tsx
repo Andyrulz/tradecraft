@@ -133,7 +133,7 @@ export default function ScreenerPage() {
   };
 
   return (
-    <main className="flex-1 pt-24 pb-12">
+    <main className="flex-1 pt-[68px] pb-12">
       <Head>
         <title>TradeCraft Stock Screener</title>
         <meta name="description" content="Find high-momentum stocks using technical signals, volume, and price action. Filter by sector, market cap, and more. Upgrade for unlimited access." />

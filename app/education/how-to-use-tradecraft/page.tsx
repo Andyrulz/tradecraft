@@ -18,7 +18,7 @@ export default function HowToUseApp() {
         <meta name="twitter:description" content="Learn how to use TradeCraft to generate actionable trade plans, analyze stocks, and discover momentum opportunities. Step-by-step guides and tips." />
         <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
       </Head>
-      <main className="flex-1 pt-24 pb-12">
+      <main className="flex-1 pt-[68px] pb-12"> {/* 68px = header height (py-3 + text + padding) for mobile CLS fix */}
         <div className="container mx-auto px-4 max-w-3xl">
           <Breadcrumbs items={[
             { label: 'Education', href: '/education/how-to-use-tradecraft' },

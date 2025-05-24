@@ -16,7 +16,7 @@ export default function AboutPage() {
         <meta name="twitter:description" content="Learn about the TradeCraft platform, our mission, and the team behind the AI-powered trade plan generator and stock screener." />
         <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
       </Head>
-      <main className="flex-1 pt-24 pb-12">
+      <main className="flex-1 pt-[68px] pb-12">
         <div className="container mx-auto px-4 max-w-3xl">
           <h1 className="text-3xl font-bold mb-6">About TradeCraft</h1>
           <p className="mb-4">TradeCraft is dedicated to empowering traders and investors with institutional-grade trade plans, actionable analysis, and educational resources. Our mission is to make data-driven trading accessible to everyone, from beginners to experienced professionals.</p>

@@ -18,7 +18,7 @@ export default function CaseStudies() {
         <meta name="twitter:description" content="Explore real-world case studies and success stories from TradeCraft users. See how traders and investors are using TradeCraft to improve their results." />
         <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
       </Head>
-      <main className="flex-1 pt-24 pb-12">
+      <main className="flex-1 pt-[68px] pb-12">
         <div className="container mx-auto px-4 max-w-3xl">
           <Breadcrumbs items={[
             { label: 'Education', href: '/education/case-studies-success-stories' },

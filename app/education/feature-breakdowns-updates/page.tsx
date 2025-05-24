@@ -18,7 +18,7 @@ export default function FeatureBreakdowns() {
         <meta name="twitter:description" content="Stay up to date with the latest TradeCraft features, platform updates, and improvements. Learn how new tools and enhancements can help your trading." />
         <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
       </Head>
-      <main className="flex-1 pt-24 pb-12">
+      <main className="flex-1 pt-[68px] pb-12">
         <div className="container mx-auto px-4 max-w-3xl">
           <Breadcrumbs items={[
             { label: 'Education', href: '/education/feature-breakdowns-updates' },

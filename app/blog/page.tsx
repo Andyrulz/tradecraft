@@ -34,7 +34,7 @@ const blogPosts = [
 
 export default function BlogIndexPage() {
 	return (
-		<main className="flex-1 pt-24 pb-12">
+		<main className="flex-1 pt-[68px] pb-12">
 			<Head>
 				<title>TradeCraft Blog</title>
 				<meta

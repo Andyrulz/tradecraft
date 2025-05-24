@@ -17,7 +17,7 @@ export default function PrivacyPolicyPage() {
         <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
         <meta name="robots" content="noindex, follow" />
       </Head>
-      <main className="flex-1 pt-24 pb-12">
+      <main className="flex-1 pt-[68px] pb-12">
         <div className="container mx-auto px-4 max-w-3xl">
           <h1 className="text-3xl font-bold mb-6">Privacy Policy</h1>
           <p className="mb-4">Last updated: 5 May 2025</p>
