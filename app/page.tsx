@@ -86,23 +86,29 @@ export default function Home() {
 			</Head>
 			<HeroSection />
       {/* Social Proof & Badges */}
-      <section className="container mx-auto px-4 max-w-4xl py-6 flex flex-wrap items-center justify-center gap-x-12 gap-y-6">
-        {/* Product Hunt Badge (external, keep as <img>) */}
-        <a href="https://www.producthunt.com/posts/tradecraft-2?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-tradecraft-2" target="_blank" rel="noopener noreferrer" aria-label="View TradeCraft on Product Hunt" className="transition-transform hover:scale-105">
-          <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=966567&theme=light&t=1748065742670" alt="TradeCraft - Trade with Confidence and Clarity | Product Hunt" width="250" height="54" style={{ width: 250, height: 54 }} />
-        </a>
-        {/* Medium Badge */}
-        <a href="https://medium.com/@andrew.labyrinthventures" target="_blank" rel="noopener noreferrer" aria-label="Read TradeCraft on Medium" className="transition-transform hover:scale-105">
-          <Image src="/badges/medium-badge.png" alt="Read us on Medium" width={120} height={40} />
-        </a>
-        {/* Gravatar Badge */}
-        <a href="https://gravatar.com/honestlycolorfulda51a20b53" target="_blank" rel="noopener noreferrer" aria-label="View Gravatar Profile" className="transition-transform hover:scale-105">
-          <Image src="https://gravatar.com/avatar/da51a20b53c2e7e2e7e2e7e2e7e2e7e2?s=120" alt="Gravatar Profile" width={40} height={40} style={{ borderRadius: '50%' }} />
-        </a>
-        {/* LinkedIn Badge */}
-        <a href="https://www.linkedin.com/company/trade-craft-pro" target="_blank" rel="noopener noreferrer" aria-label="View TradeCraft on LinkedIn" className="transition-transform hover:scale-105">
-          <Image src="/badges/linkedin-badge.png" alt="LinkedIn Company Page" width={120} height={40} />
-        </a>
+      <section className="container mx-auto px-4 max-w-4xl py-6 flex items-center justify-between">
+        <div className="flex flex-row items-center w-full justify-between gap-x-8">
+          {/* Product Hunt Badge (external, keep as <img>) */}
+          <a href="https://www.producthunt.com/posts/tradecraft-2?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-tradecraft-2" target="_blank" rel="noopener noreferrer" aria-label="View TradeCraft on Product Hunt" className="transition-transform hover:scale-105">
+            <img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=966567&theme=light&t=1748065742670" alt="TradeCraft - Trade with Confidence and Clarity | Product Hunt" width="250" height="54" style={{ width: 250, height: 54 }} />
+          </a>
+          {/* Medium Badge */}
+          <a href="https://medium.com/@andrew.labyrinthventures" target="_blank" rel="noopener noreferrer" aria-label="Read TradeCraft on Medium" className="transition-transform hover:scale-105">
+            <Image src="/badges/medium-badge.png" alt="Read us on Medium" width={120} height={40} />
+          </a>
+          {/* Gravatar Badge */}
+          <a href="https://gravatar.com/honestlycolorfulda51a20b53" target="_blank" rel="noopener noreferrer" aria-label="View Gravatar Profile" className="transition-transform hover:scale-105">
+            <Image src="https://gravatar.com/avatar/da51a20b53c2e7e2e7e2e7e2e7e2e7e2?s=120" alt="Gravatar Profile" width={40} height={40} style={{ borderRadius: '50%' }} />
+          </a>
+          {/* LinkedIn Badge */}
+          <a href="https://www.linkedin.com/company/trade-craft-pro" target="_blank" rel="noopener noreferrer" aria-label="View TradeCraft on LinkedIn" className="transition-transform hover:scale-105">
+            <Image src="/badges/linkedin-badge.png" alt="LinkedIn Company Page" width={120} height={40} />
+          </a>
+          {/* Twelve Tools Badge */}
+          <a href="https://twelve.tools" target="_blank" rel="noopener noreferrer" aria-label="Featured on Twelve Tools" className="transition-transform hover:scale-105">
+            <Image src="https://twelve.tools/badge1-white.svg" alt="Featured on Twelve Tools" width={200} height={54} />
+          </a>
+        </div>
       </section>
 			<FeatureSection />
 			<HowItWorks />
