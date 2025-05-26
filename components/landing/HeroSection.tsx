@@ -59,9 +59,22 @@ export function HeroSection() {
       <div className="container relative z-10 mx-auto px-4 pt-24 pb-12 md:pt-32 md:pb-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-5 space-y-8 text-center lg:text-left">
-            <div className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-sky-200 text-sky-800 mb-4 transition-transform duration-300 hover:scale-105 mx-auto lg:mx-0">
-              <span className="flex h-2 w-2 rounded-full bg-sky-500 mr-2"></span>
-              Professional Trading Tools
+            <div className="flex flex-row items-center gap-3 mb-4 mx-auto lg:mx-0 w-fit">
+              <span className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-sky-200 text-sky-800 transition-transform duration-300 hover:scale-105">
+                <span className="flex h-2 w-2 rounded-full bg-sky-500 mr-2"></span>
+                Professional Trading Tools
+              </span>
+              <a
+                href="https://medium.com/p/c49513bcd37b"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center bg-green-100 text-green-700 text-xs font-semibold rounded-full px-3 py-1 hover:bg-green-200 transition-colors border border-green-200 shadow-sm"
+                aria-label="Featured Insight: How to Spot the Next Leading Momentum Stock Using TradeCraft (Medium)"
+                style={{ fontSize: '0.95em', lineHeight: 1.2 }}
+              >
+                <svg width="16" height="16" fill="none" viewBox="0 0 1043.63 592.71" xmlns="http://www.w3.org/2000/svg" className="mr-1"><g><ellipse cx="521.81" cy="296.35" rx="521.81" ry="296.35" fill="#fff"/><path d="M588.67 296.35c0 163.6-132.62 296.35-296.35 296.35S-4.03 459.95-4.03 296.35 128.59 0 292.32 0s296.35 132.62 296.35 296.35z" fill="#00ab6c"/><path d="M1043.63 296.35c0 163.6-132.62 296.35-296.35 296.35s-296.35-132.62-296.35-296.35S583.65 0 747.28 0s296.35 132.62 296.35 296.35z" fill="#00ab6c"/><ellipse cx="521.81" cy="296.35" rx="208.06" ry="296.35" fill="#fff"/></g></svg>
+                Featured Insight
+              </a>
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground leading-tight">
               Trade with <span className="text-primary bg-primary/10 px-2 rounded-md">confidence</span> <br className="hidden md:inline" />

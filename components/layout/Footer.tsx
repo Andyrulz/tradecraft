@@ -17,8 +17,7 @@ export function Footer() {
 							</span>
 						</div>
 						<p className="text-muted-foreground text-sm">
-							Educational trade plans for beginners and experienced traders
-							alike.
+							Educational trade plans for beginners and experienced traders alike.
 							<br />
 							<span className="font-semibold">A product of Labyrinth Ventures.</span>
 							<br />
@@ -29,6 +28,8 @@ export function Footer() {
 							>
 								andrew.labyrinthventures@gmail.com
 							</a>
+							<br />
+							Operational Address: 45, V.G.Rao Nagar, Phase -2, Ganapathy, Coimbatore, Tamil Nadu, 641006, India
 						</p>
 					</div>
 

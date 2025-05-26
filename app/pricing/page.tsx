@@ -17,7 +17,8 @@ const GUMROAD_PREMIUM_URL = "https://labyrinthian8.gumroad.com/l/klcep";
 const plans = [
 	{
 		name: 'Free',
-		price: 'Free',
+		priceUSD: 'Free',
+		priceINR: 'Free',
 		description: 'Get started with the basics. Assigned by default to all users.',
 		features: [
 			'2 requests per day (resets at midnight UTC)',
@@ -30,7 +31,8 @@ const plans = [
 	},
 	{
 		name: 'Pro',
-		price: '$7.5/mo',
+		priceUSD: '$7.5/mo',
+		priceINR: '₹625/mo', // Example INR price, update as needed
 		description:
 			'For active traders who want more requests and support. Costs less than a single meal out—and you could make 2-5x this in a single trade by following a solid plan.',
 		features: [
@@ -44,7 +46,8 @@ const plans = [
 	},
 	{
 		name: 'Premium',
-		price: '$16.5/mo',
+		priceUSD: '$16.5/mo',
+		priceINR: '₹1375/mo', // Example INR price, update as needed
 		description:
 			'Unlimited access, screener, and premium support. For less than a night at the movies, unlock the screener and make back your subscription in just one good trade.',
 		features: [
@@ -65,6 +68,7 @@ export default function PricingPage() {
 	);
 	const [loading, setLoading] = useState(true);
 	const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
+	const [currency, setCurrency] = useState<'USD' | 'INR'>('USD');
 
 	useEffect(() => {
 		async function fetchPlan() {
@@ -103,16 +107,57 @@ export default function PricingPage() {
 				<meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
 			</Head>
 			<div className="container mx-auto px-4 max-w-5xl">
-				<h1 className="text-4xl md:text-5xl font-extrabold text-center mb-6 text-sky-900">
+				<h1 className="text-4xl md:text-5xl font-extrabold text-center mb-4 text-sky-900">
 					Pricing Plans
 				</h1>
-				<div className="text-center text-lg text-muted-foreground mb-14 max-w-2xl mx-auto space-y-4">
-					<p>
-						<span className="font-semibold text-sky-800">Trade smarter, not harder.</span> Start with the Free plan, or upgrade to unlock more daily trade plans, advanced features, and premium support.
-					</p>
-					<p>
-						<span className="font-semibold text-sky-800">Cancel anytime</span> — no commitments, instant access, and make back your subscription in just one good trade.
-					</p>
+				<div className="flex justify-center mb-4">
+					<button
+						className={`px-4 py-2 rounded-l-lg border border-sky-400 font-semibold ${currency === 'USD' ? 'bg-sky-400 text-white' : 'bg-white text-sky-700'}`}
+						onClick={() => setCurrency('USD')}
+						aria-pressed={currency === 'USD'}
+					>
+						USD
+					</button>
+					<button
+						className={`px-4 py-2 rounded-r-lg border border-sky-400 font-semibold -ml-px ${currency === 'INR' ? 'bg-sky-400 text-white' : 'bg-white text-sky-700'}`}
+						onClick={() => setCurrency('INR')}
+						aria-pressed={currency === 'INR'}
+					>
+						INR
+					</button>
+				</div>
+				<div className="text-center text-xs text-muted-foreground mb-2">
+					Prices shown in {currency === 'USD' ? 'US Dollars (USD)' : 'Indian Rupees (INR)'}.
+					{currency === 'INR' && (
+						<span> All Indian payments are processed in INR as per RBI guidelines.</span>
+					)}
+					<span className="block mt-1">Contact & address details are available in the site footer.</span>
+				</div>
+				{/* Add a visually engaging, subtle promo for the Medium article */}
+				<div className="flex justify-center mb-6">
+					<a
+						href="https://medium.com/p/c49513bcd37b"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="group block w-full max-w-xl rounded-2xl border border-sky-200 bg-gradient-to-br from-white to-sky-50 shadow-md hover:shadow-lg transition-shadow p-5 flex items-center gap-4 hover:border-sky-400"
+						aria-label="Featured Insight: How to Spot the Next Leading Momentum Stock Using TradeCraft (Medium)"
+					>
+						<img
+							src="/badges/medium.svg"
+							alt="Medium logo"
+							className="w-12 h-12 rounded-lg border border-gray-200 bg-white shadow-sm group-hover:scale-105 transition-transform"
+						/>
+						<div className="flex-1">
+							<div className="text-xs uppercase tracking-wider text-sky-500 font-bold mb-1">Featured Insight</div>
+							<div className="text-lg font-semibold text-sky-900 group-hover:text-sky-700 transition-colors">How to Spot the Next Leading Momentum Stock Using TradeCraft</div>
+							<div className="text-xs text-muted-foreground mt-1">Read our latest Medium article for actionable tips &amp; real examples.</div>
+						</div>
+						<svg className="w-6 h-6 text-sky-400 group-hover:text-sky-600 transition-colors" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+					</a>
+				</div>
+				{/* Remove or condense intro text for less vertical space */}
+				<div className="text-center text-base text-muted-foreground mb-8 max-w-2xl mx-auto">
+					<span className="font-semibold text-sky-800">Trade smarter, not harder.</span> Start free or upgrade for more daily trade plans, advanced features, and premium support. <span className="font-semibold text-sky-800">Cancel anytime.</span>
 				</div>
 				{loading ? (
 					<div className="text-center py-12">Loading...</div>
@@ -140,7 +185,7 @@ export default function PricingPage() {
 											{plan.name}
 										</h2>
 										<div className="text-4xl font-extrabold mb-2 text-sky-700">
-											{plan.price}
+											{currency === 'USD' ? plan.priceUSD : plan.priceINR}
 										</div>
 										<p className="text-base text-muted-foreground mb-6 text-center min-h-[60px]">
 											{plan.description}
@@ -180,7 +225,7 @@ export default function PricingPage() {
 											{plan.name}
 										</h2>
 										<div className="text-4xl font-extrabold mb-2 text-sky-700">
-											{plan.price}
+											{currency === 'USD' ? plan.priceUSD : plan.priceINR}
 										</div>
 										<p className="text-base text-muted-foreground mb-6 text-center min-h-[60px]">
 											{plan.description}
@@ -216,7 +261,7 @@ export default function PricingPage() {
 											</div>
 										)}
 										<h2 className="text-2xl font-bold mb-2 text-sky-800 tracking-tight">{plan.name}</h2>
-										<div className="text-4xl font-extrabold mb-2 text-sky-700">{plan.price}</div>
+										<div className="text-4xl font-extrabold mb-2 text-sky-700">{currency === 'USD' ? plan.priceUSD : plan.priceINR}</div>
 										<p className="text-base text-muted-foreground mb-6 text-center min-h-[60px]">{plan.description}</p>
 										<ul className="mb-10 space-y-3 w-full">
 											{plan.features.map((feature, i) => (
@@ -249,7 +294,7 @@ export default function PricingPage() {
 										{plan.name}
 									</h2>
 									<div className="text-4xl font-extrabold mb-2 text-sky-700">
-										{plan.price}
+										{currency === 'USD' ? plan.priceUSD : plan.priceINR}
 									</div>
 									<p className="text-base text-muted-foreground mb-6 text-center min-h-[60px]">
 										{plan.description}
