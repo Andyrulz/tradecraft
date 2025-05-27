@@ -127,7 +127,7 @@ export function HeroSection() {
                   </div>
                   <div className="flex flex-col gap-1 pt-1">
                     <Button asChild variant="ghost" className="w-full text-sky-700 hover:bg-sky-100 transition-all duration-200">
-                      <a href="/trade-plan?symbol=AAPL&horizon=longterm">See Example</a>
+                      <a href="/trade-plan/example">See Example</a>
                     </Button>
                   </div>
                   {/* Trust/metrics bar below CTA */}

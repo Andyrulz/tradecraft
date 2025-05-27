@@ -86,9 +86,9 @@ export default function Home() {
 			</Head>
 			<HeroSection />
 			{/* Social Proof & Badges (cleaned up, only main badges remain) */}
-			<section className="container mx-auto px-4 max-w-4xl py-6 flex items-center justify-between">
+			<section className="container mx-auto px-5 max-w-4xl py-6 flex items-center justify-between">
 				<div className="flex flex-row items-center w-full justify-between gap-x-8">
-					<div className="flex flex-row items-center gap-x-4">
+					<div className="flex flex-row items-center gap-x-8">
 						{/* Product Hunt Badge (external, keep as <img>) */}
 						<a
 							href="https://www.producthunt.com/posts/tradecraft-2?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-tradecraft-2"
