@@ -64,6 +64,8 @@ export default function PricingPage() {
 	);
 	const [loading, setLoading] = useState(true);
 	const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
+	// Currency toggle state
+	const [currency, setCurrency] = useState<'USD' | 'INR'>('USD');
 
 	useEffect(() => {
 		async function fetchPlan() {
@@ -92,18 +94,42 @@ export default function PricingPage() {
 				<h1 className="text-4xl md:text-5xl font-extrabold text-center mb-2 text-sky-900">
 					Pricing tailored to your needs
 				</h1>
-				<p className="text-center text-sm md:text-base text-sky-800 font-medium mb-3 max-w-4xl mx-auto leading-relaxed tracking-wide">
-					<span className="align-middle">
-						<span className="text-sky-700 font-semibold">
-							The first 3 trade plans everyday are on me. If you love it, please
-							help me run the product as a solo creator.
-						</span>{' '}
-						<span className="text-sky-600">Cancel anytime.</span>
-					</span>
-				</p>
 				<p className="text-center text-base text-muted-foreground mb-5 max-w-2xl mx-auto">
-					Trade smarter, not harder. 
+					
 				</p>
+				{/* Currency toggle */}
+				<p className="text-center text-base font-semibold text-sky-800 mb-4 max-w-2xl mx-auto leading-relaxed tracking-wide">
+  <span className="align-middle">
+    The first 3 trade plans everyday are on me. If you love it, please help me run the product as a solo creator. <span className="text-sky-600">Cancel anytime.</span>
+  </span>
+</p>
+<div className="flex flex-col items-center gap-2 mb-6">
+  <div className="inline-flex items-center bg-sky-50 border border-sky-200 rounded-xl px-2 py-1 shadow gap-1 text-base font-semibold">
+    <button
+      className={`px-3 py-1 rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-sky-400 ${currency === 'USD' ? 'bg-sky-700 text-white font-bold' : 'bg-white text-sky-700 hover:bg-sky-100'}`}
+      onClick={() => setCurrency('USD')}
+      aria-pressed={currency === 'USD'}
+      type="button"
+    >
+      USD
+    </button>
+    <span className="mx-1 text-sky-400 font-bold text-lg">|</span>
+    <button
+      className={`px-3 py-1 rounded-lg transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-sky-400 ${currency === 'INR' ? 'bg-sky-700 text-white font-bold' : 'bg-white text-sky-700 hover:bg-sky-100'}`}
+      onClick={() => setCurrency('INR')}
+      aria-pressed={currency === 'INR'}
+      type="button"
+    >
+      INR
+    </button>
+  </div>
+  <span className="text-sm text-muted-foreground">
+    {currency === 'INR'
+      ? 'Pay securely in INR via Razorpay'
+      : 'All prices in USD. INR option available for Indian users.'}
+  </span>
+</div>
+
 				{loading ? (
 					<div className="text-center py-12">Loading...</div>
 				) : (
@@ -124,9 +150,16 @@ export default function PricingPage() {
 										<h2 className="text-2xl font-bold mb-2 text-sky-800">
 											{plan.name}
 										</h2>
+										{/* Pricing display */}
 										<div className="text-3xl font-extrabold mb-2 text-sky-700">
-											{plan.price}
-										</div>
+  {currency === 'INR'
+    ? plan.name === 'Pro'
+      ? '₹599/mo'
+      : plan.name === 'Premium'
+        ? '₹1399/mo'
+        : plan.price
+    : plan.price}
+</div>
 										<p className="text-base text-muted-foreground mb-6 text-center">
 											{plan.description}
 										</p>
@@ -158,9 +191,16 @@ export default function PricingPage() {
 										<h2 className="text-2xl font-bold mb-2 text-sky-800">
 											{plan.name}
 										</h2>
+										{/* Pricing display */}
 										<div className="text-3xl font-extrabold mb-2 text-sky-700">
-											{plan.price}
-										</div>
+  {currency === 'INR'
+    ? plan.name === 'Pro'
+      ? '₹599/mo'
+      : plan.name === 'Premium'
+        ? '₹1399/mo'
+        : plan.price
+    : plan.price}
+</div>
 										<p className="text-base text-muted-foreground mb-6 text-center">
 											{plan.description}
 										</p>
@@ -190,7 +230,16 @@ export default function PricingPage() {
 										className={`rounded-2xl shadow-lg border border-sky-200 bg-white p-8 flex flex-col items-center transition-transform duration-200 hover:scale-105 ${plan.highlight ? 'ring-2 ring-sky-400' : ''}`}
 									>
 										<h2 className="text-2xl font-bold mb-2 text-sky-800">{plan.name}</h2>
-										<div className="text-3xl font-extrabold mb-2 text-sky-700">{plan.price}</div>
+										{/* Pricing display */}
+										<div className="text-3xl font-extrabold mb-2 text-sky-700">
+  {currency === 'INR'
+    ? plan.name === 'Pro'
+      ? '₹599/mo'
+      : plan.name === 'Premium'
+        ? '₹1399/mo'
+        : plan.price
+    : plan.price}
+</div>
 										<p className="text-base text-muted-foreground mb-6 text-center">{plan.description}</p>
 										<ul className="mb-8 space-y-2 w-full">
 											{plan.features.map((feature, i) => (
@@ -217,9 +266,16 @@ export default function PricingPage() {
 									<h2 className="text-2xl font-bold mb-2 text-sky-800">
 										{plan.name}
 									</h2>
+									{/* Pricing display */}
 									<div className="text-3xl font-extrabold mb-2 text-sky-700">
-										{plan.price}
-									</div>
+  {currency === 'INR'
+    ? plan.name === 'Pro'
+      ? '₹599/mo'
+      : plan.name === 'Premium'
+        ? '₹1399/mo'
+        : plan.price
+    : plan.price}
+</div>
 									<p className="text-base text-muted-foreground mb-6 text-center">
 										{plan.description}
 									</p>
