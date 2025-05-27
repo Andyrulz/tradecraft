@@ -121,13 +121,17 @@ export function HeroSection() {
                       Get a detailed trade plan with entry points, targets, and risk management
                     </p>
                   </div>
-                  <StockForm />
                   <div className="flex justify-center mt-2 mb-0">
-                    <span className="text-green-700 bg-green-50 rounded-full px-3 py-1 text-sm font-semibold flex items-center gap-1">🎉 Try generating a trade plan for free</span>
+                    <span className="text-green-700 bg-green-50 rounded-full px-3 py-1 text-sm font-semibold flex items-center gap-1">🎉 Generate trade plans for free now</span>
                   </div>
+                  <StockForm />
                   <div className="flex flex-col gap-1 pt-1">
-                    <Button asChild variant="ghost" className="w-full text-sky-700 hover:bg-sky-100 transition-all duration-200">
-                      <a href="/trade-plan/example">See Example</a>
+                    <Button
+                      asChild
+                      variant="outline"
+                      className="w-full text-sky-700 border-sky-300 bg-sky-50 hover:bg-sky-100 font-bold shadow-sm hover:border-sky-500 transition-all duration-200"
+                    >
+                      <a href="/trade-plan/example">See Example (No Sign-in Needed)</a>
                     </Button>
                   </div>
                   {/* Trust/metrics bar below CTA */}
