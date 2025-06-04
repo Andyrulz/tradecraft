@@ -43,16 +43,16 @@ export default function Home() {
 	return (
 		<main className="flex-1">
 			<Head>
-        <title>TradeCraft: Smarter Trading Plans, Momentum Screener & Stock Analysis</title>
-        <meta name="description" content="TradeCraft helps traders and investors generate actionable trade plans, screen for momentum stocks, and analyze technical and fundamental data. Start making smarter trades today!" />
-        <meta property="og:title" content="TradeCraft: Smarter Trading Plans, Momentum Screener & Stock Analysis" />
-        <meta property="og:description" content="TradeCraft helps traders and investors generate actionable trade plans, screen for momentum stocks, and analyze technical and fundamental data. Start making smarter trades today!" />
+        <title>Trade Plan Generator & Momentum Stock Screener | Stock Entry and Exit Tool</title>
+        <meta name="description" content="TradeCraft is a trade plan generator and momentum stock screener. Instantly get detailed trading plans, entry/exit signals, stop loss, targets, and discover high-momentum and small cap stocks." />
+        <meta property="og:title" content="Trade Plan Generator & Momentum Stock Screener | Stock Entry and Exit Tool" />
+        <meta property="og:description" content="TradeCraft is a trade plan generator and momentum stock screener. Instantly get detailed trading plans, entry/exit signals, stop loss, targets, and discover high-momentum and small cap stocks." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.tradingsetup.pro/" />
         <meta property="og:image" content="https://www.tradingsetup.pro/bull-bear.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="TradeCraft: Smarter Trading Plans, Momentum Screener & Stock Analysis" />
-        <meta name="twitter:description" content="TradeCraft helps traders and investors generate actionable trade plans, screen for momentum stocks, and analyze technical and fundamental data. Start making smarter trades today!" />
+        <meta name="twitter:title" content="Trade Plan Generator & Momentum Stock Screener | Stock Entry and Exit Tool" />
+        <meta name="twitter:description" content="TradeCraft is a trade plan generator and momentum stock screener. Instantly get detailed trading plans, entry/exit signals, stop loss, targets, and discover high-momentum and small cap stocks." />
         <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />

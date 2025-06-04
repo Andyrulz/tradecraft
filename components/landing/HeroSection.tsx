@@ -56,7 +56,7 @@ export function HeroSection() {
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(120,199,255,0.10),rgba(255,255,255,0))]" />
       </div>
-      <div className="container relative z-10 mx-auto px-4 pt-24 pb-12 md:pt-32 md:pb-20">
+      <div className="container relative z-10 mx-auto px-4 pt-16 pb-8 md:pt-24 md:pb-14">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-5 space-y-8 text-center lg:text-left">
             <div className="flex flex-row items-center gap-3 mb-4 mx-auto lg:mx-0 w-fit">
@@ -76,13 +76,17 @@ export function HeroSection() {
                 Featured Insight
               </a>
             </div>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground leading-tight">
-              Trade with <span className="text-primary bg-primary/10 px-2 rounded-md">confidence</span> <br className="hidden md:inline" />
-              <span className="text-sky-700">Find High Momentum Stocks</span>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground leading-tight">
+              Trade Plan Generator & <span className="text-primary bg-primary/10 px-2 rounded-md">Momentum Stock Screener</span>
+              <br />
+              <span className="text-sky-700 block mt-4">Find When & Where to Buy, Sell, or Hold</span>
             </h1>
-            <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-2xl leading-relaxed mx-auto lg:mx-0">
-              Instantly generate institutional-grade trade plans <b>or</b> discover today’s top momentum stocks—powered by technical analysis. Perfect for both beginners and experienced traders seeking clear, actionable guidance and fresh opportunities.
-            </p>
+            <ul className="text-base text-muted-foreground max-w-2xl mx-auto lg:mx-0 mt-2 mb-2 list-disc list-inside space-y-1">
+              <li><b>Trade plan generator</b> for any stock</li>
+              <li><b>Stock entry and exit tool</b> with clear buy/sell/hold signals</li>
+              <li><b>Momentum & small cap stock screener</b> for new ideas</li>
+              <li>Set <b>stop loss and targets</b> with confidence</li>
+            </ul>
             <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">
               <Button size="lg" variant="outline" asChild className="group rounded-xl text-lg px-8 py-4 border-2 border-sky-300 hover:border-sky-500 transition-all duration-300 hover:scale-105">
                 <a href="#how-it-works" className="flex items-center justify-center">
@@ -149,6 +153,9 @@ export function HeroSection() {
                       Awarded &quot;Top 10 Trading Apps 2025&quot; by FinEdge Community
                     </div>
                   </div>
+                  <p className="text-center text-muted-foreground text-sm mt-4">
+                    <a href="/blog" className="underline hover:text-primary">Read our in-depth trading guides on the TradeCraft Blog</a>
+                  </p>
                 </TabsContent>
                 <TabsContent value="discover" className="space-y-6 animate-in fade-in-50 duration-500">
                   <div className="space-y-2">

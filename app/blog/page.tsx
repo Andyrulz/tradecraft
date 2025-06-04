@@ -1,88 +1,81 @@
 import Link from 'next/link';
-import Head from 'next/head';
+
+export const metadata = {
+  title: 'TradeCraft Blog – Trading Plan, Stock Screeners, and Risk Management Guides',
+  description: 'Explore TradeCraft blog articles on trade plan generation, entry/exit tools, momentum and small cap screeners, and risk management. Learn how to use TradeCraft for smarter trading.'
+};
 
 const blogPosts = [
-	{
-		slug: 'how-to-spot-next-leading-momentum-stock-using-trade-craft',
-		title: 'How to Spot the Next Leading Momentum Stock Using Trade Craft',
-		summary:
-			"A step-by-step guide to finding high-potential momentum stocks using Trade Craft's screeners, signals, and trade plans.",
-		date: '2025-05-16',
-	},
-	{
-		slug: 'identify-breakout-stocks-price-volume',
-		title: 'How I Identify Breakout Stocks Using Price-Volume Analysis',
-		summary:
-			'A deep dive into the exact price and volume patterns I look for before entering a breakout, with real chart examples and actionable tips.',
-		date: '2025-04-10',
-	},
-	{
-		slug: 'top-5-momentum-indicators-midcap',
-		title: 'Top 5 Momentum Indicators I Use for Midcap Trading',
-		summary:
-			'Discover the momentum indicators that consistently help me spot high-potential midcap stocks before they move.',
-		date: '2025-04-20',
-	},
-	{
-		slug: 'step-by-step-trade-plan-risk-management',
-		title: 'Step-by-Step Guide: Creating a Trade Plan with Risk Management',
-		summary:
-			'A practical, step-by-step walkthrough of building a robust trade plan, including risk controls and real-world examples.',
-		date: '2025-04-28',
-	},
+  {
+    href: '/blog/trade-plan-generator',
+    title: 'Trade Plan Generator',
+    description: 'Instantly create a professional trading plan for any stock with TradeCraft.'
+  },
+  {
+    href: '/blog/stock-entry-exit-tool',
+    title: 'Stock Entry and Exit Tool',
+    description: 'Find the best price levels to buy and sell stocks using TradeCraft.'
+  },
+  {
+    href: '/blog/momentum-stock-screener',
+    title: 'Momentum Stock Screener',
+    description: 'Discover trending stocks with strong price and volume momentum.'
+  },
+  {
+    href: '/blog/small-cap-stock-screener',
+    title: 'Small Cap Stock Screener',
+    description: 'Filter for high-growth small cap opportunities.'
+  },
+  {
+    href: '/blog/how-to-set-stop-loss-targets',
+    title: 'How to Set Stop Loss and Targets',
+    description: 'Master risk management with TradeCraft’s tools.'
+  },
+  {
+    href: '/blog/detailed-trading-plan-for-any-stock',
+    title: 'Detailed Trading Plan for Any Stock',
+    description: 'Step-by-step guidance for any ticker.'
+  },
+  {
+    href: '/blog/how-to-spot-next-leading-momentum-stock-using-trade-craft',
+    title: 'How to Spot the Next Leading Momentum Stock Using TradeCraft',
+    description: 'Advanced momentum scanning techniques.'
+  },
+  {
+    href: '/blog/identify-breakout-stocks-price-volume',
+    title: 'Identify Breakout Stocks by Price & Volume',
+    description: 'Spotting breakouts with TradeCraft tools.'
+  },
+  {
+    href: '/blog/mastering-market-conditions-the-edge-most-traders-ignore',
+    title: 'Mastering Market Conditions: The Edge Most Traders Ignore',
+    description: 'Adapting your strategy to the market environment.'
+  },
+  {
+    href: '/blog/step-by-step-trade-plan-risk-management',
+    title: 'Step-by-Step Trade Plan & Risk Management',
+    description: 'A practical guide to disciplined trading.'
+  },
+  {
+    href: '/blog/top-5-momentum-indicators-midcap',
+    title: 'Top 5 Momentum Indicators for Midcap Stocks',
+    description: 'Tools and tips for midcap momentum trading.'
+  }
 ];
 
 export default function BlogIndexPage() {
-	return (
-		<main className="flex-1 pt-[68px] pb-12">
-			<Head>
-				<title>TradeCraft Blog</title>
-				<meta
-					name="description"
-					content="Explore the TradeCraft blog for trading strategies, technical analysis, and platform updates. Learn how to trade smarter with actionable insights."
-				/>
-				<meta property="og:title" content="TradeCraft Blog" />
-				<meta
-					property="og:description"
-					content="Explore the TradeCraft blog for trading strategies, technical analysis, and platform updates. Learn how to trade smarter with actionable insights."
-				/>
-				<meta property="og:type" content="website" />
-				<meta property="og:url" content="https://www.tradingsetup.pro/blog" />
-				<meta
-					property="og:image"
-					content="https://www.tradingsetup.pro/bull-bear.png"
-				/>
-				<meta name="twitter:card" content="summary_large_image" />
-				<meta name="twitter:title" content="TradeCraft Blog" />
-				<meta
-					name="twitter:description"
-					content="Explore the TradeCraft blog for trading strategies, technical analysis, and platform updates. Learn how to trade smarter with actionable insights."
-				/>
-				<meta
-					name="twitter:image"
-					content="https://www.tradingsetup.pro/bull-bear.png"
-				/>
-			</Head>
-			<div className="container mx-auto px-4 max-w-3xl">
-				<h1 className="text-3xl font-bold mb-8">TradeCraft Blog</h1>
-				<p className="mb-8 text-lg text-muted-foreground">
-					Actionable trading strategies, technical analysis, and risk management
-					insights inspired by the methods of Mark Minervini and Dan Zanger.
-				</p>
-				<div className="space-y-8">
-					{blogPosts.map((post) => (
-						<div key={post.slug} className="border-b pb-6">
-							<h2 className="text-2xl font-semibold mb-2">
-								<Link href={`/blog/${post.slug}`}>{post.title}</Link>
-							</h2>
-							<p className="text-muted-foreground mb-2">
-								{post.summary}
-							</p>
-							<span className="text-xs text-gray-500">{post.date}</span>
-						</div>
-					))}
-				</div>
-			</div>
-		</main>
-	);
+  return (
+    <main className="max-w-5xl mx-auto px-4 py-8 mt-28">
+      <h1 className="text-4xl font-bold mb-2">TradeCraft Blog</h1>
+      <p className="text-lg text-muted-foreground mb-8">Explore our in-depth guides on trading plans, stock screeners, and risk management. Learn how to use TradeCraft to improve your trading results.</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {blogPosts.map(post => (
+          <Link key={post.href} href={post.href} className="block border rounded-lg shadow-sm hover:shadow-lg transition bg-white p-6 h-full">
+            <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
+            <p className="text-base text-muted-foreground mb-0">{post.description}</p>
+          </Link>
+        ))}
+      </div>
+    </main>
+  );
 }
