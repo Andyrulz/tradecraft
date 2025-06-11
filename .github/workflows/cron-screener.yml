@@ -1,0 +1,20 @@
+name: Momentum Screener Cron
+
+on:
+  schedule:
+    # Runs at 00:00 and 12:00 UTC every day
+    - cron: "0 0,12 * * *"
+
+jobs:
+  run-screener-crons:
+    runs-on: ubuntu-latest
+    steps:
+      - name: GET refresh endpoint (populate universe)
+        run: |
+          curl -X GET "https://www.tradingsetup.pro/api/momentum-screener/refresh"
+      - name: Wait before POST (prevent overlap)
+        shell: bash
+        run: sleep 60
+      - name: POST refresh endpoint (run screener)
+        run: |
+          curl -X POST "https://www.tradingsetup.pro/api/momentum-screener/refresh"
