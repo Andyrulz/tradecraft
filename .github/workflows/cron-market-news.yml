@@ -18,4 +18,4 @@ jobs:
       - name: Run market news script
         run: |
           npm ci
-          node scripts/scrape-market-news.ts
+          npx dotenv -e .env.local -- npx tsx scripts/scrape-market-news.ts

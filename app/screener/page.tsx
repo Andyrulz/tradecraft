@@ -205,7 +205,7 @@ export default function ScreenerPage() {
             <div className="text-center p-4">
               <h2 className="text-2xl font-bold mb-2 text-sky-800">Unlock the Momentum Screener</h2>
               <p className="mb-4 text-gray-700 text-lg">
-                The Momentum Screener is your edge for finding the <span className="font-semibold text-sky-700">top 10 actionable stocks</span> every day—setups you won't find anywhere else. <br /><br />
+                The Momentum Screener is your edge for finding the <span className="font-semibold text-sky-700">top 10 actionable stocks</span> every day—setups you won&apos;t find anywhere else. <br /><br />
                 <span className="font-semibold text-sky-700">Upgrade to Premium for just $14.65/month</span> (less than a night at the movies) and you could make back your subscription with a single great trade.
               </p>
               <p className="mb-6 text-gray-600 text-base">

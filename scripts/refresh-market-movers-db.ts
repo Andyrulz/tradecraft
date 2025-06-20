@@ -1,21 +1,27 @@
 // scripts/refresh-market-movers-db.ts
 // Scrapes and upserts market movers into the new Supabase table 'market_movers'.
 
-const axios = require('axios');
-const cheerio = require('cheerio');
-const { createClient } = require('@supabase/supabase-js');
+import axios from 'axios';
+import * as cheerio from 'cheerio';
+import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_ANON_KEY!
+);
 const BASE_URL = 'https://stockanalysis.com/markets';
 const TYPES = ['gainers', 'losers'];
 const PERIODS = ['day', 'week', 'month', 'ytd'];
 const PERIOD_PATH = { day: '', week: '/week', month: '/month', ytd: '/ytd' };
 
-async function scrape(type, period) {
+async function scrape(
+  type: 'gainers' | 'losers',
+  period: 'day' | 'week' | 'month' | 'ytd'
+): Promise<any[]> {
   const url = `${BASE_URL}/${type}${PERIOD_PATH[period]}/`;
   const res = await axios.get(url);
   const $ = cheerio.load(res.data);
-  const rows = [];
+  const rows: any[] = [];
   $('table tbody tr').each((i, el) => {
     const tds = $(el).find('td');
     rows.push({
@@ -40,7 +46,7 @@ async function main() {
   let totalErrors = 0;
   for (const type of TYPES) {
     for (const period of PERIODS) {
-      const rows = await scrape(type, period);
+      const rows = await scrape(type as 'gainers' | 'losers', period as 'day' | 'week' | 'month' | 'ytd');
       let upserts = 0;
       for (const row of rows) {
         const { error } = await supabase.from('market_movers').upsert(row, { onConflict: 'type,period,symbol,date' });

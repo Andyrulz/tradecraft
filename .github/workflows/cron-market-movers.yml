@@ -18,4 +18,4 @@ jobs:
       - name: Run market movers script
         run: |
           npm ci
-          node scripts/refresh-market-movers.js
+          npx dotenv -e .env.local -- npx tsx scripts/refresh-market-movers-db.ts

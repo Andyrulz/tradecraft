@@ -11,7 +11,7 @@ function formatTimeAgo(dateString: string) {
 }
 
 // Score news: recency, has image, summary length, keywords
-function scoreNews(item) {
+function scoreNews(item: any) {
   let score = 0;
   // Recency: newer = higher
   const now = new Date();

@@ -8,6 +8,7 @@ import AuthSessionProvider from '@/components/SessionProvider';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import Script from 'next/script';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,19 +27,19 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/png" href="/favicon.png" />
-        <script
+        <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7507424386197703"
           crossOrigin="anonymous"
-        ></script>
+        />
         {/* Google Analytics tag */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-79EFCZT0E0"></script>
-        <script dangerouslySetInnerHTML={{__html: `
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-79EFCZT0E0" />
+        <Script id="ga-inline" strategy="afterInteractive">{`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
           gtag('config', 'G-79EFCZT0E0');
-        `}} />
+        `}</Script>
       </head>
       <body className={cn(
         `${inter.className} vsc-initialized`,

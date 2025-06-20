@@ -1,13 +1,16 @@
-const { createClient } = require('@supabase/supabase-js');
-const axios = require('axios');
-const cheerio = require('cheerio');
+import { createClient } from '@supabase/supabase-js';
+import axios from 'axios';
+import * as cheerio from 'cheerio';
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
+const supabase = createClient(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_ANON_KEY!
+);
 
 // Helper to parse 'x minutes ago', 'x hours ago', etc.
-function parseTimeAgo(str) {
+function parseTimeAgo(str: string) {
   if (!str) return new Date();
   const [num, unit] = str.split(' ');
   const n = parseInt(num);
@@ -23,11 +26,11 @@ async function scrapeAndStoreMarketNews() {
   const { data: html } = await axios.get('https://stockanalysis.com/news/');
   const $ = cheerio.load(html);
   // Define newsItems as an array of objects (plain JS for Node.js)
-  const newsItems = [];
+  const newsItems: any[] = [];
   const now = new Date();
 
   // Helper: Score news for highlights (recency, image, summary, keywords)
-  function scoreNews(item) {
+  function scoreNews(item: any) {
     let score = 0;
     const published = new Date(item.published_at);
     const hoursAgo = (now.getTime() - published.getTime()) / (1000 * 60 * 60);

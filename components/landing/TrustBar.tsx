@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 // Logos for lesser known companies (SVG or PNG URLs from official/press sources)
 const logos = [
@@ -30,13 +31,15 @@ export default function TrustBar() {
       <div className="text-xs text-gray-500 mb-2 font-semibold tracking-wide uppercase">As featured in</div>
       <div className="flex flex-wrap justify-center items-center gap-6">
         {logos.map((logo, idx) => (
-          <img
+          <Image
             key={idx}
             src={logo.src}
             alt={logo.alt}
             className="h-8 w-auto grayscale opacity-80 hover:opacity-100 transition"
-            loading="lazy"
+            width={100}
+            height={32}
             style={{ background: 'white', borderRadius: 6, padding: 2 }}
+            loading="lazy"
           />
         ))}
       </div>

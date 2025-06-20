@@ -51,12 +51,13 @@ function TrustBadges() {
           aria-label="View TradeCraft on Product Hunt"
           className="transition-transform hover:scale-105"
         >
-          <img
+          <Image
             src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=966567&theme=light&t=1748065742670"
             alt="TradeCraft - Trade with Confidence and Clarity | Product Hunt"
-            width="200"
-            height="44"
+            width={200}
+            height={44}
             style={{ width: 200, height: 44 }}
+            priority
           />
         </a>
         <a

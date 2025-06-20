@@ -98,13 +98,13 @@ export default function MarketSymmetryBlog() {
         <section className="mb-8">
           <h2 className="text-2xl font-bold mb-3 text-primary">The Deeper Meaning of Symmetry in Markets</h2>
           <p>
-            Symmetry in stock bases is more than just a visual pattern—it's a fundamental property found throughout nature, science, and even the way our minds process information. According to MacCormac (1998), symmetry can be rotational (like a snowflake) or reflective (like a butterfly's wings), and both types are found in the price action of stocks. But the most interesting market phenomena often arise at the edge—where symmetry gives way to slight asymmetry, just as in nature and technology.
+            Symmetry in stock bases is more than just a visual pattern—it&apos;s a fundamental property found throughout nature, science, and even the way our minds process information. According to MacCormac (1998), symmetry can be rotational (like a snowflake) or reflective (like a butterfly&apos;s wings), and both types are found in the price action of stocks. But the most interesting market phenomena often arise at the edge—where symmetry gives way to slight asymmetry, just as in nature and technology.
           </p>
           <p>
             In markets, this means that while we look for smooth, balanced bases, the best setups often have a touch of asymmetry—showing the creative tension between buyers and sellers. This mirrors the way creativity and new trends emerge in science and technology: at the interface between order and chaos, symmetry and asymmetry.
           </p>
           <p>
-            Recognizing these patterns is not just about technical analysis—it's about understanding how the mind converts shape into memory, and how fractal, self-similar structures repeat at every scale. By training yourself to spot both symmetry and the subtle break from it, you gain a deeper edge in trading and in interpreting the market's story.
+            Recognizing these patterns is not just about technical analysis—it&apos;s about understanding how the mind converts shape into memory, and how fractal, self-similar structures repeat at every scale. By training yourself to spot both symmetry and the subtle break from it, you gain a deeper edge in trading and in interpreting the market&apos;s story.
           </p>
         </section>
 

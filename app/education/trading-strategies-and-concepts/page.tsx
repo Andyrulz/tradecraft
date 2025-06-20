@@ -25,7 +25,7 @@ export default function TradingStrategies() {
             { label: 'Trading Strategies & Concepts' }
           ]} />
           <h1 className="text-3xl font-bold mb-6">Trading Strategies and Concepts</h1>
-          <p className="mb-4 text-lg">TradeCraft empowers traders with institutional-grade strategies, actionable analytics, and robust risk management. Below you'll find a detailed overview of the core trading strategies, setups, and concepts you can apply using TradeCraft's tools.</p>
+          <p className="mb-4 text-lg">TradeCraft empowers traders with institutional-grade strategies, actionable analytics, and robust risk management. Below you&apos;ll find a detailed overview of the core trading strategies, setups, and concepts you can apply using TradeCraft&apos;s tools.</p>
 
           <h2 className="text-2xl font-semibold mt-10 mb-3">Core Trade Setups</h2>
           <h3 className="text-xl font-semibold mt-8 mb-2">1. Bullish Breakout</h3>

@@ -44,7 +44,7 @@ export default function ContactPage() {
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-12 px-4">
         <div className="w-full max-w-lg bg-white rounded-xl shadow p-8">
           <h1 className="text-2xl font-bold mb-4 text-gray-800">Contact Me</h1>
-          <p className="mb-6 text-gray-600">Have a question, suggestion, or just want to say hi? Fill out the form below and I'll get back to you soon!</p>
+          <p className="mb-6 text-gray-600">Have a question, suggestion, or just want to say hi? Fill out the form below and I&apos;ll get back to you soon!</p>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>

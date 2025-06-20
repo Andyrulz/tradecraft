@@ -43,7 +43,7 @@ export default function CaseStudies() {
           <h2 className="text-2xl font-semibold mt-10 mb-3">📉 Case Study 2: Turning a Loss into a Learning Opportunity</h2>
           <p className="mb-4">
             Another user entered a fast-moving stock based on a momentum breakout. However, the move failed, resulting in a 1% capital loss. 
-            Because they used TradeCraft's trade planning module with strict risk controls, the downside was capped effectively. 
+            Because they used TradeCraft&apos;s trade planning module with strict risk controls, the downside was capped effectively. 
             Post-trade analysis revealed an overlooked earnings announcement that triggered the reversal.
           </p>
           <p className="mb-4">

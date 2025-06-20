@@ -2,11 +2,14 @@
   "name": "nextjs",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "refresh-market-movers-db": "dotenv -e .env.local -- tsx scripts/refresh-market-movers-db.ts",
+    "scrape-market-news": "dotenv -e .env.local -- tsx scripts/scrape-market-news.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -75,7 +78,8 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/node": "^22.15.3"
+    "@types/node": "^22.15.3",
+    "tsx": "^4.7.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.9",
