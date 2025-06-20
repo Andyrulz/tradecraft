@@ -15,10 +15,10 @@ export function Header({ setOverlayOpen }: { setOverlayOpen?: (open: boolean) =>
 	}, [mobileNavOpen, setOverlayOpen]);
 
 	return (
-		<header className="fixed top-0 left-0 right-0 z-50 bg-background border-b border-border shadow-sm">
+		<header className="hidden md:block fixed top-0 left-0 right-0 z-50 bg-background border-b border-border shadow-sm">
 			<div className="container mx-auto flex items-center justify-between h-16 px-4 sm:px-6">
-				<div className="flex items-center">
-					<Link href="/" className="flex items-center gap-2 group">
+				<div className="flex items-center" style={{ minWidth: '16rem' }}>
+					<Link href="/" className="flex items-center gap-2 group ml-2 md:ml-8">
 						<BarChart2 className="h-7 w-7 text-primary transition-transform group-hover:scale-110" />
 						<span className="font-extrabold text-xl text-primary tracking-tight">TradeCraft</span>
 					</Link>

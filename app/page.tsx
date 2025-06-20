@@ -51,13 +51,13 @@ function TrustBadges() {
           aria-label="View TradeCraft on Product Hunt"
           className="transition-transform hover:scale-105"
         >
-          <Image
+          <img
             src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=966567&theme=light&t=1748065742670"
             alt="TradeCraft - Trade with Confidence and Clarity | Product Hunt"
             width={200}
             height={44}
             style={{ width: 200, height: 44 }}
-            priority
+            loading="lazy"
           />
         </a>
         <a
@@ -81,12 +81,13 @@ function TrustBadges() {
           aria-label="View Gravatar Profile"
           className="transition-transform hover:scale-105"
         >
-          <Image
+          <img
             src="https://gravatar.com/avatar/da51a20b53c2e7e2e7e2e7e2e7e2e7e2?s=120"
             alt="Gravatar Profile"
             width={32}
             height={32}
             style={{ borderRadius: '50%' }}
+            loading="lazy"
           />
         </a>
         <a

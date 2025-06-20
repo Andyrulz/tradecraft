@@ -5,7 +5,6 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
-    unoptimized: true,
     domains: [
       'images.barrons.com',
       'static.foxbusiness.com',
