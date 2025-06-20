@@ -11,8 +11,8 @@ const PERIODS = [
 ];
 
 export default function MarketMoversPage() {
-  const [gainersPeriod, setGainersPeriod] = useState('day');
-  const [losersPeriod, setLosersPeriod] = useState('day');
+  const [gainersPeriod, setGainersPeriod] = useState<'day' | 'week' | 'month' | 'ytd'>('day');
+  const [losersPeriod, setLosersPeriod] = useState<'day' | 'week' | 'month' | 'ytd'>('day');
 
   return (
     <div className="max-w-7xl mx-auto px-2 sm:px-6 py-8">
@@ -27,7 +27,7 @@ export default function MarketMoversPage() {
                 <button
                   key={p.value}
                   className={`px-3 py-1 rounded font-medium text-xs border transition-colors ${gainersPeriod === p.value ? 'bg-blue-50 border-blue-500 text-blue-700' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
-                  onClick={() => setGainersPeriod(p.value)}
+                  onClick={() => setGainersPeriod(p.value as 'day' | 'week' | 'month' | 'ytd')}
                 >
                   {p.label}
                 </button>
@@ -45,7 +45,7 @@ export default function MarketMoversPage() {
                 <button
                   key={p.value}
                   className={`px-3 py-1 rounded font-medium text-xs border transition-colors ${losersPeriod === p.value ? 'bg-red-50 border-red-500 text-red-700' : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'}`}
-                  onClick={() => setLosersPeriod(p.value)}
+                  onClick={() => setLosersPeriod(p.value as 'day' | 'week' | 'month' | 'ytd')}
                 >
                   {p.label}
                 </button>
