@@ -1,0 +1,21 @@
+name: Market News Script Cron
+
+on:
+  schedule:
+    # Runs every 30 minutes
+    - cron: "*/30 * * * *"
+
+jobs:
+  run-market-news-script:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run market news script
+        run: |
+          npm ci
+          node scripts/scrape-market-news.ts
