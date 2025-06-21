@@ -113,14 +113,14 @@ export function Sidebar({ isCollapsed = false, setCollapsed, setOverlayOpen }: {
         {/* User info at the bottom */}
         <div className="flex flex-col items-start gap-2 mb-4 px-3">
           {session ? (
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full justify-center md:justify-start">
               {!collapsed && <span className="text-sm text-gray-700 font-semibold">{session.user?.name}</span>}
-              <Button size="sm" variant="outline" onClick={() => signOut()}>{!collapsed ? 'Sign out' : <User className="h-5 w-5" />}</Button>
+              <Button size="sm" variant="outline" className={collapsed ? 'w-10 h-10 p-0 flex items-center justify-center' : ''} onClick={() => signOut()}>{!collapsed ? 'Sign out' : <User className="h-5 w-5" />}</Button>
             </div>
           ) : (
-            <Button size="sm" variant="outline" onClick={() => signIn('google')}>{!collapsed ? 'Sign in with Google' : <User className="h-5 w-5" />}</Button>
+            <Button size="sm" variant="outline" className={collapsed ? 'w-10 h-10 p-0 flex items-center justify-center' : ''} onClick={() => signIn('google')}>{!collapsed ? 'Sign in with Google' : <User className="h-5 w-5" />}</Button>
           )}
-          <Link href="/contact" className="flex items-center gap-2 mt-2 px-0 py-2 rounded-md hover:bg-gray-100 transition-colors min-h-[40px]">
+          <Link href="/contact" className="flex items-center gap-2 mt-2 px-0 py-2 rounded-md hover:bg-gray-100 transition-colors min-h-[40px] w-full justify-center md:justify-start">
             <User className="h-5 w-5 text-gray-400" />
             {!collapsed && <span className="text-sm text-gray-700">Contact Me</span>}
           </Link>
