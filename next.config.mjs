@@ -50,6 +50,8 @@ const nextConfig = {
       'a57.foxnews.com',
       'responsive.fxempire.com',
       'nypost.com',
+      'image.cnbcfm.com',
+      'cdn.benzinga.com',
     ],
   },
   webpack: (config, { isServer }) => {
