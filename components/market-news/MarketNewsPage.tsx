@@ -25,6 +25,10 @@ export default function MarketNewsPage() {
       try {
         const res = await fetch('/api/market-news');
         const json = await res.json();
+        // Debug: log the first 5 news items
+        if (Array.isArray(json)) {
+          console.log('First 5 news items:', json.slice(0, 5).map(item => ({ title: item.title, published_at: item.published_at })));
+        }
         setNews(Array.isArray(json) ? json : []);
       } catch (e) {
         setError('Failed to load news.');

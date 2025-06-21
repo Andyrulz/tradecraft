@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   const { data, error } = await supabase
     .from('market_news')
@@ -8,8 +10,10 @@ export async function GET() {
     .order('published_at', { ascending: false })
     .limit(100);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  // Cache for 30 minutes (1800 seconds)
+  // Debug: log the first 5 news items to server logs
+  console.log('First 5 news:', data?.slice(0, 5));
+  // Disable cache for debugging
   return NextResponse.json(data, {
-    headers: { 'Cache-Control': 'public, max-age=1800' }
+    headers: { 'Cache-Control': 'no-store' }
   });
 }

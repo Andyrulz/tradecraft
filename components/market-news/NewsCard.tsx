@@ -1,4 +1,5 @@
 import React from 'react';
+import Image from 'next/image';
 
 function formatTimeAgo(dateString: string) {
   const date = new Date(dateString);
@@ -29,7 +30,7 @@ export default function NewsCard({ item, featured = false }: { item: any; featur
     return (
       <div className="rounded-xl bg-white shadow border border-gray-100 mb-8 p-0 w-full">
         {item.thumbnail_url && (
-          <img
+          <Image
             src={item.thumbnail_url}
             alt={item.title}
             className="w-full h-48 sm:h-72 object-cover rounded-t-xl"
@@ -85,7 +86,7 @@ export default function NewsCard({ item, featured = false }: { item: any; featur
     <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6 bg-white rounded-xl shadow border border-gray-100 overflow-hidden mb-6 p-4 hover:shadow-md transition w-full">
       {item.thumbnail_url && (
         <div className="relative w-full sm:w-40 h-36 sm:h-28 flex-shrink-0 rounded-lg overflow-hidden mb-3 sm:mb-0">
-          <img
+          <Image
             src={item.thumbnail_url}
             alt={item.title}
             className="object-cover"

@@ -45,13 +45,13 @@ function TrustBadges() {
     <section className="w-full bg-background border-b border-border py-6">
       <div className="container mx-auto px-5 max-w-4xl flex flex-wrap items-center justify-center gap-6">
         <a
-          href="https://www.producthunt.com/posts/tradecraft-2?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-tradecraft-2"
+          href="https://producthunt.com/posts/tradecraft"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="View TradeCraft on Product Hunt"
           className="transition-transform hover:scale-105"
         >
-          <img
+          <Image
             src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=966567&theme=light&t=1748065742670"
             alt="TradeCraft - Trade with Confidence and Clarity | Product Hunt"
             width={200}
@@ -75,22 +75,6 @@ function TrustBadges() {
           />
         </a>
         <a
-          href="https://gravatar.com/honestlycolorfulda51a20b53"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="View Gravatar Profile"
-          className="transition-transform hover:scale-105"
-        >
-          <img
-            src="https://gravatar.com/avatar/da51a20b53c2e7e2e7e2e7e2e7e2e7e2?s=120"
-            alt="Gravatar Profile"
-            width={32}
-            height={32}
-            style={{ borderRadius: '50%' }}
-            loading="lazy"
-          />
-        </a>
-        <a
           href="https://www.linkedin.com/company/trade-craft-pro"
           target="_blank"
           rel="noopener noreferrer"
@@ -99,22 +83,8 @@ function TrustBadges() {
         >
           <Image
             src="/badges/linkedin-badge.png"
-            alt="LinkedIn Company Page"
+            alt="View us on LinkedIn"
             width={100}
-            height={32}
-          />
-        </a>
-        <a
-          href="https://twelve.tools"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Featured on Twelve Tools"
-          className="transition-transform hover:scale-105"
-        >
-          <Image
-            src="https://twelve.tools/badge1-white.svg"
-            alt="Featured on Twelve Tools"
-            width={120}
             height={32}
           />
         </a>

@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { getStockData } from '@/lib/api';
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import authOptions from '@/app/api/auth/[...nextauth]/authOptions';
 
 // Enhanced screening logic for best momentum stocks with long bases and tight setups
 function isMomentumCandidate(stock: any): { pass: boolean; reasons: string[]; score: number; paramScores: any } {

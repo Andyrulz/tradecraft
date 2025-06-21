@@ -62,7 +62,7 @@ export function Sidebar({ isCollapsed = false, setCollapsed, setOverlayOpen }: {
 	return (
 		<>
 			{/* Desktop sidebar */}
-			<aside className={`hidden md:flex flex-col ${collapsed ? 'w-16' : 'w-64'} fixed left-0 top-14 bg-white border-r border-gray-200 z-40 h-[calc(100vh-3.5rem)] px-1 md:px-2 justify-between items-stretch shadow transition-all duration-300`}>
+			<aside className={`hidden md:flex flex-col ${collapsed ? 'w-16' : 'w-64'} fixed left-0 top-14 bg-white border-r border-gray-200 z-40 h-[calc(100vh-3.5rem)] px-1 md:px-2 justify-between items-stretch shadow transition-all duration-300 overflow-y-auto`}>
 				<div>
 					<div className="flex items-center justify-between px-3 pt-4 pb-1">
             {!collapsed && <div className="text-xs font-semibold text-gray-400 uppercase tracking-wider">General</div>}
@@ -115,10 +115,10 @@ export function Sidebar({ isCollapsed = false, setCollapsed, setOverlayOpen }: {
           {session ? (
             <div className="flex items-center gap-2">
               {!collapsed && <span className="text-sm text-gray-700 font-semibold">{session.user?.name}</span>}
-              <Button size="sm" variant="outline" onClick={() => signOut()}>Sign out</Button>
+              <Button size="sm" variant="outline" onClick={() => signOut()}>{!collapsed ? 'Sign out' : <User className="h-5 w-5" />}</Button>
             </div>
           ) : (
-            <Button size="sm" variant="outline" onClick={() => signIn('google')}>Sign in with Google</Button>
+            <Button size="sm" variant="outline" onClick={() => signIn('google')}>{!collapsed ? 'Sign in with Google' : <User className="h-5 w-5" />}</Button>
           )}
           <Link href="/contact" className="flex items-center gap-2 mt-2 px-0 py-2 rounded-md hover:bg-gray-100 transition-colors min-h-[40px]">
             <User className="h-5 w-5 text-gray-400" />
@@ -140,7 +140,7 @@ export function Sidebar({ isCollapsed = false, setCollapsed, setOverlayOpen }: {
 					<div className="fixed inset-0 z-50 bg-black/40" onClick={() => setDrawerOpen(false)} />
 				)}
 				<div
-					className={`fixed top-0 left-0 h-full w-4/5 max-w-xs bg-white z-[60] shadow-lg transition-transform duration-300 ${drawerOpen ? 'translate-x-0' : '-translate-x-full'}`}
+					className={`fixed top-0 left-0 h-full w-4/5 max-w-xs bg-white z-[60] shadow-lg transition-transform duration-300 ${drawerOpen ? 'translate-x-0' : '-translate-x-full'} overflow-y-auto`}
 					style={{ willChange: 'transform' }}
 				>
 					<div className="flex justify-end p-4">

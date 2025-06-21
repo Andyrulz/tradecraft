@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useCallback } from 'react';
 import { useSession, signIn } from 'next-auth/react';
@@ -12,7 +13,9 @@ import { TradePlanHeader } from '@/components/trade-plan/TradePlanHeader';
 import Head from 'next/head';
 import { createClient } from '@supabase/supabase-js';
 
-export default function TradePlanPage() {
+export const dynamic = "force-dynamic";
+
+function TradePlanPage() {
   const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -1164,5 +1167,13 @@ export default function TradePlanPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function TradePlanPageWrapper() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <TradePlanPage />
+    </Suspense>
   );
 }
