@@ -21,19 +21,6 @@ function parseTimeAgo(str: string) {
   return now;
 }
 
-// Helper to fetch Open Graph image from a news article URL
-async function fetchOgImage(url: string): Promise<string | null> {
-  try {
-    const { data: html } = await axios.get(url, { timeout: 7000 });
-    const $ = cheerio.load(html);
-    const ogImage = $("meta[property='og:image']").attr('content');
-    if (ogImage && ogImage.startsWith('http')) return ogImage;
-  } catch (e) {
-    // Ignore errors, fallback to default
-  }
-  return null;
-}
-
 // Scrape news from stockanalysis.com/news/
 async function scrapeAndStoreMarketNews() {
   const { data: html } = await axios.get('https://stockanalysis.com/news/');
@@ -116,21 +103,6 @@ async function scrapeAndStoreMarketNews() {
       newsItems.push(item);
     }
   });
-
-  // Fetch Open Graph images for each news item (in parallel, but limit concurrency)
-  const concurrency = 5;
-  let i = 0;
-  async function processBatch(batch: any[]) {
-    await Promise.all(batch.map(async (item) => {
-      const ogImage = await fetchOgImage(item.url);
-      if (ogImage) item.thumbnail_url = ogImage;
-      item.score = scoreNews(item);
-    }));
-  }
-  while (i < newsItems.length) {
-    await processBatch(newsItems.slice(i, i + concurrency));
-    i += concurrency;
-  }
 
   let upserted = 0;
   for (const item of newsItems) {
