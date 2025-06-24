@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import MarketNewsPageAutoAds from '@/components/market-news/MarketNewsPageAutoAds';
+import MarketNewsPage from '@/components/market-news/MarketNewsPage';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -25,5 +25,5 @@ export const metadata: Metadata = generateSEOMetadata({
 });
 
 export default function Page() {
-  return <MarketNewsPageAutoAds />;
+  return <MarketNewsPage />;
 }

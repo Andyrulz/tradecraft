@@ -5,6 +5,8 @@ import NewsCard from './NewsCard';
 import NewsSidebar from './NewsSidebar';
 import { HybridAdStrategy, ManualAd, StickyBannerAd, InFeedAd, MultiplexAd } from '@/components/ui/HybridAds';
 import { AdAnalytics } from '@/components/ui/AdAnalytics';
+import { ContentSection, NewsArticleWrapper } from '@/components/ui/AdBreakHelper';
+import { InFeedWorkingAd, BannerWorkingAd, LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
 
 interface NewsItem {
   title: string;
@@ -129,20 +131,36 @@ export default function MarketNewsPage() {
   // Only calculate scores to determine which articles get "featured" styling
   const restWithScore = rest.map(item => ({ ...item, _score: scoreNews(item) }));
   // Note: restWithScore maintains the original API order (newest first)  // Show every 5th article as featured - primarily position-based, minimal score-based
-  // Balanced ad frequency: every 6 articles for good UX while maintaining revenue
+  // More aggressive ad frequency: every 3 articles for better revenue
   const newsCards = restWithScore.map((item, i) => {
     // Very conservative: Mainly rely on position (every 5th), only feature score-based for truly exceptional content
     const isFeatured = (i > 0 && i % 5 === 0);
-    // Reduced ad frequency: every 6 articles, limited to first 18 articles for better UX
-    const showAdAfter = (i + 1) % 6 === 0 && i < 18;
+    // More aggressive ad frequency: every 3 articles, extended to first 30 articles
+    const showAdAfter = (i + 1) % 3 === 0 && i < 30;
     
-    // Add section breaks for Google Auto Ads placement opportunities
-    const isNewSection = i > 0 && i % 4 === 0;
-    
-    return (
+    // Add section breaks every 2 articles for Google Auto Ads placement opportunities
+    const isNewSection = i > 0 && i % 2 === 0;
+    // Add major section breaks every 6 articles
+    const isMajorSection = i > 0 && i % 6 === 0;
+      return (
       <React.Fragment key={item.url + i}>
-        {/* Section break for additional ad placement opportunities */}
-        {isNewSection && (
+        {/* Major section break for enhanced ad placement opportunities */}
+        {isMajorSection && (
+          <div className="my-12 py-6 border-t-2 border-gray-200">
+            <div className="text-center">
+              <div className="inline-block px-4 py-2 bg-gradient-to-r from-blue-50 to-green-50 text-sm text-blue-700 rounded-lg border border-blue-200">
+                📊 Market Analysis Continues
+              </div>
+            </div>
+            {/* Force manual ad in major section breaks */}
+            <div className="mt-6">
+              <InFeedAd className="my-6" />
+            </div>
+          </div>
+        )}
+        
+        {/* Minor section break for additional ad placement opportunities */}
+        {isNewSection && !isMajorSection && (
           <div className="my-8 py-4 border-t border-gray-100">
             <div className="text-center">
               <div className="inline-block px-3 py-1 bg-blue-50 text-xs text-blue-600 rounded-full">
@@ -151,16 +169,26 @@ export default function MarketNewsPage() {
             </div>
           </div>
         )}
-        
-        {/* News article with proper spacing */}
-        <div className="mb-4">
+          {/* News article with proper spacing for ad recognition */}
+        <NewsArticleWrapper 
+          index={i} 
+          isLast={i === restWithScore.length - 1}
+        >
           <NewsCard item={item} featured={isFeatured} />
-        </div>
-        
-        {/* Manual in-feed ads at strategic positions */}
+        </NewsArticleWrapper>
+          {/* Manual in-feed ads at strategic positions - MORE FREQUENT */}
         {showAdAfter && (
-          <div className="my-8">
-            <InFeedAd className="my-6" />
+          <div className="my-10 py-6 bg-gray-50 rounded-lg border border-gray-200">
+            <div className="text-center mb-4">
+              <span className="text-xs text-gray-500 uppercase tracking-wide">Advertisement</span>
+            </div>
+            <InFeedWorkingAd className="my-0" />
+            {/* Add a second ad for high-value positions using working ad unit */}
+            {(i + 1) % 9 === 0 && (
+              <div className="mt-6">
+                <BannerWorkingAd className="w-full" />
+              </div>
+            )}
           </div>
         )}
       </React.Fragment>
@@ -175,13 +203,13 @@ export default function MarketNewsPage() {
               Stay informed with the latest market-moving news and analysis.
             </p>
           </div>
-        </section>{/* Top Banner Ad - High Revenue */}
+        </section>        {/* Top Banner Ad - High Revenue */}
         <ManualAd 
-          slot="2957844942" 
+          adKey="TOP_BANNER"
           format="auto"
           className="flex justify-center mb-8"
           style={{ display: 'block', minHeight: 120 }}
-        />        {/* Mobile-first layout: Enhanced structure for better ad placement */}
+        />{/* Mobile-first layout: Enhanced structure for better ad placement */}
         <div className="lg:hidden">
           
           {/* Mobile: Introduction section */}
@@ -200,16 +228,18 @@ export default function MarketNewsPage() {
             <div className="bg-white rounded-lg border border-gray-200 shadow-sm">
               <NewsSidebar news={sidebarNews} />
             </div>
-          </section>
+          </section>          {/* Mobile: Strategic ad placement - FIRST AD */}
+          <InFeedWorkingAd className="my-8" />
           
-          {/* Mobile: Strategic ad placement */}
-          <InFeedAd className="my-8" />
-            {/* Mobile: Featured article section */}
+          {/* Mobile: Featured article section */}
           <section className="mb-10">
             <div className="overflow-hidden">
               <NewsCard item={featured} featured />
             </div>
           </section>
+          
+          {/* Mobile: Strategic ad placement - SECOND AD */}
+          <LargeWorkingAd className="my-10" />
           
           {/* Mobile: Additional content section for ad placement */}
           <section className="mb-10">
@@ -220,18 +250,13 @@ export default function MarketNewsPage() {
                 Our curated selection focuses on events that directly impact stock prices and market sentiment.
               </p>
             </div>
-          </section>
-          
-          {/* Mobile: Latest news section with enhanced spacing */}
-          <section className="mb-10">
-            <h2 className="text-xl font-semibold mb-6 text-gray-800">Latest Market News</h2>
+          </section>          {/* Mobile: Latest news section with enhanced spacing */}
+          <ContentSection title="Latest Market News" className="mb-10">
             <div className="space-y-4">
               {newsCards}
             </div>
-          </section>
-
-          {/* Mobile: Strategic ad between content sections */}
-          <InFeedAd className="my-8" />
+          </ContentSection>          {/* Mobile: Strategic ad between content sections - THIRD AD */}
+          <LargeWorkingAd className="my-12" />
 
           {/* Mobile: Market insights section */}
           <section className="mb-10">
@@ -285,23 +310,37 @@ export default function MarketNewsPage() {
               <h2 className="text-xl font-semibold mb-6 text-gray-800">Breaking News</h2>
               <NewsCard item={featured} featured />
             </section>
-            
-            {/* Strategic ad after featured content */}
+              {/* Strategic ad after featured content */}
             <div className="mb-10">
               <ManualAd 
-                slot="1234567897" 
+                adKey="IN_FEED_SECONDARY"
                 format="auto"
                 className="flex justify-center"
                 style={{ display: 'block', minHeight: 100 }}
               />
             </div>
-            
-            {/* Latest news section with proper content structure */}
+              {/* Latest news section with proper content structure */}
             <section className="mb-10">
               <h2 className="text-xl font-semibold mb-6 text-gray-800">Latest Market News</h2>
               <div className="space-y-3">
                 {newsCards}
               </div>
+            </section>
+
+            {/* Mid-content ad section for additional revenue */}
+            <section className="my-12">
+              <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-lg p-6 mb-6">
+                <h3 className="text-lg font-semibold mb-2">Trading Insights</h3>
+                <p className="text-gray-600 text-sm">
+                  Discover advanced trading tools and market analysis features.
+                </p>
+              </div>
+              <ManualAd 
+                adKey="IN_FEED_PRIMARY"
+                format="auto"
+                className="flex justify-center"
+                style={{ display: 'block', minHeight: 150 }}
+              />
             </section>
 
             {/* Bottom section for additional ad placement */}
@@ -313,7 +352,7 @@ export default function MarketNewsPage() {
                 </p>
               </div>
               <ManualAd 
-                slot="1234567898" 
+                adKey="BOTTOM_BANNER"
                 format="auto"
                 className="flex justify-center"
                 style={{ display: 'block', minHeight: 120 }}
@@ -327,11 +366,10 @@ export default function MarketNewsPage() {
               <h2 className="text-lg font-semibold mb-4 text-gray-800">Market Highlights</h2>
               <NewsSidebar news={sidebarNews} />
             </section>
-            
-            {/* Sidebar ad section */}
+              {/* Sidebar ad section */}
             <section className="mb-8">
               <ManualAd 
-                slot="1234567899" 
+                adKey="SIDEBAR_PRIMARY"
                 format="auto"
                 className="w-full"
                 style={{ display: 'block', minHeight: 250 }}

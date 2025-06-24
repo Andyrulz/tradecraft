@@ -11,29 +11,29 @@ export const AD_CONFIG = {
   
   // Ad slot configurations for different placements
   SLOTS: {
-    // High-performance banner ads
+    // High-performance banner ads (Use your existing real ad unit)
     TOP_BANNER: '2957844942',
-    BOTTOM_BANNER: '1234567896',
+    BOTTOM_BANNER: '2957844942', // Reuse existing ad unit temporarily
     
-    // In-content ads (highest revenue potential)
-    IN_FEED_PRIMARY: '1234567893',
-    IN_FEED_SECONDARY: '1234567897',
+    // In-content ads (highest revenue potential) - Auto format for best performance
+    IN_FEED_PRIMARY: '2957844942', // Reuse until you create new ad units
+    IN_FEED_SECONDARY: '2957844942',
     
     // Sidebar ads
-    SIDEBAR_PRIMARY: '1234567899',
-    SIDEBAR_SECONDARY: '1234567900',
+    SIDEBAR_PRIMARY: '2957844942',
+    SIDEBAR_SECONDARY: '2957844942',
     
     // Mobile-specific ads
-    MOBILE_STICKY: '1234567891',
-    MOBILE_NATIVE: '1234567894',
+    MOBILE_STICKY: '2957844942',
+    MOBILE_NATIVE: '2957844942',
     
-    // Desktop-specific ads
-    LARGE_RECTANGLE: '1234567892',
-    LEADERBOARD: '1234567895',
+    // Desktop-specific ads  
+    LARGE_RECTANGLE: '2957844942',
+    LEADERBOARD: '2957844942',
     
     // Multiplex/native ads
-    MULTIPLEX: '1234567894',
-    NATIVE_FEED: '1234567898'
+    MULTIPLEX: '2957844942',
+    NATIVE_FEED: '2957844942'
   },
   
   // Revenue optimization settings
