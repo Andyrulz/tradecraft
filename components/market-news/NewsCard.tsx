@@ -7,6 +7,7 @@ function formatTimeAgo(dateString: string) {
   const date = new Date(dateString);
   const now = new Date();
   const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
+  
   if (diff < 60) return `${diff} second${diff === 1 ? '' : 's'} ago`;
   if (diff < 3600) {
     const mins = Math.floor(diff / 60);
@@ -16,7 +17,21 @@ function formatTimeAgo(dateString: string) {
     const hrs = Math.floor(diff / 3600);
     return `${hrs} hour${hrs === 1 ? '' : 's'} ago`;
   }
+  if (diff < 86400 * 2) {
+    return 'Yesterday';
+  }
+  if (diff < 86400 * 3) {
+    return '2 days ago';
+  }
   return date.toLocaleDateString();
+}
+
+// Helper to check if news is very recent (within last hour)
+function isBreakingNews(dateString: string): boolean {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diff = Math.floor((now.getTime() - date.getTime()) / 1000);
+  return diff < 3600; // Less than 1 hour
 }
 
 export default function NewsCard({ item, featured = false }: { item: any; featured?: boolean }) {
@@ -29,15 +44,14 @@ export default function NewsCard({ item, featured = false }: { item: any; featur
   }
 
   const [imgSrc, setImgSrc] = useState(item.thumbnail_url || DEFAULT_IMAGE);
-
   if (featured) {
     return (
-      <div className="rounded-xl bg-white shadow border border-gray-100 mb-8 p-0 w-full">
+      <div className="rounded-xl bg-white shadow border border-gray-100 mb-6 lg:mb-8 p-0 w-full">
         {item.thumbnail_url && (
           <Image
             src={imgSrc}
             alt={item.title}
-            className="w-full h-48 sm:h-72 object-cover rounded-t-xl"
+            className="w-full h-40 sm:h-48 lg:h-72 object-cover rounded-t-xl"
             width={800}
             height={288}
             style={{ objectFit: 'cover', borderTopLeftRadius: '0.75rem', borderTopRightRadius: '0.75rem' }}
@@ -45,14 +59,21 @@ export default function NewsCard({ item, featured = false }: { item: any; featur
             onError={() => setImgSrc(DEFAULT_IMAGE)}
           />
         )}
-        <div className="p-4 sm:p-6">
-          <div className="text-gray-500 text-xs mb-2">
-            {item.source && <>{item.source} &middot; </>}{formatTimeAgo(item.published_at)}
+        <div className="p-3 sm:p-4 lg:p-6">
+          <div className="flex items-center gap-2 text-xs mb-2">
+            {isBreakingNews(item.published_at) && (
+              <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800 animate-pulse">
+                BREAKING
+              </span>
+            )}
+            <span className="text-gray-500">
+              {item.source && <>{item.source} &middot; </>}{formatTimeAgo(item.published_at)}
+            </span>
           </div>
-          <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-xl sm:text-2xl font-bold text-blue-800 hover:underline block mb-2">
+          <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-lg sm:text-xl lg:text-2xl font-bold text-blue-800 hover:underline block mb-2 leading-tight">
             {item.title}
           </a>
-          <div className="text-gray-700 text-base mb-2 line-clamp-3">{item.summary}</div>
+          <div className="text-gray-700 text-sm sm:text-base mb-2 line-clamp-3">{item.summary}</div>
           {item.video_url ? (
             <div className="mt-4 rounded-lg overflow-hidden">
               <iframe
@@ -85,11 +106,10 @@ export default function NewsCard({ item, featured = false }: { item: any; featur
       </div>
     );
   }
-
   // Clean, single-line card for non-featured news
   return (
-    <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-6 bg-white rounded-xl shadow border border-gray-100 overflow-hidden mb-6 p-4 hover:shadow-md transition w-full">
-      <div className="relative w-full sm:w-40 h-36 sm:h-28 flex-shrink-0 rounded-lg overflow-hidden mb-3 sm:mb-0">
+    <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4 lg:gap-6 bg-white rounded-xl shadow border border-gray-100 overflow-hidden mb-4 sm:mb-6 p-3 sm:p-4 hover:shadow-md transition w-full">
+      <div className="relative w-full sm:w-32 lg:w-40 h-32 sm:h-24 lg:h-28 flex-shrink-0 rounded-lg overflow-hidden mb-2 sm:mb-0">
         <Image
           src={imgSrc}
           alt={item.title}
@@ -102,13 +122,20 @@ export default function NewsCard({ item, featured = false }: { item: any; featur
         />
       </div>
       <div className="flex flex-col flex-1 min-w-0">
-        <div className="text-gray-500 text-xs mb-1">
-          {item.source && <>{item.source} &middot; </>}{formatTimeAgo(item.published_at)}
+        <div className="flex items-center gap-2 text-xs mb-1">
+          {isBreakingNews(item.published_at) && (
+            <span className="inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">
+              BREAKING
+            </span>
+          )}
+          <span className="text-gray-500">
+            {item.source && <>{item.source} &middot; </>}{formatTimeAgo(item.published_at)}
+          </span>
         </div>
-        <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-base sm:text-lg font-semibold text-blue-900 hover:underline block mb-1">
+        <a href={item.url} target="_blank" rel="noopener noreferrer" className="text-sm sm:text-base lg:text-lg font-semibold text-blue-900 hover:underline block mb-1 leading-tight">
           {item.title}
         </a>
-        <div className="text-gray-700 text-sm mt-1 line-clamp-2">{item.summary}</div>
+        <div className="text-gray-700 text-xs sm:text-sm mt-1 line-clamp-2">{item.summary}</div>
       </div>
     </div>
   );

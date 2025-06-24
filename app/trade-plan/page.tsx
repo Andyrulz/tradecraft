@@ -7,6 +7,7 @@ import { useSession, signIn } from 'next-auth/react';
 import { TradingRecommendation } from '@/components/trade-plan/TradingRecommendation';
 import { TechnicalAnalysis } from '@/components/trade-plan/TechnicalAnalysis';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Share2 } from 'lucide-react';
 import { AdSenseAd } from '@/components/ui/AdSenseAd';
 import { TradePlanHeader } from '@/components/trade-plan/TradePlanHeader';
@@ -32,6 +33,7 @@ function TradePlanPage() {
   const [quotaExceeded, setQuotaExceeded] = useState(false);
   const [usageInfo, setUsageInfo] = useState<{ request_count: number; total_requests: number; date: string } | null>(null);
   const [userPlan, setUserPlan] = useState<'free' | 'pro' | 'premium'>('free');
+  const [showSignIn, setShowSignIn] = useState(false);
 
   // Handler for timeframe toggle
   const handleHorizonChange = (newHorizon: string) => {
@@ -899,7 +901,10 @@ function TradePlanPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        if (data.quotaExceeded) {
+        if (res.status === 401) {
+          setShowSignIn(true);
+          setError('Please sign in to generate trade plans.');
+        } else if (data.quotaExceeded) {
           setQuotaExceeded(true);
           setUsageInfo({ request_count: data.request_count, total_requests: data.total_requests, date: data.date });
           setError(data.error || 'You have used up your daily quota. Please come back tomorrow.');
@@ -988,6 +993,24 @@ function TradePlanPage() {
     }
     fetchPlan();
   }, [session]);
+
+  // Check authentication status and show sign-in modal if needed
+  useEffect(() => {
+    if (status === 'loading') return; // Wait for session to load
+    if (status === 'unauthenticated') {
+      setShowSignIn(true);
+      setLoading(false);
+    }
+  }, [status]);
+
+  // Close sign-in modal when user becomes authenticated
+  useEffect(() => {
+    if (session && showSignIn) {
+      setShowSignIn(false);
+      // Automatically start trade plan generation after successful sign-in
+      fetchTradePlan(symbol, horizon);
+    }
+  }, [session, showSignIn, symbol, horizon, fetchTradePlan]);
 
   if (quotaExceeded) {
     // Parse upgrade info from error or API fields
@@ -1094,9 +1117,15 @@ function TradePlanPage() {
           <p className="mb-6 text-muted-foreground text-center max-w-md">
             {error}
           </p>
-          <Button onClick={() => fetchTradePlan(symbol, horizon)} className="w-full max-w-xs">
-            Retry
-          </Button>
+          {showSignIn ? (
+            <Button onClick={() => signIn('google')} className="w-full max-w-xs bg-sky-600 hover:bg-sky-700">
+              Sign In with Google
+            </Button>
+          ) : (
+            <Button onClick={() => fetchTradePlan(symbol, horizon)} className="w-full max-w-xs">
+              Retry
+            </Button>
+          )}
         </div>
       </main>
     );
@@ -1138,12 +1167,17 @@ function TradePlanPage() {
             )}
           </div>
         )}
-        <div className="mt-8">
-          <TradingRecommendation tradePlan={tradePlan} onTimeframeChange={handleHorizonChange} />
-        </div>
-        <div className="mt-8">
-          <TechnicalAnalysis tradePlan={tradePlan} onHorizonChange={handleHorizonChange} />
-        </div>
+        {/* Only render trade plan components if tradePlan exists */}
+        {tradePlan && (
+          <>
+            <div className="mt-8">
+              <TradingRecommendation tradePlan={tradePlan} onTimeframeChange={handleHorizonChange} />
+            </div>
+            <div className="mt-8">
+              <TechnicalAnalysis tradePlan={tradePlan} onHorizonChange={handleHorizonChange} />
+            </div>
+          </>
+        )}
         <div className="mt-8">
           <Button
             onClick={() => {
@@ -1166,6 +1200,38 @@ function TradePlanPage() {
           </p>
         </div>
       </div>
+      
+      {/* Sign In modal for unauthorized access */}
+      <Dialog open={showSignIn} onOpenChange={setShowSignIn}>
+        <DialogContent>
+          <div className="text-center p-4">
+            <h2 className="text-2xl font-bold mb-2 text-sky-800">Welcome to TradeCraft</h2>
+            <p className="mb-4 text-gray-700 text-lg">
+              Sign in with Google to generate professional trade plans and access TradeCraft&apos;s powerful analysis tools.
+            </p>
+            <div className="mb-4">
+              <div className="flex items-center gap-2 text-green-700 text-sm justify-center mb-2">
+                <span className="inline-block w-2 h-2 rounded-full bg-green-500" />
+                10,000+ trade plans generated
+              </div>
+              <div className="flex items-center gap-2 text-blue-700 text-sm justify-center">
+                <span className="inline-block w-2 h-2 rounded-full bg-blue-500" />
+                Professional risk management & analysis
+              </div>
+            </div>
+            <Button
+              size="lg"
+              className="bg-sky-600 hover:bg-sky-700 text-white font-bold text-lg px-8 py-3 rounded-xl shadow-lg"
+              onClick={() => signIn('google')}
+            >
+              Sign In with Google
+            </Button>
+            <p className="text-xs text-gray-500 mt-4">
+              Free to start • No credit card required
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }

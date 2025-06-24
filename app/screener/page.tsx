@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import Head from 'next/head';
-import { useSession } from 'next-auth/react';
+import { useSession, signIn } from 'next-auth/react';
 
 function ScreenerRow({ stock }: { stock: any }) {
   return (
@@ -224,14 +224,14 @@ export default function ScreenerPage() {
             <div className="text-center p-4">
               <h2 className="text-2xl font-bold mb-2 text-sky-800">Sign In Required</h2>
               <p className="mb-4 text-gray-700 text-lg">
-                Please sign in to access the Momentum Screener and discover today&apos;s top actionable stocks.
+                Please sign in with Google to access the Momentum Screener and discover today&apos;s top actionable stocks.
               </p>
               <Button
                 size="lg"
                 className="bg-sky-600 hover:bg-sky-700 text-white font-bold text-lg px-8 py-3 rounded-xl shadow-lg"
-                onClick={() => router.push('/auth/signin')}
+                onClick={() => signIn('google')}
               >
-                Sign In
+                Sign In with Google
               </Button>
             </div>
           </DialogContent>

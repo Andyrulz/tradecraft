@@ -1,11 +1,32 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import Head from 'next/head';
+import { Metadata } from 'next';
+import { generateMetadata as generateSEOMetadata } from '@/lib/seo';
 
-export const metadata = {
-  title: 'TradeCraft Blog – Trading Plan, Stock Screeners, and Risk Management Guides',
-  description: 'Explore TradeCraft blog articles on trade plan generation, entry/exit tools, momentum and small cap screeners, and risk management. Learn how to use TradeCraft for smarter trading.'
-};
+export const metadata: Metadata = generateSEOMetadata({
+  title: 'Trading Education Blog - Stock Market Analysis & Trading Strategies | TradeCraft Pro',
+  description: 'Learn advanced trading strategies, stock analysis techniques, and market insights. Expert guides on trade plan generation, risk management, momentum trading, and technical analysis.',
+  keywords: [
+    'trading blog',
+    'stock market education',
+    'trading strategies',
+    'technical analysis',
+    'momentum trading',
+    'swing trading',
+    'risk management',
+    'trade plans',
+    'stock analysis',
+    'market analysis',
+    'trading education',
+    'investment strategies',
+    'trading psychology',
+    'market trends',
+    'stock market guide'
+  ],
+  canonicalUrl: 'https://www.tradingsetup.pro/blog',
+  ogImage: 'https://www.tradingsetup.pro/og-blog.jpg',
+  ogType: 'website'
+});
 
 const blogPosts = [
   {
@@ -83,28 +104,23 @@ const blogPosts = [
 
 export default function BlogIndexPage() {
   return (
-    <>
-      <Head>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7507424386197703" crossOrigin="anonymous"></script>
-      </Head>
-      <main className="max-w-6xl mx-auto px-4 py-8 bg-background">
-        <div className="mb-10 text-center">
-          <span className="inline-block bg-primary/10 text-primary font-semibold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-3">Blog</span>
-          <h1 className="text-4xl md:text-5xl font-extrabold mb-3 text-primary tracking-tight">TradeCraft Blog</h1>
-          <p className="text-lg text-muted-foreground mb-0 max-w-2xl mx-auto">Explore our in-depth guides on trading plans, stock screeners, and risk management. Learn how to use TradeCraft to improve your trading results.</p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-          {blogPosts.map(post => (
-            <Link key={post.href} href={post.href} className="group block border border-border rounded-2xl shadow-sm hover:shadow-lg transition bg-background p-4 sm:p-6 h-full w-full min-h-[320px]">
-              {post.image && (
-                <Image src={post.image} alt={post.title} width={500} height={280} className="rounded-lg object-cover w-full h-36 sm:h-40 mb-4" />
-              )}
-              <h2 className="text-lg sm:text-xl font-semibold mb-2 text-primary group-hover:underline group-hover:text-primary/80 transition-colors">{post.title}</h2>
-              <p className="text-sm sm:text-base text-muted-foreground mb-0">{post.description}</p>
-            </Link>
-          ))}
-        </div>
-      </main>
-    </>
+    <main className="max-w-6xl mx-auto px-4 py-8 bg-background">
+      <div className="mb-10 text-center">
+        <span className="inline-block bg-primary/10 text-primary font-semibold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-3">Blog</span>
+        <h1 className="text-4xl md:text-5xl font-extrabold mb-3 text-primary tracking-tight">TradeCraft Blog</h1>
+        <p className="text-lg text-muted-foreground mb-0 max-w-2xl mx-auto">Explore our in-depth guides on trading plans, stock screeners, and risk management. Learn how to use TradeCraft to improve your trading results.</p>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+        {blogPosts.map(post => (
+          <Link key={post.href} href={post.href} className="group block border border-border rounded-2xl shadow-sm hover:shadow-lg transition bg-background p-4 sm:p-6 h-full w-full min-h-[320px]">
+            {post.image && (
+              <Image src={post.image} alt={post.title} width={500} height={280} className="rounded-lg object-cover w-full h-36 sm:h-40 mb-4" />
+            )}
+            <h2 className="text-lg sm:text-xl font-semibold mb-2 text-primary group-hover:underline group-hover:text-primary/80 transition-colors">{post.title}</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-0">{post.description}</p>
+          </Link>
+        ))}
+      </div>
+    </main>
   );
 }

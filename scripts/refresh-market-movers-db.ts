@@ -62,8 +62,18 @@ async function main() {
     }
   }
   // Cleanup: Delete rows older than 7 days
-  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  await supabase.from('market_movers').delete().lt('date', sevenDaysAgo);
+  //const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  //await supabase.from('market_movers').delete().lt('date', sevenDaysAgo);
+  // Keep only the latest date's records
+  const { data: latestRows } = await supabase
+    .from('market_movers')
+    .select('date')
+    .order('date', { ascending: false })
+    .limit(1);
+  if (latestRows && latestRows.length > 0) {
+    const keepDate = latestRows[0].date;
+  await supabase.from('market_movers').delete().not('date', 'eq', keepDate);
+}
   if (totalErrors === 0) {
     console.log(`All market movers upserted successfully. Total: ${totalUpserts}`);
   } else {

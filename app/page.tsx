@@ -1,13 +1,34 @@
-'use client';
-
+import { Metadata } from 'next';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { BenefitsSection } from '@/components/landing/BenefitsSection';
 import { FeatureSection } from '@/components/landing/FeatureSection';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import TestimonialsSection from '@/components/landing/TestimonialsSection';
 import Link from 'next/link';
-import Head from 'next/head';
 import Image from 'next/image';
+import { StructuredData } from '@/components/seo/StructuredData';
+import { generateMetadata as generateSEOMetadata, generateBreadcrumbStructuredData } from '@/lib/seo';
+
+// Generate metadata for the homepage
+export const metadata: Metadata = generateSEOMetadata({
+  title: 'TradeCraft Pro - Advanced Stock Market Analysis & Trading Tools',
+  description: 'Professional stock market analysis tools, real-time market news, momentum stock screeners, and automated trade plan generation. Make informed trading decisions with TradeCraft Pro.',
+  keywords: [
+    'stock market analysis',
+    'trading tools',
+    'momentum stock screener',
+    'stock trade plans',
+    'market news',
+    'stock market research',
+    'trading software',
+    'stock analysis tools',
+    'market data',
+    'trading strategies'
+  ],
+  canonicalUrl: 'https://www.tradingsetup.pro',
+  ogImage: 'https://www.tradingsetup.pro/og-homepage.jpg',
+  ogType: 'website'
+});
 
 const blogPosts = [
 	{
@@ -94,51 +115,15 @@ function TrustBadges() {
 }
 
 export default function Home() {
+	const breadcrumbData = generateBreadcrumbStructuredData([
+		{ name: 'Home', url: 'https://www.tradingsetup.pro' }
+	]);
+
 	return (
 		<main className="flex-1 bg-background">
-			<Head>
-        <title>Trade Plan Generator & Momentum Stock Screener | Stock Entry and Exit Tool</title>
-        <meta name="description" content="TradeCraft is a trade plan generator and momentum stock screener. Instantly get detailed trading plans, entry/exit signals, stop loss, targets, and discover high-momentum and small cap stocks." />
-        <meta property="og:title" content="Trade Plan Generator & Momentum Stock Screener | Stock Entry and Exit Tool" />
-        <meta property="og:description" content="TradeCraft is a trade plan generator and momentum stock screener. Instantly get detailed trading plans, entry/exit signals, stop loss, targets, and discover high-momentum and small cap stocks." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.tradingsetup.pro/" />
-        <meta property="og:image" content="https://www.tradingsetup.pro/bull-bear.png" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Trade Plan Generator & Momentum Stock Screener | Stock Entry and Exit Tool" />
-        <meta name="twitter:description" content="TradeCraft is a trade plan generator and momentum stock screener. Instantly get detailed trading plans, entry/exit signals, stop loss, targets, and discover high-momentum and small cap stocks." />
-        <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-        <link rel="canonical" href="https://www.tradingsetup.pro/" />
-        <link rel="icon" href="/favicon.png" />
-        <link rel="apple-touch-icon" href="/favicon.png" />
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: `{
-          \"@context\": \"https://schema.org\",
-          \"@type\": \"WebSite\",
-          \"url\": \"https://www.tradingsetup.pro/\",
-          \"name\": \"TradeCraft by TradingSetup.pro\",
-          \"description\": \"TradeCraft helps traders and investors generate actionable trade plans, screen for momentum stocks, and analyze technical and fundamental data.\",
-          \"publisher\": {
-            \"@type\": \"Organization\",
-            \"name\": \"TradingSetup.pro\",
-            \"url\": \"https://www.tradingsetup.pro/\",
-            \"logo\": {
-              \"@type\": \"ImageObject\",
-              \"url\": \"https://www.tradingsetup.pro/bull-bear.png\"
-            }
-          },
-          \"potentialAction\": {
-            \"@type\": \"SearchAction\",
-            \"target\": \"https://www.tradingsetup.pro/screener?query={search_term_string}\",
-            \"query-input\": \"required name=search_term_string\"
-          },
-          \"sameAs\": [
-            \"https://twitter.com/TradeCraftPro\"
-          ]
-        }` }} />
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7507424386197703" crossOrigin="anonymous"></script>
-			</Head>
+			{/* Homepage Structured Data */}
+			<StructuredData data={breadcrumbData} />
+			
 			<HeroSection />
       <TrustBadges />
 			<BenefitsSection />

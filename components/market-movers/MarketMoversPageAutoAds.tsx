@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import MarketMoversTable from './MarketMoversTable';
-import { HybridAdStrategy, ManualAd, InFeedAd, LargeRectangleAd } from '@/components/ui/HybridAds';
+import { GoogleAutoAds } from '@/components/ui/HybridAds';
 import { AdAnalytics } from '@/components/ui/AdAnalytics';
 
 const PERIODS = [
@@ -12,12 +12,12 @@ const PERIODS = [
   { label: 'YTD', value: 'ytd' },
 ];
 
-export default function MarketMoversPage() {
+export default function MarketMoversPageAutoAds() {
   const [gainersPeriod, setGainersPeriod] = useState<'day' | 'week' | 'month' | 'ytd'>('day');
   const [losersPeriod, setLosersPeriod] = useState<'day' | 'week' | 'month' | 'ytd'>('day');
-
   return (
-    <HybridAdStrategy>
+    <div>
+      <GoogleAutoAds />
       <AdAnalytics />
       <div className="max-w-7xl mx-auto px-3 sm:px-6 py-6 pb-24 lg:pb-8">
         
@@ -31,16 +31,8 @@ export default function MarketMoversPage() {
             </p>
           </div>
           
-          {/* Top Banner Ad - High Revenue */}
-          <ManualAd 
-            slot="2957844941" 
-            format="auto"
-            className="flex justify-center mb-8"
-            style={{ display: 'block', minHeight: 120 }}
-          />
-          
           {/* Market overview intro */}
-          <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg">
+          <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg mb-8">
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">Today&apos;s Market Overview</h2>
             <p className="text-gray-700 leading-relaxed">
               Monitor real-time market movements and discover which stocks are making the biggest moves. 
@@ -52,7 +44,7 @@ export default function MarketMoversPage() {
         {/* SECTION 2: Quick Analysis */}
         <section className="mb-12">
           <h2 className="text-2xl font-semibold mb-6 text-gray-800">Market Movement Analysis</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
               <h3 className="text-lg font-semibold text-green-700 mb-3">Top Gainers Insights</h3>
               <p className="text-gray-600 leading-relaxed">
@@ -70,11 +62,11 @@ export default function MarketMoversPage() {
           </div>
         </section>
 
-        {/* SECTION 3: Mobile Layout - Stacked with strategic ads */}
+        {/* SECTION 3: Mobile Layout - Stacked with natural breaks */}
         <div className="md:hidden">
           
           {/* Top Gainers Section */}
-          <section className="mb-10">
+          <section className="mb-12">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-semibold text-green-700">Top Gainers</h2>
               <div className="flex gap-1 overflow-x-auto">
@@ -108,11 +100,18 @@ export default function MarketMoversPage() {
             </div>
           </section>
 
-          {/* Strategic ad between sections for mobile - better UX */}
-          <InFeedAd className="my-10" />
+          {/* Content break section */}
+          <section className="mb-12">
+            <div className="text-center py-8 border-t border-b border-gray-200 bg-gray-50">
+              <h2 className="text-xl font-semibold text-gray-700 mb-3">Market Analysis Tools</h2>
+              <p className="text-gray-600 max-w-md mx-auto leading-relaxed">
+                Discover more market insights with our comprehensive screening and analysis tools.
+              </p>
+            </div>
+          </section>
 
           {/* Top Losers Section */}
-          <section className="mb-10">
+          <section className="mb-12">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-semibold text-red-700">Top Losers</h2>
               <div className="flex gap-1 overflow-x-auto">
@@ -162,7 +161,7 @@ export default function MarketMoversPage() {
 
         </div>
 
-        {/* SECTION 4: Desktop Layout - Side by side with center ad column */}
+        {/* SECTION 4: Desktop Layout - Side by side with center content */}
         <div className="hidden md:block">
           
           {/* Market data tables section */}
@@ -225,16 +224,6 @@ export default function MarketMoversPage() {
             </div>
           </section>
 
-          {/* Strategic ad placement between sections */}
-          <section className="mb-12">
-            <ManualAd 
-              slot="1234567895" 
-              format="auto"
-              className="flex justify-center"
-              style={{ display: 'block', minHeight: 120 }}
-            />
-          </section>
-
           {/* Additional analysis section */}
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-8 text-gray-800">Market Insights & Strategy</h2>
@@ -266,18 +255,9 @@ export default function MarketMoversPage() {
                 </ul>
               </div>
             </div>
-          </section>
+          </section>        </div>
 
-          {/* Bottom banner ad for desktop */}
-          <ManualAd 
-            slot="1234567896" 
-            format="auto"
-            className="flex justify-center mt-12"
-            style={{ display: 'block', minHeight: 100 }}
-          />
-
-        </div>
       </div>
-    </HybridAdStrategy>
+    </div>
   );
 }

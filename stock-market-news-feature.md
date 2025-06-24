@@ -88,9 +88,25 @@ g. Testing
 
 - News is scraped from https://stockanalysis.com/news/ using a script (`scripts/scrape-market-news.ts`).
 - The script parses the latest headlines, links, sources, and timestamps, and stores them in the `market_news` table in Supabase.
-- A new API route (`app/api/market-news/route.ts`) fetches news from Supabase and serves it to the frontend.
+- **Data Collection**: The scraper only collects news from the last 24 hours during each run.
+- **Enhanced Scoring Algorithm**: Articles are scored using a sophisticated multi-factor algorithm:
+  - **Recency** (0-72 points): Linear decay over 72 hours
+  - **Visual Content** (+3 points): Articles with thumbnails
+  - **Content Quality** (0-4 points): Based on summary length and depth
+  - **Source Authority** (0-5 points): Bloomberg, Reuters, WSJ get highest scores
+  - **Keyword Importance**: Weighted by impact level and position (title vs summary)
+    - High-impact: Fed, inflation, recession (+3 in title, +2 in summary)
+    - Medium-impact: Earnings, IPO, mergers (+2 in title, +1 in summary)
+    - Market terms: Dow, Nasdaq, S&P (+1 each)
+    - Policy terms: Political/regulatory news (+2 each)
+  - **Breaking News** (+5 points): Urgent/developing stories
+  - **Market Timing** (+1-2 points): Market hours content prioritized
+  - **Data Richness** (+1 each): Presence of dollar amounts, percentages, numbers
+- **Automatic Cleanup**: The scraper automatically deletes all news older than 72 hours from the database at the start of each run, ensuring a rolling 72-hour window.
+- A new API route (`app/api/market-news/route.ts`) fetches news from Supabase (filtered to last 72 hours) and serves it to the frontend.
 - The frontend page (`app/news/page.tsx`) uses a new component (`components/market-news/MarketNewsPage.tsx`), which renders a table of news items (`components/market-news/MarketNewsTable.tsx`).
 - News items are displayed with headline, link, source, and time ago, similar to the reference site.
 - The implementation closely follows the pattern used for Market Movers, with a dedicated API, table, and frontend components.
 - To update news, run the scraping script on a schedule (e.g., via cron or serverless job).
 - The system is modular and can be extended with filters, search, or richer summaries in the future.
+- **Performance Optimization**: 72-hour data retention ensures faster API responses and reduced database storage.

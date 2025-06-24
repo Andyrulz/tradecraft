@@ -76,7 +76,7 @@ export default function MarketMoversPage() {
           {/* Top Gainers Section */}
           <section className="mb-10">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold text-green-700">Top Gainers</h2>
+              <h2 className="text-2xl font-semibold text-green-700">📈 Top Gainers</h2>
               <div className="flex gap-1 overflow-x-auto">
                 {PERIODS.map(p => (
                   <button
@@ -114,7 +114,7 @@ export default function MarketMoversPage() {
           {/* Top Losers Section */}
           <section className="mb-10">
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-semibold text-red-700">Top Losers</h2>
+              <h2 className="text-2xl font-semibold text-red-700">📉 Top Losers</h2>
               <div className="flex gap-1 overflow-x-auto">
                 {PERIODS.map(p => (
                   <button
@@ -168,12 +168,13 @@ export default function MarketMoversPage() {
           {/* Market data tables section */}
           <section className="mb-12">
             <h2 className="text-2xl font-semibold mb-8 text-center text-gray-800">Live Market Data</h2>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
               
-              {/* Gainers Column - 50% width */}
-              <div className="lg:col-span-1">
+              {/* Gainers Column - 2/5 width */}
+              <div className="lg:col-span-2">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-semibold text-green-700">Top Gainers</h3>
+                  <h3 className="text-xl font-semibold text-green-700">📈 Top Gainers</h3>
                   <div className="flex gap-1">
                     {PERIODS.map(p => (
                       <button
@@ -196,10 +197,21 @@ export default function MarketMoversPage() {
                 </div>
               </div>
 
-              {/* Losers Column - 50% width */}
-              <div className="lg:col-span-1">
+              {/* Center Ad Column - 1/5 width for high visibility */}
+              <div className="lg:col-span-1 flex flex-col justify-start items-center space-y-6">
+                <LargeRectangleAd className="sticky top-4" />
+                <ManualAd 
+                  slot="1234567895" 
+                  format="auto"
+                  className="w-full"
+                  style={{ display: 'block', minHeight: 250 }}
+                />
+              </div>
+
+              {/* Losers Column - 2/5 width */}
+              <div className="lg:col-span-2">
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-semibold text-red-700">Top Losers</h3>
+                  <h3 className="text-xl font-semibold text-red-700">📉 Top Losers</h3>
                   <div className="flex gap-1">
                     {PERIODS.map(p => (
                       <button
@@ -223,16 +235,6 @@ export default function MarketMoversPage() {
               </div>
               
             </div>
-          </section>
-
-          {/* Strategic ad placement between sections */}
-          <section className="mb-12">
-            <ManualAd 
-              slot="1234567895" 
-              format="auto"
-              className="flex justify-center"
-              style={{ display: 'block', minHeight: 120 }}
-            />
           </section>
 
           {/* Additional analysis section */}
@@ -274,9 +276,8 @@ export default function MarketMoversPage() {
             format="auto"
             className="flex justify-center mt-12"
             style={{ display: 'block', minHeight: 100 }}
-          />
+          />        </div>
 
-        </div>
       </div>
     </HybridAdStrategy>
   );
