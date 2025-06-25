@@ -1,5 +1,8 @@
 import React from "react";
 import Head from "next/head";
+import { HybridAdStrategy } from '@/components/ui/HybridAds';
+import { BannerWorkingAd, LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
+import MobileLargeAd from '@/components/ui/MobileLargeAd';
 import {
   Accordion,
   AccordionItem,
@@ -127,7 +130,7 @@ const topics = [
 
 export default function EducationPage() {
   return (
-    <>
+    <HybridAdStrategy>
       <Head>
         <script
           async
@@ -136,6 +139,10 @@ export default function EducationPage() {
         ></script>
       </Head>
       <div className="max-w-2xl mx-auto py-10 px-4 md:px-0 relative">
+        
+        {/* Top banner ad */}
+        <BannerWorkingAd className="flex justify-center mb-8" />
+        
         {/* Decorative Accent */}
         <div className="flex justify-center mb-4">
           <span className="inline-block w-16 h-1 rounded-full bg-gradient-to-r from-primary/70 via-accent to-primary/70 animate-pulse" />
@@ -190,9 +197,19 @@ export default function EducationPage() {
               <div className="text-muted-foreground text-sm mt-1">
                 {pillar.desc}
               </div>
-            </div>
-          ))}
+            </div>          ))}
         </div>
+
+        {/* Strategic ad placement between content sections */}
+        <div className="my-12">
+          <div className="md:hidden">
+            <MobileLargeAd />
+          </div>
+          <div className="hidden md:block">
+            <LargeWorkingAd />
+          </div>
+        </div>
+
         <Accordion
           type="single"
           collapsible
@@ -225,9 +242,8 @@ export default function EducationPage() {
         {/* Soft background accent */}
         <div className="pointer-events-none fixed inset-0 z-[-1] opacity-60">
           <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50 to-yellow-50" />
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[60vw] h-[60vw] rounded-full bg-blue-100 blur-3xl" />
-        </div>
+          <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[60vw] h-[60vw] rounded-full bg-blue-100 blur-3xl" />        </div>
       </div>
-    </>
+    </HybridAdStrategy>
   );
 }

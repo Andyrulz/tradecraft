@@ -8,22 +8,20 @@
 export const AD_CONFIG = {
   // Your Google AdSense Publisher ID
   CLIENT_ID: 'ca-pub-7507424386197703',
-  
-  // Ad slot configurations for different placements
+    // Ad slot configurations for different placements
   SLOTS: {
     // High-performance banner ads (Use your existing real ad unit)
     TOP_BANNER: '2957844942',
     BOTTOM_BANNER: '2957844942', // Reuse existing ad unit temporarily
+      // In-content ads (highest revenue potential) - NEW SPECIALIZED UNITS
+    IN_FEED_PRIMARY: '6142335506', // NEW: TradeCraft In-Feed Primary
+    IN_FEED_SECONDARY: '2957844942', // Reuse until you create new ad units
     
-    // In-content ads (highest revenue potential) - Auto format for best performance
-    IN_FEED_PRIMARY: '2957844942', // Reuse until you create new ad units
-    IN_FEED_SECONDARY: '2957844942',
-    
-    // Sidebar ads
-    SIDEBAR_PRIMARY: '2957844942',
+    // Sidebar ads - NEW SPECIALIZED UNIT
+    SIDEBAR_PRIMARY: '4185691359', // NEW: TradeCraft Sidebar Desktop
     SIDEBAR_SECONDARY: '2957844942',
-    
-    // Mobile-specific ads
+      // Mobile-specific ads - NEW SPECIALIZED UNIT
+    MOBILE_LARGE: '3320731043', // NEW: TradeCraft Mobile Large (fluid/native)
     MOBILE_STICKY: '2957844942',
     MOBILE_NATIVE: '2957844942',
     

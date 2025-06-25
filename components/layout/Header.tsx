@@ -48,7 +48,14 @@ export function Header({ setOverlayOpen }: { setOverlayOpen?: (open: boolean) =>
 							<Button size="sm" variant="outline" onClick={() => signOut()}>Sign out</Button>
 						</>
 					) : (
-						<Button size="sm" variant="outline" onClick={() => signIn('google')}>Sign in with Google</Button>
+						<>
+							<Link href="/auth/signin">
+								<Button size="sm" variant="ghost">Sign in</Button>
+							</Link>
+							<Link href="/auth/signin?mode=signup">
+								<Button size="sm" variant="default">Sign up</Button>
+							</Link>
+						</>
 					)}
 				</div>
 			</div>
@@ -76,6 +83,25 @@ export function Header({ setOverlayOpen }: { setOverlayOpen?: (open: boolean) =>
 					<Link href="/#benefits" className="py-3 text-lg text-primary hover:text-primary/80 font-semibold" onClick={() => setMobileNavOpen(false)}>Benefits</Link>
 					<Link href="/pricing" className="py-3 text-lg text-primary hover:text-primary/80 font-semibold" onClick={() => setMobileNavOpen(false)}>Pricing</Link>
 					<Link href="/contact" className="py-3 text-lg text-primary hover:text-primary/80 font-semibold" onClick={() => setMobileNavOpen(false)}>Contact</Link>
+					
+					{/* Mobile auth buttons */}
+					<div className="border-t pt-4 mt-4">
+						{status === 'loading' ? null : session ? (
+							<>
+								<div className="py-2 text-sm text-muted-foreground">{session.user?.name}</div>
+								<Button size="sm" variant="outline" onClick={() => { signOut(); setMobileNavOpen(false); }} className="w-full">Sign out</Button>
+							</>
+						) : (
+							<div className="flex flex-col gap-2">
+								<Link href="/auth/signin" onClick={() => setMobileNavOpen(false)}>
+									<Button size="sm" variant="ghost" className="w-full">Sign in</Button>
+								</Link>
+								<Link href="/auth/signin?mode=signup" onClick={() => setMobileNavOpen(false)}>
+									<Button size="sm" variant="default" className="w-full">Sign up</Button>
+								</Link>
+							</div>
+						)}
+					</div>
 				</nav>
 			</div>
 		</header>

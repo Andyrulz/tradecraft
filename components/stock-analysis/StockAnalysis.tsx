@@ -3,6 +3,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Info, TrendingUp, TrendingDown, AlertTriangle, DollarSign, LineChart, Target, Flag } from 'lucide-react';
+import { LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
+import MobileLargeAd from '@/components/ui/MobileLargeAd';
 import {
   Tooltip,
   TooltipContent,
@@ -12,9 +14,10 @@ import {
 
 interface StockAnalysisProps {
   analysis: StockAnalysisType;
+  showAds?: boolean;
 }
 
-export function StockAnalysis({ analysis }: StockAnalysisProps) {
+export function StockAnalysis({ analysis, showAds = false }: StockAnalysisProps) {
   const getScoreColor = (score: string) => {
     switch (score) {
       case 'high':
@@ -205,6 +208,18 @@ export function StockAnalysis({ analysis }: StockAnalysisProps) {
           </div>
         </CardContent>
       </Card>
+
+      {/* Strategic ad placement between sections */}
+      {showAds && (
+        <div className="my-8">
+          <div className="md:hidden">
+            <MobileLargeAd />
+          </div>
+          <div className="hidden md:block">
+            <LargeWorkingAd />
+          </div>
+        </div>
+      )}
 
       {/* Peer Comparison */}
       <Card className="shadow-lg">

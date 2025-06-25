@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import MarketMoversTable from './MarketMoversTable';
 import { GoogleAutoAds } from '@/components/ui/HybridAds';
 import { AdAnalytics } from '@/components/ui/AdAnalytics';
+import { InFeedWorkingAd, BannerWorkingAd, LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
+import { ContentSection } from '@/components/ui/AdBreakHelper';
 
 const PERIODS = [
   { label: 'Today', value: 'day' },
@@ -30,8 +32,7 @@ export default function MarketMoversPageAutoAds() {
               Stay informed about market momentum and identify trending securities.
             </p>
           </div>
-          
-          {/* Market overview intro */}
+            {/* Market overview intro */}
           <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg mb-8">
             <h2 className="text-2xl font-semibold mb-4 text-gray-800">Today&apos;s Market Overview</h2>
             <p className="text-gray-700 leading-relaxed">
@@ -39,9 +40,10 @@ export default function MarketMoversPageAutoAds() {
               Our data is updated throughout the trading day to help you stay on top of market trends.
             </p>
           </div>
-        </section>
-
-        {/* SECTION 2: Quick Analysis */}
+          
+          {/* Top Banner Ad - Guaranteed ad placement */}
+          <BannerWorkingAd className="flex justify-center mb-8" />
+        </section>        {/* SECTION 2: Quick Analysis */}
         <section className="mb-12">
           <h2 className="text-2xl font-semibold mb-6 text-gray-800">Market Movement Analysis</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -60,6 +62,9 @@ export default function MarketMoversPageAutoAds() {
               </p>
             </div>
           </div>
+          
+          {/* Strategic ad after analysis section */}
+          <InFeedWorkingAd className="mb-8" />
         </section>
 
         {/* SECTION 3: Mobile Layout - Stacked with natural breaks */}
@@ -98,9 +103,7 @@ export default function MarketMoversPageAutoAds() {
                 or sector rotation. Consider volume and market cap when evaluating opportunities.
               </p>
             </div>
-          </section>
-
-          {/* Content break section */}
+          </section>          {/* Content break section with strategic ad */}
           <section className="mb-12">
             <div className="text-center py-8 border-t border-b border-gray-200 bg-gray-50">
               <h2 className="text-xl font-semibold text-gray-700 mb-3">Market Analysis Tools</h2>
@@ -108,6 +111,8 @@ export default function MarketMoversPageAutoAds() {
                 Discover more market insights with our comprehensive screening and analysis tools.
               </p>
             </div>
+            {/* Strategic ad placement in content break */}
+            <LargeWorkingAd className="mt-8" />
           </section>
 
           {/* Top Losers Section */}
@@ -143,11 +148,8 @@ export default function MarketMoversPageAutoAds() {
                 or broader market corrections. Research fundamentals before making investment decisions.
               </p>
             </div>
-          </section>
-
-          {/* Trading tips section */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-800">Trading Tips & Strategies</h2>
+          </section>          {/* Trading tips section */}
+          <ContentSection title="Trading Tips & Strategies" className="mb-12">
             <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
               <h3 className="font-semibold text-blue-800 mb-3">Smart Trading Practices</h3>
               <ul className="space-y-2 text-blue-700 text-sm">
@@ -157,7 +159,10 @@ export default function MarketMoversPageAutoAds() {
                 <li>• Research company fundamentals and recent news</li>
               </ul>
             </div>
-          </section>
+          </ContentSection>
+
+          {/* Additional mobile ad for better revenue */}
+          <InFeedWorkingAd className="my-10" />
 
         </div>
 
@@ -189,10 +194,12 @@ export default function MarketMoversPageAutoAds() {
                     ))}
                   </div>
                 </div>
-                
-                <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                  <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
                   <MarketMoversTable type="gainers" period={gainersPeriod} />
                 </div>
+                
+                {/* Add strategic ad after gainers table on desktop */}
+                <BannerWorkingAd className="mt-6" />
               </div>
 
               {/* Losers Column - 50% width */}
@@ -219,10 +226,15 @@ export default function MarketMoversPageAutoAds() {
                 <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
                   <MarketMoversTable type="losers" period={losersPeriod} />
                 </div>
+                
+                {/* Add strategic ad after losers table on desktop */}
+                <BannerWorkingAd className="mt-6" />
               </div>
-              
-            </div>
+                </div>
           </section>
+
+          {/* Strategic mid-content ad */}
+          <LargeWorkingAd className="mb-12" />
 
           {/* Additional analysis section */}
           <section className="mb-12">
@@ -255,7 +267,10 @@ export default function MarketMoversPageAutoAds() {
                 </ul>
               </div>
             </div>
-          </section>        </div>
+          </section>
+          
+          {/* Bottom banner ad for desktop */}
+          <BannerWorkingAd className="flex justify-center mt-12" /></div>
 
       </div>
     </div>

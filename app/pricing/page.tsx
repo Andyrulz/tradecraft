@@ -27,7 +27,7 @@ const plans = [
 			'No on-demand support',
 		],
 		cta: 'Sign Up Free',
-		ctaLink: '/auth/signin',
+		ctaLink: '/auth/signin?mode=signup',
 		highlight: false,
 	},
 	{

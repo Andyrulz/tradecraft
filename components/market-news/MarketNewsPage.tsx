@@ -3,7 +3,8 @@
 import React, { useEffect, useState } from 'react';
 import NewsCard from './NewsCard';
 import NewsSidebar from './NewsSidebar';
-import { HybridAdStrategy, ManualAd, StickyBannerAd, InFeedAd, MultiplexAd } from '@/components/ui/HybridAds';
+import { HybridAdStrategy, ManualAd, StickyBannerAd, InFeedAd, MultiplexAd, InFeedPrimaryAd } from '@/components/ui/HybridAds';
+import MobileLargeAd from '@/components/ui/MobileLargeAd';
 import { AdAnalytics } from '@/components/ui/AdAnalytics';
 import { ContentSection, NewsArticleWrapper } from '@/components/ui/AdBreakHelper';
 import { InFeedWorkingAd, BannerWorkingAd, LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
@@ -182,7 +183,7 @@ export default function MarketNewsPage() {
             <div className="text-center mb-4">
               <span className="text-xs text-gray-500 uppercase tracking-wide">Advertisement</span>
             </div>
-            <InFeedWorkingAd className="my-0" />
+            <InFeedPrimaryAd className="my-0" />
             {/* Add a second ad for high-value positions using working ad unit */}
             {(i + 1) % 9 === 0 && (
               <div className="mt-6">
@@ -229,7 +230,7 @@ export default function MarketNewsPage() {
               <NewsSidebar news={sidebarNews} />
             </div>
           </section>          {/* Mobile: Strategic ad placement - FIRST AD */}
-          <InFeedWorkingAd className="my-8" />
+          <InFeedPrimaryAd className="my-8" />
           
           {/* Mobile: Featured article section */}
           <section className="mb-10">
@@ -237,9 +238,13 @@ export default function MarketNewsPage() {
               <NewsCard item={featured} featured />
             </div>
           </section>
-          
-          {/* Mobile: Strategic ad placement - SECOND AD */}
-          <LargeWorkingAd className="my-10" />
+            {/* Mobile: Strategic ad placement - SECOND AD */}
+          <div className="md:hidden">
+            <MobileLargeAd className="my-10" />
+          </div>
+          <div className="hidden md:block">
+            <LargeWorkingAd className="my-10" />
+          </div>
           
           {/* Mobile: Additional content section for ad placement */}
           <section className="mb-10">
@@ -256,7 +261,12 @@ export default function MarketNewsPage() {
               {newsCards}
             </div>
           </ContentSection>          {/* Mobile: Strategic ad between content sections - THIRD AD */}
-          <LargeWorkingAd className="my-12" />
+          <div className="md:hidden">
+            <MobileLargeAd className="my-12" />
+          </div>
+          <div className="hidden md:block">
+            <LargeWorkingAd className="my-12" />
+          </div>
 
           {/* Mobile: Market insights section */}
           <section className="mb-10">

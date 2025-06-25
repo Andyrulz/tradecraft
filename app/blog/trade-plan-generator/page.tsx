@@ -1,13 +1,19 @@
 import Head from 'next/head';
 import Image from 'next/image';
+import { HybridAdStrategy } from '@/components/ui/HybridAds';
+import { BannerWorkingAd, LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
+import MobileLargeAd from '@/components/ui/MobileLargeAd';
 
 export default function TradePlanGeneratorBlog() {
   return (
-    <>
+    <HybridAdStrategy>
       <Head>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7507424386197703" crossOrigin="anonymous"></script>
       </Head>
       <main className="max-w-3xl mx-auto px-4 mt-28 mb-16">
+        {/* Top banner ad */}
+        <BannerWorkingAd className="flex justify-center mb-8" />
+        
         <article>
           <header className="mb-8">
             <h1 className="text-4xl md:text-5xl font-extrabold text-foreground mb-4 leading-tight">
@@ -88,6 +94,16 @@ export default function TradePlanGeneratorBlog() {
             </div>
           </section>
 
+          {/* Strategic ad placement between content sections */}
+          <div className="my-10">
+            <div className="md:hidden">
+              <MobileLargeAd />
+            </div>
+            <div className="hidden md:block">
+              <LargeWorkingAd />
+            </div>
+          </div>
+
           <section className="mb-8">
             <h2 className="text-2xl font-bold mb-3 text-primary">Why Use the Trade Plan Generator?</h2>
             <ul className="list-disc list-inside space-y-2 text-base pl-2">
@@ -120,12 +136,22 @@ export default function TradePlanGeneratorBlog() {
             </div>
           </section>
 
+          {/* Bottom ad before footer */}
+          <div className="my-10">
+            <div className="md:hidden">
+              <MobileLargeAd />
+            </div>
+            <div className="hidden md:block">
+              <LargeWorkingAd />
+            </div>
+          </div>
+
           <footer className="mt-10 text-center">
             <a href="/" className="inline-block bg-primary text-white font-bold px-6 py-3 rounded-lg shadow hover:bg-primary/90 transition">Generate a Trade Plan</a>
             <p className="text-muted-foreground text-sm mt-3">Ready to trade smarter? Try the Trade Plan Generator free—no sign-in required.</p>
           </footer>
         </article>
       </main>
-    </>
+    </HybridAdStrategy>
   );
 }

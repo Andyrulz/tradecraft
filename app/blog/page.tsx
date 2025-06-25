@@ -2,6 +2,9 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Metadata } from 'next';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo';
+import { HybridAdStrategy } from '@/components/ui/HybridAds';
+import { BannerWorkingAd, LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
+import MobileLargeAd from '@/components/ui/MobileLargeAd';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Trading Education Blog - Stock Market Analysis & Trading Strategies | TradeCraft Pro',
@@ -103,24 +106,84 @@ const blogPosts = [
 ];
 
 export default function BlogIndexPage() {
+  // Split blog posts for strategic ad placement
+  const firstRowPosts = blogPosts.slice(0, 3);
+  const middlePosts = blogPosts.slice(3, 6);
+  const remainingPosts = blogPosts.slice(6);
+
   return (
-    <main className="max-w-6xl mx-auto px-4 py-8 bg-background">
-      <div className="mb-10 text-center">
-        <span className="inline-block bg-primary/10 text-primary font-semibold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-3">Blog</span>
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-3 text-primary tracking-tight">TradeCraft Blog</h1>
-        <p className="text-lg text-muted-foreground mb-0 max-w-2xl mx-auto">Explore our in-depth guides on trading plans, stock screeners, and risk management. Learn how to use TradeCraft to improve your trading results.</p>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-        {blogPosts.map(post => (
-          <Link key={post.href} href={post.href} className="group block border border-border rounded-2xl shadow-sm hover:shadow-lg transition bg-background p-4 sm:p-6 h-full w-full min-h-[320px]">
-            {post.image && (
-              <Image src={post.image} alt={post.title} width={500} height={280} className="rounded-lg object-cover w-full h-36 sm:h-40 mb-4" />
-            )}
-            <h2 className="text-lg sm:text-xl font-semibold mb-2 text-primary group-hover:underline group-hover:text-primary/80 transition-colors">{post.title}</h2>
-            <p className="text-sm sm:text-base text-muted-foreground mb-0">{post.description}</p>
-          </Link>
-        ))}
-      </div>
-    </main>
+    <HybridAdStrategy>
+      <main className="max-w-6xl mx-auto px-4 py-8 bg-background">
+        <div className="mb-10 text-center">
+          <span className="inline-block bg-primary/10 text-primary font-semibold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-3">Blog</span>
+          <h1 className="text-4xl md:text-5xl font-extrabold mb-3 text-primary tracking-tight">TradeCraft Blog</h1>
+          <p className="text-lg text-muted-foreground mb-0 max-w-2xl mx-auto">Explore our in-depth guides on trading plans, stock screeners, and risk management. Learn how to use TradeCraft to improve your trading results.</p>
+        </div>
+
+        {/* Top banner ad */}
+        <BannerWorkingAd className="flex justify-center mb-8" />
+
+        {/* First row of blog posts */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8">
+          {firstRowPosts.map(post => (
+            <Link key={post.href} href={post.href} className="group block border border-border rounded-2xl shadow-sm hover:shadow-lg transition bg-background p-4 sm:p-6 h-full w-full min-h-[320px]">
+              {post.image && (
+                <Image src={post.image} alt={post.title} width={500} height={280} className="rounded-lg object-cover w-full h-36 sm:h-40 mb-4" />
+              )}
+              <h2 className="text-lg sm:text-xl font-semibold mb-2 text-primary group-hover:underline group-hover:text-primary/80 transition-colors">{post.title}</h2>
+              <p className="text-sm sm:text-base text-muted-foreground mb-0">{post.description}</p>
+            </Link>
+          ))}
+        </div>
+
+        {/* Strategic ad placement between content sections */}
+        <div className="my-10">
+          <div className="md:hidden">
+            <MobileLargeAd />
+          </div>
+          <div className="hidden md:block">
+            <LargeWorkingAd />
+          </div>
+        </div>
+
+        {/* Middle section of blog posts */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8">
+          {middlePosts.map(post => (
+            <Link key={post.href} href={post.href} className="group block border border-border rounded-2xl shadow-sm hover:shadow-lg transition bg-background p-4 sm:p-6 h-full w-full min-h-[320px]">
+              {post.image && (
+                <Image src={post.image} alt={post.title} width={500} height={280} className="rounded-lg object-cover w-full h-36 sm:h-40 mb-4" />
+              )}
+              <h2 className="text-lg sm:text-xl font-semibold mb-2 text-primary group-hover:underline group-hover:text-primary/80 transition-colors">{post.title}</h2>
+              <p className="text-sm sm:text-base text-muted-foreground mb-0">{post.description}</p>
+            </Link>
+          ))}
+        </div>
+
+        {/* Remaining blog posts */}
+        {remainingPosts.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {remainingPosts.map(post => (
+              <Link key={post.href} href={post.href} className="group block border border-border rounded-2xl shadow-sm hover:shadow-lg transition bg-background p-4 sm:p-6 h-full w-full min-h-[320px]">
+                {post.image && (
+                  <Image src={post.image} alt={post.title} width={500} height={280} className="rounded-lg object-cover w-full h-36 sm:h-40 mb-4" />
+                )}
+                <h2 className="text-lg sm:text-xl font-semibold mb-2 text-primary group-hover:underline group-hover:text-primary/80 transition-colors">{post.title}</h2>
+                <p className="text-sm sm:text-base text-muted-foreground mb-0">{post.description}</p>
+              </Link>
+            ))}
+          </div>
+        )}
+
+        {/* Bottom ad */}
+        <div className="mt-12">
+          <div className="md:hidden">
+            <MobileLargeAd />
+          </div>
+          <div className="hidden md:block">
+            <LargeWorkingAd />
+          </div>
+        </div>
+      </main>
+    </HybridAdStrategy>
   );
 }

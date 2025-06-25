@@ -2,8 +2,11 @@
 
 import React, { useState } from 'react';
 import MarketMoversTable from './MarketMoversTable';
-import { HybridAdStrategy, ManualAd, InFeedAd, LargeRectangleAd } from '@/components/ui/HybridAds';
+import { HybridAdStrategy, ManualAd, InFeedAd, LargeRectangleAd, InFeedPrimaryAd } from '@/components/ui/HybridAds';
+import MobileLargeAd from '@/components/ui/MobileLargeAd';
 import { AdAnalytics } from '@/components/ui/AdAnalytics';
+import { InFeedWorkingAd, BannerWorkingAd, LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
+import { ContentSection } from '@/components/ui/AdBreakHelper';
 
 const PERIODS = [
   { label: 'Today', value: 'day' },
@@ -30,14 +33,8 @@ export default function MarketMoversPage() {
               Stay informed about market momentum and identify trending securities.
             </p>
           </div>
-          
-          {/* Top Banner Ad - High Revenue */}
-          <ManualAd 
-            slot="2957844941" 
-            format="auto"
-            className="flex justify-center mb-8"
-            style={{ display: 'block', minHeight: 120 }}
-          />
+            {/* Top Banner Ad - High Revenue */}
+          <BannerWorkingAd className="flex justify-center mb-8" />
           
           {/* Market overview intro */}
           <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg">
@@ -47,9 +44,7 @@ export default function MarketMoversPage() {
               Our data is updated throughout the trading day to help you stay on top of market trends.
             </p>
           </div>
-        </section>
-
-        {/* SECTION 2: Quick Analysis */}
+        </section>        {/* SECTION 2: Quick Analysis */}
         <section className="mb-12">
           <h2 className="text-2xl font-semibold mb-6 text-gray-800">Market Movement Analysis</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -68,6 +63,9 @@ export default function MarketMoversPage() {
               </p>
             </div>
           </div>
+          
+          {/* Strategic ad after analysis section */}
+          <InFeedPrimaryAd className="mt-8" />
         </section>
 
         {/* SECTION 3: Mobile Layout - Stacked with strategic ads */}
@@ -106,10 +104,13 @@ export default function MarketMoversPage() {
                 or sector rotation. Consider volume and market cap when evaluating opportunities.
               </p>
             </div>
-          </section>
-
-          {/* Strategic ad between sections for mobile - better UX */}
-          <InFeedAd className="my-10" />
+          </section>          {/* Strategic ad between sections for mobile - better UX */}
+          <div className="md:hidden">
+            <MobileLargeAd className="my-10" />
+          </div>
+          <div className="hidden md:block">
+            <LargeWorkingAd className="my-10" />
+          </div>
 
           {/* Top Losers Section */}
           <section className="mb-10">
@@ -144,11 +145,8 @@ export default function MarketMoversPage() {
                 or broader market corrections. Research fundamentals before making investment decisions.
               </p>
             </div>
-          </section>
-
-          {/* Trading tips section */}
-          <section className="mb-12">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-800">Trading Tips & Strategies</h2>
+          </section>          {/* Trading tips section */}
+          <ContentSection title="Trading Tips & Strategies" className="mb-12">
             <div className="bg-blue-50 p-6 rounded-lg border border-blue-200">
               <h3 className="font-semibold text-blue-800 mb-3">Smart Trading Practices</h3>
               <ul className="space-y-2 text-blue-700 text-sm">
@@ -158,7 +156,10 @@ export default function MarketMoversPage() {
                 <li>• Research company fundamentals and recent news</li>
               </ul>
             </div>
-          </section>
+          </ContentSection>
+
+          {/* Additional mobile ad for better revenue */}
+          <InFeedPrimaryAd className="my-10" />
 
         </div>
 
@@ -190,10 +191,12 @@ export default function MarketMoversPage() {
                     ))}
                   </div>
                 </div>
-                
-                <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
+                  <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
                   <MarketMoversTable type="gainers" period={gainersPeriod} />
                 </div>
+                
+                {/* Add strategic ad after gainers table on desktop */}
+                <BannerWorkingAd className="mt-6" />
               </div>
 
               {/* Losers Column - 50% width */}
@@ -220,19 +223,20 @@ export default function MarketMoversPage() {
                 <div className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden">
                   <MarketMoversTable type="losers" period={losersPeriod} />
                 </div>
+                
+                {/* Add strategic ad after losers table on desktop */}
+                <BannerWorkingAd className="mt-6" />
               </div>
               
             </div>
-          </section>
-
-          {/* Strategic ad placement between sections */}
+          </section>          {/* Strategic ad placement between sections */}
           <section className="mb-12">
-            <ManualAd 
-              slot="1234567895" 
-              format="auto"
-              className="flex justify-center"
-              style={{ display: 'block', minHeight: 120 }}
-            />
+            <div className="md:hidden">
+              <MobileLargeAd />
+            </div>
+            <div className="hidden md:block">
+              <LargeWorkingAd />
+            </div>
           </section>
 
           {/* Additional analysis section */}
@@ -266,15 +270,8 @@ export default function MarketMoversPage() {
                 </ul>
               </div>
             </div>
-          </section>
-
-          {/* Bottom banner ad for desktop */}
-          <ManualAd 
-            slot="1234567896" 
-            format="auto"
-            className="flex justify-center mt-12"
-            style={{ display: 'block', minHeight: 100 }}
-          />
+          </section>          {/* Bottom banner ad for desktop */}
+          <BannerWorkingAd className="flex justify-center mt-12" />
 
         </div>
       </div>

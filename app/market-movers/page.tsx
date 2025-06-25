@@ -1,9 +1,9 @@
 import { Metadata } from 'next';
 import Head from 'next/head';
-// Use Auto Ads version for maximum Google optimization
-import MarketMoversPageAutoAds from '@/components/market-movers/MarketMoversPageAutoAds';
-// Alternative: Use hybrid version with manual + auto ads
-// import MarketMoversPage from '@/components/market-movers/MarketMoversPage';
+// Use Hybrid version with aggressive manual ads for better revenue
+import MarketMoversPage from '@/components/market-movers/MarketMoversPage';
+// Alternative: Use Auto Ads only version (less revenue but more conservative)
+// import MarketMoversPageAutoAds from '@/components/market-movers/MarketMoversPageAutoAds';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = generateSEOMetadata({
@@ -37,7 +37,7 @@ export default function Page() {
       <Head>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7507424386197703" crossOrigin="anonymous"></script>
       </Head>
-      <MarketMoversPageAutoAds />
+      <MarketMoversPage />
     </>
   );
 }

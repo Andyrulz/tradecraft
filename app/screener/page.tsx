@@ -5,7 +5,6 @@ import { ScreenerFilters } from '@/components/screener/ScreenerFilters';
 import { ScreenerResults } from '@/components/screener/ScreenerResults';
 import { Card, CardContent } from '@/components/ui/card';
 import { ScreenerStock, ScreenerFilters as FilterType } from '@/lib/types';
-import { AdSenseAd } from '@/components/ui/AdSenseAd';
 import Link from 'next/link';
 import { getMockScreenerStocks } from '@/lib/mock-data';
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
@@ -198,7 +197,7 @@ export default function ScreenerPage() {
           </div>
         )}
         {/* Show ads for free and not signed in users, hide for paid */}
-        {(!session || userPlan === 'free') && <AdSenseAd />}
+        {/* No ads in paid screener feature */}
         {/* Upgrade modal for non-premium users */}
         <Dialog open={showUpgrade} onOpenChange={setShowUpgrade}>
           <DialogContent>

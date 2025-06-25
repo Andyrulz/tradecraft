@@ -9,7 +9,6 @@ import { TechnicalAnalysis } from '@/components/trade-plan/TechnicalAnalysis';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Share2 } from 'lucide-react';
-import { AdSenseAd } from '@/components/ui/AdSenseAd';
 import { TradePlanHeader } from '@/components/trade-plan/TradePlanHeader';
 import Head from 'next/head';
 import { createClient } from '@supabase/supabase-js';
@@ -1192,7 +1191,7 @@ function TradePlanPage() {
         </div>
         <div className="mt-8">
           {/* Show ads for free and not signed in users, hide for paid */}
-          {(!session || userPlan === 'free') && <AdSenseAd />}
+          {/* No ads in paid trade plan feature */}
         </div>
         <div className="mt-8">
           <p className="text-xs text-muted-foreground text-center">

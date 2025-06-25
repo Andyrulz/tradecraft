@@ -44,11 +44,12 @@ export function GoogleAutoAds() {
 // Manual ad placement for strategic high-value positions
 interface ManualAdProps {
   slot?: string;
-  format?: 'auto' | 'rectangle' | 'banner' | 'leaderboard';
+  format?: 'auto' | 'rectangle' | 'banner' | 'leaderboard' | 'fluid';
   className?: string;
   style?: React.CSSProperties;
   responsive?: boolean;
   adKey?: keyof typeof AD_CONFIG.SLOTS;
+  layoutKey?: string;
 }
 
 export function ManualAd({ 
@@ -57,7 +58,8 @@ export function ManualAd({
   format = 'auto',
   className = 'flex justify-center my-6',
   style = { display: 'block', minHeight: 90 },
-  responsive = true
+  responsive = true,
+  layoutKey
 }: ManualAdProps) {
   // Use adKey from config or fallback to slot prop
   const adSlot = adKey ? AD_CONFIG.SLOTS[adKey] : slot || AD_CONFIG.SLOTS.TOP_BANNER;
@@ -77,17 +79,23 @@ export function ManualAd({
     return () => clearTimeout(timer);
   }, [adSlot]); // Add adSlot as dependency
 
+  const adProps: any = {
+    className: "adsbygoogle",
+    style,
+    "data-ad-client": AD_CONFIG.CLIENT_ID,
+    "data-ad-slot": adSlot,
+    "data-ad-format": format,
+    "data-full-width-responsive": responsive ? "true" : "false"
+  };
+
+  // Add layout key for fluid ads
+  if (layoutKey) {
+    adProps["data-ad-layout-key"] = layoutKey;
+  }
+
   return (
     <div className={className}>
-      {/* Exact Google AdSense format */}
-      <ins
-        className="adsbygoogle"
-        style={style}
-        data-ad-client={AD_CONFIG.CLIENT_ID}
-        data-ad-slot={adSlot}
-        data-ad-format={format}
-        data-full-width-responsive={responsive ? "true" : "false"}
-      ></ins>
+      <ins {...adProps} />
     </div>
   );
 }
@@ -122,13 +130,78 @@ export const InFeedAd = ({ className = 'my-6' }: { className?: string }) => (
       <p className="text-xs text-gray-500 mb-2 text-center">Advertisement</p>
       <ManualAd 
         adKey="IN_FEED_PRIMARY"
-        format="auto"
+        format="fluid"
+        layoutKey="-fj+2x+at-az-73"
         className="w-full"
         style={{ display: 'block', minHeight: 120 }}
       />
     </div>
   </div>
 );
+
+// Specialized component for the new in-feed ad unit
+export const InFeedPrimaryAd = ({ className = 'my-6' }: { className?: string }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        // @ts-ignore
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.warn('In-feed ad initialization failed:', e);
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className={className}>
+      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+        <p className="text-xs text-gray-500 mb-2 text-center">Sponsored Content</p>
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block' }}
+          data-ad-format="fluid"
+          data-ad-layout-key="-fj+2x+at-az-73"
+          data-ad-client={AD_CONFIG.CLIENT_ID}
+          data-ad-slot="6142335506"
+        />
+      </div>
+    </div>
+  );
+};
+
+// Specialized component for the new sidebar desktop ad unit
+export const SidebarDesktopAd = ({ className = 'w-full mb-8' }: { className?: string }) => {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      try {
+        // @ts-ignore
+        (window.adsbygoogle = window.adsbygoogle || []).push({});
+      } catch (e) {
+        console.warn('Sidebar ad initialization failed:', e);
+      }
+    }, 200); // Slightly longer delay for sidebar ads
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <div className={className}>
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
+        <p className="text-xs text-gray-500 mb-3 text-center">Advertisement</p>
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block', minHeight: 250 }}
+          data-ad-client={AD_CONFIG.CLIENT_ID}
+          data-ad-slot="4185691359"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        />
+      </div>
+    </div>
+  );
+};
 
 export const MultiplexAd = () => (
   <div className="my-8">
