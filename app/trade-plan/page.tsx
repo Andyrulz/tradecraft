@@ -6,6 +6,8 @@ import { useEffect, useState, useCallback } from 'react';
 import { useSession, signIn } from 'next-auth/react';
 import { TradingRecommendation } from '@/components/trade-plan/TradingRecommendation';
 import { TechnicalAnalysis } from '@/components/trade-plan/TechnicalAnalysis';
+import { ExecutiveSummary } from '@/components/trade-plan/ExecutiveSummary';
+import { TradingChart } from '@/components/trade-plan/TradingChart';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Share2 } from 'lucide-react';
@@ -260,15 +262,98 @@ function TradePlanPage() {
     return 'low';
   };
 
-  // Calculate risk management levels
-  const calculateRiskManagement = (
+  // Calculate swing lows with pivot detection
+  const calculateSwingLow = (
+    prices: { open: number; high: number; low: number; close: number }[],
+    leftCandles: number = 15,
+    rightCandles: number = 15
+  ): number | null => {
+    if (prices.length < leftCandles + rightCandles + 1) {
+      return null;
+    }
+
+    let swingLow = null;
+    let swingLowPrice = Infinity;
+
+    // Start from leftCandles and go until length - rightCandles
+    for (let i = leftCandles; i < prices.length - rightCandles; i++) {
+      const currentLow = prices[i].low;
+      let isSwingLow = true;
+
+      // Check left candles
+      for (let j = i - leftCandles; j < i; j++) {
+        if (prices[j].low <= currentLow) {
+          isSwingLow = false;
+          break;
+        }
+      }
+
+      if (!isSwingLow) continue;
+
+      // Check right candles
+      for (let j = i + 1; j <= i + rightCandles; j++) {
+        if (prices[j].low <= currentLow) {
+          isSwingLow = false;
+          break;
+        }
+      }
+
+      // If this is a swing low and it's the most recent valid one, use it
+      if (isSwingLow && currentLow < swingLowPrice) {
+        swingLow = currentLow;
+        swingLowPrice = currentLow;
+      }
+    }
+
+    return swingLow;
+  };
+
+  // Enhanced swing low calculation with proper risk hierarchy
+  const calculateEnhancedSwingLow = async (
+    symbol: string,
+    timeframe: 'swing' | 'positional' | 'longterm'
+  ): Promise<number | null> => {
+    try {
+      // Always use daily data as the base for consistency
+      const response = await fetch(`/api/swing-low-data?symbol=${symbol}&interval=1day&outputsize=100`);
+      
+      if (!response.ok) {
+        console.warn(`Failed to fetch daily data for swing low calculation`);
+        return null;
+      }
+
+      const data = await response.json();
+      const dailyData = data.values || [];
+      
+      if (dailyData.length === 0) return null;
+
+      // Calculate swing low on daily data with different lookback periods based on timeframe
+      const lookbackPeriods = {
+        swing: { left: 5, right: 5 },     // Shorter lookback for swing (recent swing lows)
+        positional: { left: 10, right: 10 }, // Medium lookback for positional
+        longterm: { left: 20, right: 20 }    // Longer lookback for long term (major swing lows)
+      };
+
+      const { left, right } = lookbackPeriods[timeframe];
+      const swingLow = calculateSwingLow(dailyData, left, right);
+      
+      return swingLow;
+    } catch (error) {
+      console.warn(`Error in enhanced swing low calculation:`, error);
+      return null;
+    }
+  };
+
+  // Generate risk management data
+  const generateRiskManagement = async (
     prices: { open: number; high: number; low: number; close: number }[],
     volumes: number[],
     metrics: any,
     atr: number,
     setupType: 'bullish_breakout' | 'support_bounce' | 'trend_continuation',
-    horizon: 'swing' | 'positional' | 'longterm'
-  ): any => {
+    horizon: 'swing' | 'positional' | 'longterm',
+    symbol: string
+  ): Promise<any> => {
     const current = prices[prices.length - 1];
     const trend = metrics.trend;
     const recentVolume = volumes.slice(-5);
@@ -321,33 +406,143 @@ function TradePlanPage() {
       }
     })();
 
-    // Initial stop loss based on setup type and timeframe
-    const initialStopLoss: any = (() => {
+    // Enhanced swing low stop loss calculation with proper risk hierarchy
+    const calculateSwingLowStopLoss = async (symbol: string): Promise<any> => {
+      try {
+        // Get swing low using enhanced calculation
+        const swingLowPrice = await calculateEnhancedSwingLow(symbol, horizon as 'swing' | 'positional' | 'longterm');
+        
+        if (swingLowPrice === null) {
+          console.warn('No swing low found, falling back to ATR-based stop loss');
+          return getATRBasedStopLoss();
+        }
+
+        // Progressive buffer and risk tolerance based on timeframe
+        const riskParams = {
+          swing: { buffer: 0.005, maxRisk: 0.08, minDistance: 0.02 },     // 0.5% buffer, 8% max risk, 2% min distance
+          positional: { buffer: 0.015, maxRisk: 0.15, minDistance: 0.05 }, // 1.5% buffer, 15% max risk, 5% min distance  
+          longterm: { buffer: 0.025, maxRisk: 0.25, minDistance: 0.08 }    // 2.5% buffer, 25% max risk, 8% min distance
+        };
+
+        const params = riskParams[horizon as keyof typeof riskParams] || riskParams.swing;
+        
+        // Apply buffer below swing low
+        let finalStopLoss = swingLowPrice * (1 - params.buffer);
+        
+        // Ensure minimum distance for timeframe (longer timeframes need wider stops)
+        const minStopLossDistance = current.close * params.minDistance;
+        const currentDistance = current.close - finalStopLoss;
+        
+        if (currentDistance < minStopLossDistance) {
+          console.log(`Enforcing minimum ${(params.minDistance * 100).toFixed(1)}% distance for ${horizon} timeframe`);
+          finalStopLoss = current.close - minStopLossDistance;
+        }
+        
+        // Check if within maximum risk tolerance
+        const maxStopLossDistance = current.close * params.maxRisk;
+        const stopLossDistance = current.close - finalStopLoss;
+        
+        if (stopLossDistance > maxStopLossDistance) {
+          console.warn(`Swing low exceeds ${(params.maxRisk * 100).toFixed(1)}% max risk for ${horizon}, using max distance`);
+          finalStopLoss = current.close - maxStopLossDistance;
+        }
+
+        return {
+          price: finalStopLoss,
+          type: 'fixed' as const,
+          description: `Stop loss below swing low (${horizon}, ${(params.buffer * 100).toFixed(1)}% buffer)`,
+          method: 'swing_low_pivot',
+          swingLowPrice: swingLowPrice,
+          bufferPercentage: params.buffer,
+          enforced: currentDistance < minStopLossDistance ? 'minimum_distance' : stopLossDistance > maxStopLossDistance ? 'maximum_risk' : 'swing_low'
+        };
+
+      } catch (error) {
+        console.error('Error calculating swing low stop loss:', error);
+        return getATRBasedStopLoss();
+      }
+    };
+
+    // Fallback ATR-based stop loss function
+    const getATRBasedStopLoss = () => {
       const atrMultiplier = horizon === 'swing' ? 1.5 : horizon === 'positional' ? 2 : 2.5;
       switch (setupType) {
         case 'bullish_breakout':
           return {
             price: Math.max(current.close - (atr * atrMultiplier), nearestSupport),
             type: 'trailing_stop' as const,
-            description: 'Stop loss below breakout level',
-            atrMultiple: atrMultiplier
+            description: 'Stop loss below breakout level (ATR-based fallback)',
+            atrMultiple: atrMultiplier,
+            method: 'atr_fallback'
           };
         case 'support_bounce':
           return {
             price: nearestSupport - (atr * atrMultiplier),
             type: 'trailing_stop' as const,
-            description: 'Stop loss below support level',
-            atrMultiple: atrMultiplier
+            description: 'Stop loss below support level (ATR-based fallback)',
+            atrMultiple: atrMultiplier,
+            method: 'atr_fallback'
           };
         case 'trend_continuation':
           return {
             price: current.close - (atr * atrMultiplier),
             type: 'trailing_stop' as const,
-            description: 'Stop loss below trend continuation',
-            atrMultiple: atrMultiplier
+            description: 'Stop loss below trend continuation (ATR-based fallback)',
+            atrMultiple: atrMultiplier,
+            method: 'atr_fallback'
+          };
+        default:
+          return {
+            price: current.close - (atr * atrMultiplier),
+            type: 'fixed' as const,
+            description: 'Default ATR-based stop loss',
+            atrMultiple: atrMultiplier,
+            method: 'atr_fallback'
           };
       }
-    })();
+    };
+
+    // Enhanced stop loss logic with swing low priority and intelligent fallbacks
+    const calculateEnhancedStopLoss = async (symbol: string): Promise<any> => {
+      try {
+        // Step 1: Try swing low calculation
+        const swingLowResult = await calculateSwingLowStopLoss(symbol);
+        
+        // Check if swing low risk is acceptable
+        const swingLowRisk = ((current.close - swingLowResult.price) / current.close) * 100;
+        const maxRisk = horizon === 'swing' ? 8 : horizon === 'positional' ? 15 : 20;
+        
+        if (swingLowRisk <= maxRisk && swingLowResult.method === 'swing_low_pivot') {
+          console.log(`✅ Using swing low stop loss: $${swingLowResult.price.toFixed(2)} (${swingLowRisk.toFixed(2)}% risk)`);
+          return swingLowResult;
+        }
+        
+        // Step 2: Try ATR-based calculation if swing low too risky
+        console.log(`⚠️ Swing low risk ${swingLowRisk.toFixed(2)}% > ${maxRisk}%, trying ATR fallback`);
+        const atrResult = getATRBasedStopLoss();
+        const atrRisk = ((current.close - atrResult.price) / current.close) * 100;
+        
+        if (atrRisk <= maxRisk) {
+          console.log(`✅ Using ATR stop loss: $${atrResult.price.toFixed(2)} (${atrRisk.toFixed(2)}% risk)`);
+          return atrResult;
+        }
+        
+        // Step 3: If both are too risky, proceed with swing low anyway (as requested)
+        console.log(`⚠️ Both swing low and ATR exceed risk limits, proceeding with swing low`);
+        return {
+          ...swingLowResult,
+          description: `${swingLowResult.description} (high risk accepted)`,
+          riskWarning: true
+        };
+        
+      } catch (error) {
+        console.error('Error in enhanced stop loss calculation:', error);
+        return getATRBasedStopLoss();
+      }
+    };
+
+    // Use enhanced stop loss calculation
+    const initialStopLoss: any = await calculateEnhancedStopLoss(symbol);
 
     // Targets based on setup type, risk:reward, and timeframe
     const baseMultipliers = horizon === 'swing' ? [1.5, 2.5, 4] :
@@ -470,13 +665,22 @@ function TradePlanPage() {
       volumeConfirmation: recentVolume.some(vol => vol > avgVolume * 1.5),
       patternReliability: probabilityScore,
       suggestedPositionSize: (() => {
-        if (horizon === 'swing') {
-          return probabilityScore > 70 ? 5 : 3;
-        } else if (horizon === 'positional') {
-          return probabilityScore > 70 ? 4 : 2;
-        } else {
-          return probabilityScore > 70 ? 3 : 1;
-        }
+        // Calculate position size based on risk management principles
+        const riskPerTrade = horizon === 'swing' ? 2 : horizon === 'positional' ? 1.5 : 1; // % of portfolio to risk
+        const stopLossDistance = Math.abs(current.close - initialStopLoss.price);
+        const riskPerShare = (stopLossDistance / current.close) * 100; // Risk per share as %
+        
+        // Calculate position size: (Risk per trade %) / (Risk per share %) = Position size %
+        const calculatedSize = Math.min(riskPerTrade / (riskPerShare || 1), 10); // Cap at 10%
+        
+        // Adjust based on confidence and setup quality
+        const confidenceMultiplier = probabilityScore > 80 ? 1.3 : probabilityScore > 60 ? 1 : 0.7;
+        const volatilityAdjustment = atr / current.close > 0.03 ? 0.7 : 1; // Reduce size for high volatility
+        const volumeAdjustment = recentVolume.some(vol => vol > avgVolume * 1.5) ? 1.1 : 0.9;
+        
+        const finalSize = calculatedSize * confidenceMultiplier * volatilityAdjustment * volumeAdjustment;
+        
+        return Math.round(Math.max(0.5, Math.min(finalSize, 8)) * 10) / 10; // Between 0.5% and 8%
       })(),
     };
   };
@@ -1042,38 +1246,38 @@ function TradePlanPage() {
     }
     return (
       <main className="flex-1 pt-[68px] pb-12 bg-gradient-to-br from-blue-50 via-white to-blue-100">
-        <div className="container mx-auto px-4 flex flex-col min-h-[60vh] justify-center items-center">
+        <div className="container mx-auto px-3 sm:px-4 flex flex-col min-h-[60vh] justify-center items-center">
           <div className="max-w-lg w-full">
-            <div className="bg-white/90 border border-blue-200 rounded-2xl shadow-lg p-8 flex flex-col items-center animate-fade-in">
+            <div className="bg-white/90 border border-blue-200 rounded-2xl shadow-lg p-6 sm:p-8 flex flex-col items-center animate-fade-in">
               <div className="flex flex-col items-center mb-4">
                 <svg width="48" height="48" fill="none" viewBox="0 0 48 48" className="mb-2">
                   <circle cx="24" cy="24" r="24" fill="#DBEAFE"/>
                   <path d="M24 14v10" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round"/>
                   <circle cx="24" cy="32" r="2" fill="#2563EB"/>
                 </svg>
-                <h1 className="text-2xl font-bold text-blue-900 mb-1">Daily Quota Reached</h1>
-                <p className="text-sm text-muted-foreground text-center max-w-md">
+                <h1 className="text-xl sm:text-2xl font-bold text-blue-900 mb-1 text-center">Daily Quota Reached</h1>
+                <p className="text-sm text-muted-foreground text-center max-w-md px-2 leading-relaxed">
                   {upgradeMessage ? null : (typeof error === 'string' ? error : 'You have used up your daily quota. Please come back tomorrow.')}
                 </p>
-                <div className="mt-2 text-xs text-blue-800 font-medium bg-blue-100 rounded px-2 py-1">
+                <div className="mt-2 text-xs text-blue-800 font-medium bg-blue-100 rounded-lg px-3 py-2">
                   {/* Removed requests today indicator */}
                 </div>
               </div>
               {upgradeMessage && (
                 <div className="w-full text-center mb-6">
-                  <div className="text-base font-semibold text-blue-900 mb-2 animate-fade-in-slow">
+                  <div className="text-sm sm:text-base font-semibold text-blue-900 mb-2 animate-fade-in-slow px-2 leading-relaxed">
                     {upgradeMessage}
                   </div>
                   {cta && (
                     <a
                       href={ctaLink}
-                      className="inline-block mt-4 px-8 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 text-white font-bold shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-200 text-lg animate-pulse-slow"
+                      className="mt-4 px-6 sm:px-8 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-blue-400 text-white font-bold shadow-lg hover:scale-105 hover:shadow-xl transition-all duration-200 text-base sm:text-lg animate-pulse-slow min-h-[48px] flex items-center justify-center text-center"
                       style={{ animation: 'pulse 2.5s infinite' }}
                     >
                       {cta}
                     </a>
                   )}
-                  <div className="mt-4 text-xs text-muted-foreground">
+                  <div className="mt-4 text-xs text-muted-foreground px-2 leading-relaxed">
                     Premium unlocks 10x more requests, exclusive features, and priority support. Invest in your trading edge!
                   </div>
                 </div>
@@ -1097,12 +1301,12 @@ function TradePlanPage() {
   if (loading) {
     return (
       <main className="flex-1 pt-[68px] pb-12">
-        <div className="container mx-auto px-4 flex flex-col min-h-[60vh] justify-center items-center">
-          <h1 className="text-2xl font-bold mb-4">Generating Trade Plan...</h1>
-          <p className="mb-6 text-muted-foreground text-center max-w-md">
+        <div className="container mx-auto px-3 sm:px-4 flex flex-col min-h-[60vh] justify-center items-center">
+          <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center">Generating Trade Plan...</h1>
+          <p className="mb-6 text-muted-foreground text-center max-w-md px-4 leading-relaxed">
             Your trade plan is being generated. This may take a few moments.
           </p>
-          <div className="animate-spin rounded-full h-32 w-32 border-t-4 border-b-4 border-primary mb-4"></div>
+          <div className="animate-spin rounded-full h-24 w-24 sm:h-32 sm:w-32 border-t-4 border-b-4 border-primary mb-4"></div>
         </div>
       </main>
     );
@@ -1111,17 +1315,17 @@ function TradePlanPage() {
   if (error) {
     return (
       <main className="flex-1 pt-[68px] pb-12">
-        <div className="container mx-auto px-4 flex flex-col min-h-[60vh] justify-center items-center">
-          <h1 className="text-2xl font-bold mb-4">Error Generating Trade Plan</h1>
-          <p className="mb-6 text-muted-foreground text-center max-w-md">
+        <div className="container mx-auto px-3 sm:px-4 flex flex-col min-h-[60vh] justify-center items-center">
+          <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center">Error Generating Trade Plan</h1>
+          <p className="mb-6 text-muted-foreground text-center max-w-md px-4 leading-relaxed">
             {error}
           </p>
           {showSignIn ? (
-            <Button onClick={() => signIn('google')} className="w-full max-w-xs bg-sky-600 hover:bg-sky-700">
+            <Button onClick={() => signIn('google')} className="w-full max-w-xs bg-sky-600 hover:bg-sky-700 min-h-[48px]" size="lg">
               Sign In with Google
             </Button>
           ) : (
-            <Button onClick={() => fetchTradePlan(symbol, horizon)} className="w-full max-w-xs">
+            <Button onClick={() => fetchTradePlan(symbol, horizon)} className="w-full max-w-xs min-h-[48px]" size="lg">
               Retry
             </Button>
           )}
@@ -1145,7 +1349,21 @@ function TradePlanPage() {
         <meta name="twitter:description" content="Generate actionable trade plans for any stock. Get entry, stop, targets, and risk management in seconds. Upgrade for more daily requests and premium features." />
         <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
       </Head>
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-3 sm:px-4">
+        {/* Trade Plan Introduction Section */}
+        {tradePlan && (
+          <div className="mb-6 sm:mb-8">
+            <div className="text-center mb-4">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
+                Trade Plan for {tradePlan.symbol}
+              </h1>
+              <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+                Comprehensive analysis with entry zones, targets, and risk management for your trading strategy.
+              </p>
+            </div>
+          </div>
+        )}
+        
         {/* Place TradePlanHeader at the top for consistent UX, pass onTimeframeChange */}
         {tradePlan && (
           <TradePlanHeader
@@ -1159,7 +1377,7 @@ function TradePlanPage() {
         )}
         {/* Show requests used and time until reset if usageInfo is present and quota not exceeded */}
         {usageInfo && !quotaExceeded && (
-          <div className="mt-4 text-xs text-blue-800 font-medium bg-blue-100 rounded px-2 py-1 inline-block">
+          <div className="mt-4 text-xs text-blue-800 font-medium bg-blue-100 rounded-lg px-3 py-2 inline-block">
             Requests used: {usageInfo.request_count}
             {usageInfo.date && (
               <span className="ml-2 text-blue-700">(Resets in {getTimeUntilQuotaReset(usageInfo.date)})</span>
@@ -1169,32 +1387,68 @@ function TradePlanPage() {
         {/* Only render trade plan components if tradePlan exists */}
         {tradePlan && (
           <>
-            <div className="mt-8">
+            <div className="mt-6 sm:mt-8">
+              <ExecutiveSummary tradePlan={tradePlan} />
+            </div>
+            <div className="mt-6 sm:mt-8">
+              <TradingChart 
+                symbol={symbol}
+                entryPrice={tradePlan.riskManagement?.entryZone?.high || tradePlan.currentPrice}
+                stopLoss={tradePlan.riskManagement?.initialStopLoss?.price || tradePlan.currentPrice * 0.95}
+                targetPrice={tradePlan.riskManagement?.targets?.[0]?.price || tradePlan.currentPrice * 1.1}
+                timeHorizon={horizon as 'swing' | 'positional' | 'longterm'}
+                entryZone={tradePlan.riskManagement?.entryZone}
+                priceHistory={tradePlan.priceHistory}
+              />
+            </div>
+            <div className="mt-6 sm:mt-8">
               <TradingRecommendation tradePlan={tradePlan} onTimeframeChange={handleHorizonChange} />
             </div>
-            <div className="mt-8">
+            <div className="mt-6 sm:mt-8">
               <TechnicalAnalysis tradePlan={tradePlan} onHorizonChange={handleHorizonChange} />
             </div>
           </>
         )}
-        <div className="mt-8">
-          <Button
-            onClick={() => {
-              setCopied(true);
-              navigator.clipboard.writeText(window.location.href);
-            }}
-            className="w-full max-w-xs"
-          >
-            {copied ? 'Link Copied!' : 'Share This Trade Plan'}
-            <Share2 className="w-5 h-5 ml-2" />
-          </Button>
+        <div className="mt-8 sm:mt-12 space-y-6">
+          {/* Action Buttons Section */}
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button
+              onClick={() => {
+                setCopied(true);
+                navigator.clipboard.writeText(window.location.href);
+              }}
+              className="w-full sm:w-auto min-w-[200px] min-h-[48px] text-base bg-slate-700 hover:bg-slate-800 text-white"
+              size="lg"
+            >
+              {copied ? 'Link Copied!' : 'Share This Analysis'}
+              <Share2 className="w-5 h-5 ml-2" />
+            </Button>
+            <Button
+              onClick={() => window.location.reload()}
+              variant="outline"
+              className="w-full sm:w-auto min-w-[200px] min-h-[48px] text-base"
+              size="lg"
+            >
+              Generate New Plan
+            </Button>
+          </div>
+          
+          {/* Additional Resources */}
+          <div className="text-center">
+            <div className="inline-flex items-center gap-4 text-xs text-muted-foreground bg-muted/30 rounded-lg px-4 py-2">
+              <span>Need help?</span>
+              <a href="/education" className="text-slate-600 hover:text-slate-800 hover:underline font-medium">Trading Education</a>
+              <span>•</span>
+              <a href="/faq" className="text-slate-600 hover:text-slate-800 hover:underline font-medium">FAQ</a>
+            </div>
+          </div>
         </div>
-        <div className="mt-8">
+        <div className="mt-6 sm:mt-8">
           {/* Show ads for free and not signed in users, hide for paid */}
           {/* No ads in paid trade plan feature */}
         </div>
-        <div className="mt-8">
-          <p className="text-xs text-muted-foreground text-center">
+        <div className="mt-6 sm:mt-8">
+          <p className="text-xs text-muted-foreground text-center px-4 leading-relaxed">
             This analysis is for educational purposes only. Always conduct your own research before making investment decisions.
           </p>
         </div>
@@ -1202,10 +1456,10 @@ function TradePlanPage() {
       
       {/* Sign In modal for unauthorized access */}
       <Dialog open={showSignIn} onOpenChange={setShowSignIn}>
-        <DialogContent>
-          <div className="text-center p-4">
-            <h2 className="text-2xl font-bold mb-2 text-sky-800">Welcome to TradeCraft</h2>
-            <p className="mb-4 text-gray-700 text-lg">
+        <DialogContent className="max-w-md mx-auto">
+          <div className="text-center p-2 sm:p-4">
+            <h2 className="text-xl sm:text-2xl font-bold mb-2 text-sky-800">Welcome to TradeCraft</h2>
+            <p className="mb-4 text-gray-700 text-base sm:text-lg leading-relaxed px-2">
               Sign in with Google to generate professional trade plans and access TradeCraft&apos;s powerful analysis tools.
             </p>
             <div className="mb-4">
@@ -1220,12 +1474,12 @@ function TradePlanPage() {
             </div>
             <Button
               size="lg"
-              className="bg-sky-600 hover:bg-sky-700 text-white font-bold text-lg px-8 py-3 rounded-xl shadow-lg"
+              className="bg-sky-600 hover:bg-sky-700 text-white font-bold text-base sm:text-lg px-6 sm:px-8 py-3 rounded-xl shadow-lg min-h-[48px]"
               onClick={() => signIn('google')}
             >
               Sign In with Google
             </Button>
-            <p className="text-xs text-gray-500 mt-4">
+            <p className="text-xs text-gray-500 mt-4 px-2">
               Free to start • No credit card required
             </p>
           </div>

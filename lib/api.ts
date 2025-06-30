@@ -202,10 +202,14 @@ export async function getStockData(symbol: string, retries = 3, horizon: string 
       low: closes[closes.length - 1] - atr,
       high: closes[closes.length - 1] + atr
     };
-    const stopLoss = {
-      price: closes[closes.length - 1] - 2 * atr,
-      type: 'fixed'
-    };
+    
+    // Use enhanced stop loss calculation with swing low priority
+    const stopLoss = await calculateEnhancedStopLoss(
+      symbol,
+      closes[closes.length - 1],
+      atr,
+      horizon || 'swing'
+    );
     const targets = [
       { price: closes[closes.length - 1] + atr, probability: 70, riskRewardRatio: 1.5 },
       { price: closes[closes.length - 1] + 2 * atr, probability: 50, riskRewardRatio: 2.0 },
@@ -260,7 +264,7 @@ export async function getStockData(symbol: string, retries = 3, horizon: string 
         education: 'Volatility measures the standard deviation of daily returns. Higher volatility means more risk.',
         actionableAdvice: volatility !== 'N/A'
           ? (parseFloat(volatility) > 3.5
-              ? 'High volatility. Consider reducing position size or waiting for stabilization.'
+              ? 'High volatility. Consider reducing position size to 50-70% of normal or waiting for stabilization.'
               : parseFloat(volatility) < 1
               ? 'Low volatility. Consider waiting for a breakout.'
               : 'Moderate volatility. Adjust position size accordingly.')
@@ -281,9 +285,23 @@ export async function getStockData(symbol: string, retries = 3, horizon: string 
     else if (trend === 'sideways') setupType = 'support_bounce';
 
     let summary = '';
-    if (confidenceLevel === 'high') summary = 'Strong alignment of trend, volume, and indicators. Consider entering with proper risk management.';
-    else if (confidenceLevel === 'medium') summary = 'Some signals align, but wait for confirmation or use smaller position size.';
-    else summary = 'Signals are mixed or weak. Avoid new entries or use minimal size.';
+    const calculatedPositionSize = (() => {
+      const riskPerTrade = horizon === 'swing' ? 2 : horizon === 'positional' ? 1.5 : 1;
+      const stopLossDistance = Math.abs(parseFloat(latest.close) - stopLoss.price);
+      const riskPerShare = stopLossDistance / parseFloat(latest.close) * 100;
+      const calculatedSize = Math.min(riskPerTrade / (riskPerShare || 1), 10);
+      const confidenceMultiplier = confidenceLevel === 'high' ? 1.2 : confidenceLevel === 'low' ? 0.6 : 1;
+      const volatilityAdjustment = atr / parseFloat(latest.close) > 0.03 ? 0.7 : 1;
+      return Math.round(Math.max(0.5, calculatedSize * confidenceMultiplier * volatilityAdjustment) * 10) / 10;
+    })();
+    
+    if (confidenceLevel === 'high') {
+      summary = `Strong alignment of trend, volume, and indicators. Consider ${calculatedPositionSize}% position size with proper risk management.`;
+    } else if (confidenceLevel === 'medium') {
+      summary = `Some signals align, but wait for confirmation or use ${Math.max(0.5, calculatedPositionSize * 0.7)}% position size.`;
+    } else {
+      summary = `Signals are mixed or weak. Avoid new entries or use minimal ${Math.max(0.5, calculatedPositionSize * 0.5)}% size.`;
+    }
     // Use USD formatting for all price values in summary
     const { formatNumber } = await import('./utils');
     // Remove entry/stop/targets from summary for market outlook
@@ -302,7 +320,21 @@ export async function getStockData(symbol: string, retries = 3, horizon: string 
       riskManagement: {
         probabilityScore: 70, // Placeholder, replace with real calculation if available
         riskRewardRatio: 2.0, // Placeholder, replace with real calculation if available
-        suggestedPositionSize: 100, // Placeholder, replace with real calculation if available
+        suggestedPositionSize: (() => {
+          // Calculate position size based on risk per trade and timeframe
+          const riskPerTrade = horizon === 'swing' ? 2 : horizon === 'positional' ? 1.5 : 1; // % of portfolio to risk
+          const stopLossDistance = Math.abs(parseFloat(latest.close) - stopLoss.price);
+          const riskPerShare = stopLossDistance / parseFloat(latest.close) * 100; // Risk per share as %
+          
+          // Calculate position size: (Risk per trade %) / (Risk per share %) = Position size %
+          const calculatedSize = Math.min(riskPerTrade / (riskPerShare || 1), 10); // Cap at 10%
+          
+          // Adjust based on confidence and volatility
+          const confidenceMultiplier = confidenceLevel === 'high' ? 1.2 : confidenceLevel === 'low' ? 0.6 : 1;
+          const volatilityAdjustment = atr / parseFloat(latest.close) > 0.03 ? 0.7 : 1; // Reduce size for high volatility
+          
+          return Math.round(Math.max(0.5, calculatedSize * confidenceMultiplier * volatilityAdjustment) * 10) / 10;
+        })(),
         entryZone,
         initialStopLoss: stopLoss,
         targets,
@@ -397,10 +429,233 @@ function getIndicatorAdvice(name: string, value: any, signal: string) {
   if (name === 'Volatility') {
     if (value !== 'N/A') {
       const numericValue = parseFloat(value);
-      if (numericValue > 3.5) return 'High volatility. Consider reducing position size or waiting for stabilization.';
+      if (numericValue > 3.5) return 'High volatility. Consider reducing position size to 50-70% of normal or waiting for stabilization.';
       if (numericValue < 1) return 'Low volatility. Consider waiting for a breakout.';
       return 'Moderate volatility. Adjust position size accordingly.';
     }
   }
   return '';
+}
+
+// Swing low detection and stop loss calculation functions
+function calculateSwingLow(
+  prices: { open: number; high: number; low: number; close: number }[],
+  leftCandles: number = 15,
+  rightCandles: number = 15
+): number | null {
+  if (prices.length < leftCandles + rightCandles + 1) {
+    return null;
+  }
+
+  let swingLow = null;
+  let swingLowPrice = Infinity;
+
+  // Start from leftCandles and go until length - rightCandles
+  for (let i = leftCandles; i < prices.length - rightCandles; i++) {
+    const currentLow = prices[i].low;
+    let isSwingLow = true;
+
+    // Check left candles
+    for (let j = i - leftCandles; j < i; j++) {
+      if (prices[j].low <= currentLow) {
+        isSwingLow = false;
+        break;
+      }
+    }
+
+    if (!isSwingLow) continue;
+
+    // Check right candles
+    for (let j = i + 1; j <= i + rightCandles; j++) {
+      if (prices[j].low <= currentLow) {
+        isSwingLow = false;
+        break;
+      }
+    }
+
+    // If this is a swing low and it's the most recent valid one, use it
+    if (isSwingLow && currentLow < swingLowPrice) {
+      swingLow = currentLow;
+      swingLowPrice = currentLow;
+    }
+  }
+
+  return swingLow;
+}
+
+async function fetchTimeframeData(
+  symbol: string,
+  timeframe: 'swing' | 'positional' | 'longterm'
+): Promise<{ open: number; high: number; low: number; close: number }[]> {
+  try {
+    // Always use daily data as base for consistency, but fetch enough history for different lookback periods
+    const outputSizes = {
+      swing: 30,      // 30 days for recent swing lows
+      positional: 60, // 60 days for medium-term swing lows
+      longterm: 120   // 120 days for major swing lows
+    };
+
+    const outputsize = outputSizes[timeframe];
+
+    // Use the same API key rotation as the main function
+    const apiKey = getNextTwelveDataApiKey();
+    const response = await fetch(
+      `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&outputsize=${outputsize}&apikey=${apiKey}`
+    );
+
+    if (!response.ok) {
+      console.warn(`Failed to fetch daily data for ${timeframe} swing low calculation`);
+      return [];
+    }
+
+    const data = await response.json();
+    
+    if (data.status === 'error') {
+      console.warn(`API error fetching ${timeframe} data:`, data.message);
+      return [];
+    }
+
+    return data.values?.map((item: any) => ({
+      open: parseFloat(item.open),
+      high: parseFloat(item.high),
+      low: parseFloat(item.low),
+      close: parseFloat(item.close)
+    })) || [];
+  } catch (error) {
+    console.warn(`Error fetching ${timeframe} data:`, error);
+    return [];
+  }
+}
+
+async function calculateEnhancedStopLoss(
+  symbol: string,
+  currentPrice: number,
+  atr: number,
+  horizon: string,
+  setupType: string = 'bullish_breakout'
+): Promise<any> {
+  try {
+    // Step 1: Try swing low calculation
+    const swingLowResult = await calculateSwingLowStopLoss(symbol, currentPrice, atr, horizon, setupType);
+    
+    // Check if swing low risk is acceptable
+    const swingLowRisk = ((currentPrice - swingLowResult.price) / currentPrice) * 100;
+    const maxRisk = horizon === 'swing' ? 8 : horizon === 'positional' ? 15 : 20;
+    
+    if (swingLowRisk <= maxRisk && swingLowResult.method === 'swing_low_pivot') {
+      console.log(`✅ Using swing low stop loss: $${swingLowResult.price.toFixed(2)} (${swingLowRisk.toFixed(2)}% risk)`);
+      return swingLowResult;
+    }
+    
+    // Step 2: Try ATR-based calculation if swing low too risky
+    console.log(`⚠️ Swing low risk ${swingLowRisk.toFixed(2)}% > ${maxRisk}%, trying ATR fallback`);
+    const atrResult = getATRBasedStopLoss(currentPrice, atr, horizon, setupType);
+    const atrRisk = ((currentPrice - atrResult.price) / currentPrice) * 100;
+    
+    if (atrRisk <= maxRisk) {
+      console.log(`✅ Using ATR stop loss: $${atrResult.price.toFixed(2)} (${atrRisk.toFixed(2)}% risk)`);
+      return atrResult;
+    }
+    
+    // Step 3: If both are too risky, proceed with swing low anyway (as requested)
+    console.log(`⚠️ Both swing low and ATR exceed risk limits, proceeding with swing low`);
+    return {
+      ...swingLowResult,
+      description: `${swingLowResult.description} (high risk accepted)`,
+      riskWarning: true
+    };
+    
+  } catch (error) {
+    console.error('Error in enhanced stop loss calculation:', error);
+    return getATRBasedStopLoss(currentPrice, atr, horizon, setupType);
+  }
+}
+
+async function calculateSwingLowStopLoss(
+  symbol: string, 
+  currentPrice: number, 
+  atr: number, 
+  horizon: string,
+  setupType: string
+): Promise<any> {
+  try {
+    // Fetch daily data for consistent swing low detection
+    const timeframeData = await fetchTimeframeData(symbol, horizon as 'swing' | 'positional' | 'longterm');
+    
+    if (timeframeData.length === 0) {
+      console.warn('No timeframe data available, falling back to ATR-based stop loss');
+      return getATRBasedStopLoss(currentPrice, atr, horizon, setupType);
+    }
+
+    // Use different lookback periods based on timeframe for progressive risk tolerance
+    const lookbackPeriods = {
+      swing: { left: 5, right: 5 },     // Recent swing lows for quick exits
+      positional: { left: 10, right: 10 }, // Medium-term swing lows
+      longterm: { left: 20, right: 20 }    // Major swing lows for longer holds
+    };
+
+    const periods = lookbackPeriods[horizon as keyof typeof lookbackPeriods] || lookbackPeriods.swing;
+    const swingLowPrice = calculateSwingLow(timeframeData, periods.left, periods.right);
+    
+    if (swingLowPrice === null) {
+      console.warn('No swing low found, falling back to ATR-based stop loss');
+      return getATRBasedStopLoss(currentPrice, atr, horizon, setupType);
+    }
+
+    // Progressive risk parameters ensuring longer timeframes have wider stops
+    const riskParams = {
+      swing: { buffer: 0.005, maxRisk: 0.08, minDistance: 0.02 },     // 0.5% buffer, 8% max risk, 2% min distance
+      positional: { buffer: 0.015, maxRisk: 0.15, minDistance: 0.05 }, // 1.5% buffer, 15% max risk, 5% min distance  
+      longterm: { buffer: 0.025, maxRisk: 0.25, minDistance: 0.08 }    // 2.5% buffer, 25% max risk, 8% min distance
+    };
+
+    const params = riskParams[horizon as keyof typeof riskParams] || riskParams.swing;
+    
+    // Apply buffer below swing low
+    let finalStopLoss = swingLowPrice * (1 - params.buffer);
+    
+    // Ensure minimum distance for timeframe (critical for proper risk hierarchy)
+    const minStopLossDistance = currentPrice * params.minDistance;
+    const currentDistance = currentPrice - finalStopLoss;
+    
+    if (currentDistance < minStopLossDistance) {
+      console.log(`Enforcing minimum ${(params.minDistance * 100).toFixed(1)}% distance for ${horizon} timeframe`);
+      finalStopLoss = currentPrice - minStopLossDistance;
+    }
+    
+    // Check maximum risk tolerance
+    const maxStopLossDistance = currentPrice * params.maxRisk;
+    const stopLossDistance = currentPrice - finalStopLoss;
+    
+    if (stopLossDistance > maxStopLossDistance) {
+      console.warn(`Swing low exceeds ${(params.maxRisk * 100).toFixed(1)}% max risk for ${horizon}, using max distance`);
+      finalStopLoss = currentPrice - maxStopLossDistance;
+    }
+
+    return {
+      price: finalStopLoss,
+      type: 'fixed' as const,
+      description: `Stop loss below swing low (${horizon}, ${(params.buffer * 100).toFixed(1)}% buffer)`,
+      method: 'swing_low_pivot',
+      swingLowPrice: swingLowPrice,
+      bufferPercentage: params.buffer,
+      enforced: currentDistance < minStopLossDistance ? 'minimum_distance' : stopLossDistance > maxStopLossDistance ? 'maximum_risk' : 'swing_low'
+    };
+
+  } catch (error) {
+    console.error('Error calculating swing low stop loss:', error);
+    return getATRBasedStopLoss(currentPrice, atr, horizon, setupType);
+  }
+}
+
+function getATRBasedStopLoss(currentPrice: number, atr: number, horizon: string, setupType: string) {
+  const atrMultiplier = horizon === 'swing' ? 1.5 : horizon === 'positional' ? 2 : 2.5;
+  
+  return {
+    price: currentPrice - (atr * atrMultiplier),
+    type: 'fixed' as const,
+    description: `ATR-based stop loss (${atrMultiplier}x ATR)`,
+    atrMultiple: atrMultiplier,
+    method: 'atr_fallback'
+  };
 }

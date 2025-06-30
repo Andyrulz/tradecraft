@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { TradePlan, TimeHorizon } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpRight, ArrowDownRight, Minus, TrendingUp, DollarSign, LineChart, Target, AlertTriangle, Info, BarChart } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Minus, TrendingUp, DollarSign, LineChart, Target, AlertTriangle, Info, BarChart, Copy, CheckCircle } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import {
   Tooltip,
@@ -33,10 +33,23 @@ export function TradingRecommendation({ tradePlan, onTimeframeChange }: TradingR
   const [metrics, setMetrics] = useState<StockMetrics | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [copiedValues, setCopiedValues] = useState<Record<string, boolean>>({});
 
   const handleTimeframeChange = (value: TimeHorizon) => {
     setSelectedTimeframe(value);
     onTimeframeChange?.(value);
+  };
+
+  const handleCopy = async (value: string, key: string) => {
+    try {
+      await navigator.clipboard.writeText(value);
+      setCopiedValues(prev => ({ ...prev, [key]: true }));
+      setTimeout(() => {
+        setCopiedValues(prev => ({ ...prev, [key]: false }));
+      }, 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+    }
   };
 
   useEffect(() => {
@@ -91,11 +104,11 @@ export function TradingRecommendation({ tradePlan, onTimeframeChange }: TradingR
   const getConfidenceColor = () => {
     switch (tradePlan.confidenceLevel) {
       case 'high':
-        return 'bg-green-100 text-green-800';
+        return 'bg-slate-100 text-slate-800';
       case 'medium':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-slate-100 text-slate-700';
       case 'low':
-        return 'bg-red-100 text-red-800';
+        return 'bg-slate-100 text-slate-600';
       default:
         return 'bg-gray-100 text-gray-800';
     }
@@ -112,62 +125,77 @@ export function TradingRecommendation({ tradePlan, onTimeframeChange }: TradingR
   };
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      {/* Verbal Summary */}
-      <Card className="transition-all duration-300 hover:shadow-lg w-full">
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
-            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-              <LineChart className="h-5 w-5 text-primary" />
-              Trade Analysis
+    <div className="space-y-6">
+      {/* Enhanced Market Outlook with Progressive Disclosure */}
+      <Card className="transition-all duration-300 hover:shadow-lg border-0 bg-gradient-to-br from-blue-50 to-indigo-50">
+        <CardHeader className="pb-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+              <LineChart className="h-6 w-6 text-blue-600" />
+              Market Analysis
             </CardTitle>
-            <Badge variant="outline" className="text-sm animate-pulse">
-              {getTimeframeDescription()}
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="text-sm font-medium border-blue-200 text-blue-700">
+                {getTimeframeDescription()}
+              </Badge>
+              {getDirectionIcon()}
+            </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="space-y-6">
-            {/* Market Outlook */}
-            <div className="animate-slide-in">
-              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-primary" />
-                Market Outlook
+          <div className="space-y-4">
+            {/* Simplified Market Context */}
+            <div className="bg-white/80 backdrop-blur-sm p-4 rounded-xl border border-blue-100">
+              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2 text-blue-800">
+                <TrendingUp className="h-4 w-4" />
+                Market Context
               </h3>
-              <div className="bg-muted/50 p-4 rounded-lg transition-colors duration-300 hover:bg-muted">
-                {/* Show only general market/technical context, filter out entry/stop/target details */}
-                <p className="text-sm">
-                  {tradePlan.summary
-                    .split(/(?<=[.!?])\s+/)
-                    .filter(line =>
-                      !/\b(entry|stop[- ]?loss|target|exit)\b/i.test(line)
-                    )
-                    .join(' ')
-                  }
-                </p>
-              </div>
+              <p className="text-sm leading-relaxed text-gray-700">
+                {tradePlan.summary
+                  .split(/(?<=[.!?])\s+/)
+                  .filter(line =>
+                    !/\b(entry|stop[- ]?loss|target|exit)\b/i.test(line)
+                  )
+                  .slice(0, 2) // Only show first 2 sentences
+                  .join(' ')
+                }
+              </p>
             </div>
-            {/* Trade Recommendation */}
-            <div className="animate-slide-in">
-              <h3 className="text-sm font-semibold mb-2 flex items-center gap-2">
-                <Target className="h-4 w-4 text-primary" />
-                Trade Recommendation
-              </h3>
-              <div className="bg-muted/50 p-4 rounded-lg transition-colors duration-300 hover:bg-muted">
-                <div className="flex items-center gap-2 mb-2">
-                  <Badge className={getConfidenceColor()}>
-                    {tradePlan.confidenceLevel?.toUpperCase()}
-                  </Badge>
-                  <span className="text-sm text-muted-foreground">
-                    {tradePlan.setupType?.replace('_', ' ').toUpperCase()}
-                  </span>
+
+            {/* Action-Oriented Recommendation */}
+            <div className={`p-4 rounded-xl border-2 ${
+              tradePlan.confidenceLevel === 'high' ? 'bg-slate-50 border-slate-200' :
+              tradePlan.confidenceLevel === 'medium' ? 'bg-slate-50 border-slate-200' :
+              'bg-slate-50 border-slate-200'
+            }`}>
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 mt-1">
+                  {tradePlan.confidenceLevel === 'high' ? (
+                    <div className="h-6 w-6 rounded-full bg-slate-500 flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">✓</span>
+                    </div>
+                  ) : tradePlan.confidenceLevel === 'medium' ? (
+                    <div className="h-6 w-6 rounded-full bg-slate-400 flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">!</span>
+                    </div>
+                  ) : (
+                    <div className="h-6 w-6 rounded-full bg-slate-400 flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">⚠</span>
+                    </div>
+                  )}
                 </div>
-                {/* Only show a short actionable summary here, not the full tradePlan.summary */}
-                <p className="text-sm">
-                  {tradePlan.confidenceLevel === 'high' && 'Strong alignment of trend, volume, and indicators. Consider entering with proper risk management.'}
-                  {tradePlan.confidenceLevel === 'medium' && 'Some signals align, but wait for confirmation or use smaller position size.'}
-                  {tradePlan.confidenceLevel === 'low' && 'Signals are mixed or weak. Avoid new entries or use minimal size.'}
-                </p>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-sm mb-1">
+                    {tradePlan.confidenceLevel === 'high' && 'Strong Signal - Consider Entry'}
+                    {tradePlan.confidenceLevel === 'medium' && 'Moderate Signal - Wait for Confirmation'}
+                    {tradePlan.confidenceLevel === 'low' && 'Weak Signal - Avoid or Minimal Size'}
+                  </h4>
+                  <p className="text-xs leading-relaxed opacity-80">
+                    {tradePlan.confidenceLevel === 'high' && 'Multiple indicators align. Good risk/reward setup with volume confirmation.'}
+                    {tradePlan.confidenceLevel === 'medium' && 'Some indicators align. Consider smaller position or wait for additional confirmation.'}
+                    {tradePlan.confidenceLevel === 'low' && 'Mixed signals detected. High risk trade - consider avoiding or use learning position only.'}
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -184,36 +212,36 @@ export function TradingRecommendation({ tradePlan, onTimeframeChange }: TradingR
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {/* Trade Overview */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="space-y-2 p-3 rounded-lg border bg-card">
+            {/* Trade Overview - Mobile Optimized Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2 p-4 rounded-lg border bg-card">
                 <p className="text-sm text-muted-foreground">Trade Setup</p>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">
+                <div className="flex flex-col gap-2">
+                  <Badge variant="outline" className="self-start">
                     {(tradePlan?.setupType ?? '').replace('_', ' ').toUpperCase()}
                   </Badge>
-                  <Badge className={getConfidenceColor()}>
+                  <Badge className={`${getConfidenceColor()} self-start`}>
                     {(tradePlan?.confidenceLevel ?? '').toUpperCase()}
                   </Badge>
                 </div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground leading-relaxed">
                   {tradePlan.setupType === 'bullish_breakout' ? 'Look for volume confirmation on breakout' :
                    tradePlan.setupType === 'support_bounce' ? 'Enter on bounce from support' :
                    'Follow the trend with proper risk management'}
                 </p>
               </div>
 
-              <div className="space-y-2 p-3 rounded-lg border bg-card">
+              <div className="space-y-2 p-4 rounded-lg border bg-card">
                 <p className="text-sm text-muted-foreground">Risk Management</p>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">
+                <div className="flex flex-col gap-2">
+                  <Badge variant="outline" className="self-start">
                     {typeof tradePlan?.riskManagement?.riskRewardRatio === 'number' ? tradePlan.riskManagement.riskRewardRatio.toFixed(1) : 'N/A'}x R:R
                   </Badge>
-                  <Badge variant="outline">
+                  <Badge variant="outline" className="self-start">
                     {typeof tradePlan?.riskManagement?.suggestedPositionSize === 'number' ? tradePlan.riskManagement.suggestedPositionSize : 'N/A'}% Size
                   </Badge>
                 </div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground leading-relaxed">
                   {typeof tradePlan?.riskManagement?.riskRewardRatio === 'number' ? (
                     tradePlan.riskManagement.riskRewardRatio >= 2 ? 'Excellent risk/reward ratio' :
                     tradePlan.riskManagement.riskRewardRatio >= 1.5 ? 'Good risk/reward ratio' :
@@ -222,17 +250,17 @@ export function TradingRecommendation({ tradePlan, onTimeframeChange }: TradingR
                 </p>
               </div>
 
-              <div className="space-y-2 p-3 rounded-lg border bg-card">
+              <div className="space-y-2 p-4 rounded-lg border bg-card">
                 <p className="text-sm text-muted-foreground">Probability</p>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">
+                <div className="flex flex-col gap-2">
+                  <Badge variant="outline" className="self-start">
                     {typeof tradePlan?.riskManagement?.probabilityScore === 'number' ? tradePlan.riskManagement.probabilityScore : 'N/A'}% Success
                   </Badge>
-                  <Badge variant={tradePlan?.riskManagement?.volumeConfirmation ? "default" : "outline"}>
+                  <Badge variant={tradePlan?.riskManagement?.volumeConfirmation ? "default" : "outline"} className="self-start">
                     {tradePlan?.riskManagement?.volumeConfirmation ? "Volume Confirmed" : "Needs Volume"}
                   </Badge>
                 </div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground leading-relaxed">
                   {typeof tradePlan?.riskManagement?.probabilityScore === 'number' ? (
                     tradePlan.riskManagement.probabilityScore > 70 ? 'High probability setup' :
                     tradePlan.riskManagement.probabilityScore > 50 ? 'Moderate probability setup' :
@@ -241,14 +269,14 @@ export function TradingRecommendation({ tradePlan, onTimeframeChange }: TradingR
                 </p>
               </div>
 
-              <div className="space-y-2 p-3 rounded-lg border bg-card">
+              <div className="space-y-2 p-4 rounded-lg border bg-card">
                 <p className="text-sm text-muted-foreground">Pattern Reliability</p>
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline">
+                <div className="flex flex-col gap-2">
+                  <Badge variant="outline" className="self-start">
                     {typeof tradePlan?.riskManagement?.patternReliability === 'number' ? tradePlan.riskManagement.patternReliability : 'N/A'}% Reliable
                   </Badge>
                 </div>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground leading-relaxed">
                   {typeof tradePlan?.riskManagement?.patternReliability === 'number' ? (
                     tradePlan.riskManagement.patternReliability > 80 ? 'Very reliable pattern' :
                     tradePlan.riskManagement.patternReliability > 60 ? 'Reliable pattern' :
@@ -258,25 +286,46 @@ export function TradingRecommendation({ tradePlan, onTimeframeChange }: TradingR
               </div>
             </div>
 
-            {/* Trade Execution */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Trade Execution - Stack on Mobile */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Entry and Stop Loss */}
               <div className="space-y-4">
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-muted-foreground">Entry Zone</span>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Info className="h-4 w-4 text-muted-foreground" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Optimal price range to enter the trade</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <div className="flex items-center gap-2">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Info className="h-4 w-4 text-muted-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Optimal price range to enter the trade</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 w-6 p-0 hover:bg-gray-100"
+                        onClick={() => handleCopy(
+                          `${formatNumber(tradePlan?.riskManagement?.entryZone?.low)} - ${formatNumber(tradePlan?.riskManagement?.entryZone?.high)}`, 
+                          'entry-zone'
+                        )}
+                      >
+                        {copiedValues['entry-zone'] ? (
+                          <CheckCircle className="h-3 w-3 text-slate-600" />
+                        ) : (
+                          <Copy className="h-3 w-3 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-sm cursor-pointer hover:bg-gray-50 p-1 rounded"
+                       onClick={() => handleCopy(
+                         `${formatNumber(tradePlan?.riskManagement?.entryZone?.low)} - ${formatNumber(tradePlan?.riskManagement?.entryZone?.high)}`, 
+                         'entry-zone'
+                       )}>
                     <span>{formatNumber(tradePlan?.riskManagement?.entryZone?.low)}</span>
                     <span>{formatNumber(tradePlan?.riskManagement?.entryZone?.high)}</span>
                   </div>
@@ -304,21 +353,36 @@ export function TradingRecommendation({ tradePlan, onTimeframeChange }: TradingR
                 <div>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-muted-foreground">Stop Loss</span>
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger>
-                          <Info className="h-4 w-4 text-muted-foreground" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>Price level to exit if trade moves against you</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
+                    <div className="flex items-center gap-2">
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Info className="h-4 w-4 text-muted-foreground" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>Price level to exit if trade moves against you</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="h-6 w-6 p-0 hover:bg-gray-100"
+                        onClick={() => handleCopy(formatNumber(tradePlan?.riskManagement?.initialStopLoss?.price), 'stop-loss')}
+                      >
+                        {copiedValues['stop-loss'] ? (
+                          <CheckCircle className="h-3 w-3 text-slate-600" />
+                        ) : (
+                          <Copy className="h-3 w-3 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
-                  <div className="text-sm font-medium text-red-500">
+                  <div className="text-sm font-medium text-slate-700 cursor-pointer hover:bg-gray-50 p-1 rounded"
+                       onClick={() => handleCopy(formatNumber(tradePlan?.riskManagement?.initialStopLoss?.price), 'stop-loss')}>
                     {formatNumber(tradePlan?.riskManagement?.initialStopLoss?.price)}
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                     {tradePlan?.riskManagement?.initialStopLoss?.type === 'trailing' ?
                       'Trailing stop loss - moves with price' :
                       tradePlan?.riskManagement?.initialStopLoss?.type === 'fixed' ?
@@ -328,36 +392,49 @@ export function TradingRecommendation({ tradePlan, onTimeframeChange }: TradingR
                 </div>
               </div>
 
-              {/* Targets */}
-              <div className="space-y-4">
+              {/* Targets - Full Width on Mobile */}
+              <div className="space-y-4 lg:col-span-2">
                 <h4 className="text-sm text-muted-foreground mb-2">Price Targets</h4>
                 {Array.isArray(tradePlan?.riskManagement?.targets) && tradePlan.riskManagement.targets.length > 0 ? (
-                  tradePlan.riskManagement.targets.map((target, index) => (
-                    <div key={index} className="space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm">Target {index + 1}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-green-500">
-                            {formatNumber(target.price)}
-                          </span>
-                          <Badge variant="outline" className="text-xs">
-                            {typeof target.riskRewardRatio === 'number' ? target.riskRewardRatio : 'N/A'}x
-                          </Badge>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {tradePlan.riskManagement.targets.map((target, index) => (
+                      <div key={index} className="space-y-2 p-3 rounded-lg border bg-muted/20 hover:bg-muted/30 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium">Target {index + 1}</span>
+                          <div className="flex items-center gap-2">
+                            <Badge variant="outline" className="text-xs">
+                              {typeof target.riskRewardRatio === 'number' ? target.riskRewardRatio : 'N/A'}x
+                            </Badge>
+                            <Button                        size="sm"
+                        variant="ghost"
+                        className="h-6 w-6 p-0 hover:bg-gray-100"
+                        onClick={() => handleCopy(formatNumber(target.price), `target-${index}`)}
+                            >                            {copiedValues[`target-${index}`] ? (
+                              <CheckCircle className="h-3 w-3 text-slate-600" />
+                            ) : (
+                              <Copy className="h-3 w-3 text-muted-foreground" />
+                            )}
+                            </Button>
+                          </div>
                         </div>
+                        <div className="text-base font-semibold text-slate-700 cursor-pointer"
+                             onClick={() => handleCopy(formatNumber(target.price), `target-${index}`)}>
+                          {formatNumber(target.price)}
+                        </div>
+                        <Progress 
+                          value={typeof target.probability === 'number' ? target.probability : 0} 
+                          className="h-2"
+                        />
+                        <p className="text-xs text-muted-foreground leading-relaxed">
+                          {typeof target.probability === 'number' ? (
+                            target.probability > 70 ? 'High probability target' :
+                            target.probability > 50 ? 'Moderate probability target' :
+                            'Low probability target'
+                          ) : 'Target probability unavailable'}
+                        </p>
                       </div>
-                      <Progress 
-                        value={typeof target.probability === 'number' ? target.probability : 0} 
-                        className="h-2"
-                      />
-                      <p className="text-xs text-muted-foreground">
-                        {typeof target.probability === 'number' ? (
-                          target.probability > 70 ? 'High probability target' :
-                          target.probability > 50 ? 'Moderate probability target' :
-                          'Low probability target'
-                        ) : 'Target probability unavailable'}
-                      </p>
-                    </div>
-                  ))
+                    ))}
+                  </div>
                 ) : (
                   <p className="text-xs text-muted-foreground">No targets available</p>
                 )}
@@ -373,11 +450,11 @@ export function TradingRecommendation({ tradePlan, onTimeframeChange }: TradingR
           <CardHeader>
             <div className="flex items-center gap-2">
               <AlertTriangle className="h-5 w-5 text-red-500" />
-              <CardTitle className="text-red-800">Caution</CardTitle>
+              <CardTitle className="text-base sm:text-lg text-red-800">Caution</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-red-700">{tradePlan.avoidanceReason}</p>
+            <p className="text-sm text-red-700 leading-relaxed">{tradePlan.avoidanceReason}</p>
           </CardContent>
         </Card>
       )}

@@ -52,24 +52,24 @@ export function TechnicalAnalysis({ tradePlan }: TechnicalAnalysisProps) {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Actionable Technical Insights <span className="ml-2 text-xs font-normal text-muted-foreground">[{timeframeLabel}]</span></CardTitle>
+            <CardTitle className="text-lg sm:text-xl">Actionable Technical Insights <span className="ml-2 text-xs font-normal text-muted-foreground">[{timeframeLabel}]</span></CardTitle>
           </div>
-          <div className={`mt-2 text-base font-semibold ${summaryColor}`}>{actionableSummary}</div>
+          <div className={`mt-2 text-sm sm:text-base font-semibold ${summaryColor} leading-relaxed`}>{actionableSummary}</div>
         </CardHeader>
         <CardContent>
           {indicators.length === 0 ? (
             <div className="text-muted-foreground text-sm">No technical indicators available for this stock.</div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-4 sm:gap-6">
               {indicators.map((indicator: TechnicalIndicator, index: number) => (
-                <div key={index} className="space-y-2">
-                  <div className="flex items-center justify-between">
+                <div key={index} className="space-y-3 p-4 rounded-lg border bg-muted/20">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold">{indicator.name}</h3>
+                      <h3 className="font-semibold text-sm sm:text-base">{indicator.name}</h3>
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger>
-                            <Info className="h-4 w-4 text-muted-foreground" />
+                            <Info className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>{indicator.education}</p>
@@ -77,14 +77,14 @@ export function TechnicalAnalysis({ tradePlan }: TechnicalAnalysisProps) {
                         </Tooltip>
                       </TooltipProvider>
                     </div>
-                    <Badge className={getSignalColor(indicator.signal)}>
+                    <Badge className={`${getSignalColor(indicator.signal)} self-start sm:self-center`}>
                       {indicator.signal.toUpperCase()}
                     </Badge>
                   </div>
-                  <div className="text-sm text-muted-foreground">
+                  <div className="text-sm text-muted-foreground leading-relaxed">
                     {indicator.description}
                   </div>
-                  <div className="text-sm font-medium">
+                  <div className="text-sm font-medium bg-blue-50 p-3 rounded-lg">
                     <span className="font-semibold">What to do:</span> {indicator.actionableAdvice || ''}
                   </div>
                 </div>

@@ -5,7 +5,7 @@ import MarketMoversTable from './MarketMoversTable';
 import { HybridAdStrategy, ManualAd, InFeedAd, LargeRectangleAd, InFeedPrimaryAd } from '@/components/ui/HybridAds';
 import MobileLargeAd from '@/components/ui/MobileLargeAd';
 import { AdAnalytics } from '@/components/ui/AdAnalytics';
-import { InFeedWorkingAd, BannerWorkingAd, LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
+import { InFeedWorkingAd, BannerWorkingAd, LargeWorkingAd, WorkingAdUnit } from '@/components/ui/WorkingAdUnit';
 import { ContentSection } from '@/components/ui/AdBreakHelper';
 
 const PERIODS = [
@@ -34,7 +34,11 @@ export default function MarketMoversPage() {
             </p>
           </div>
             {/* Top Banner Ad - High Revenue */}
-          <BannerWorkingAd className="flex justify-center mb-8" />
+          <WorkingAdUnit 
+            className="flex justify-center mb-8"
+            style={{ display: 'block', minHeight: 90 }}
+            label=""
+          />
           
           {/* Market overview intro */}
           <div className="bg-gradient-to-r from-blue-50 to-green-50 p-6 rounded-lg">
@@ -196,7 +200,11 @@ export default function MarketMoversPage() {
                 </div>
                 
                 {/* Add strategic ad after gainers table on desktop */}
-                <BannerWorkingAd className="mt-6" />
+                <WorkingAdUnit 
+                  className="mt-6"
+                  style={{ display: 'block', minHeight: 90 }}
+                  label=""
+                />
               </div>
 
               {/* Losers Column - 50% width */}
@@ -225,7 +233,11 @@ export default function MarketMoversPage() {
                 </div>
                 
                 {/* Add strategic ad after losers table on desktop */}
-                <BannerWorkingAd className="mt-6" />
+                <WorkingAdUnit 
+                  className="mt-6"
+                  style={{ display: 'block', minHeight: 90 }}
+                  label=""
+                />
               </div>
               
             </div>
@@ -271,7 +283,11 @@ export default function MarketMoversPage() {
               </div>
             </div>
           </section>          {/* Bottom banner ad for desktop */}
-          <BannerWorkingAd className="flex justify-center mt-12" />
+          <WorkingAdUnit 
+            className="flex justify-center mt-12"
+            style={{ display: 'block', minHeight: 90 }}
+            label=""
+          />
 
         </div>
       </div>
