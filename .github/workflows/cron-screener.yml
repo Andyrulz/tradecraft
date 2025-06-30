@@ -2,8 +2,8 @@ name: Momentum Screener Cron
 
 on:
   schedule:
-    # Runs at 00:00 and 12:00 UTC every day
-    - cron: "0 0,12 * * *"
+    # Runs at 01:00 and 13:00 UTC every day (1 hour offset to avoid any overlap)
+    - cron: "0 1,13 * * *"
 
 jobs:
   run-screener-crons:
