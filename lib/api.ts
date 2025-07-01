@@ -1,14 +1,29 @@
 import { TechnicalIndicator, IndicatorSignal } from './types';
 
-// API key rotation setup
+// API key rotation setup - Alpha Vantage alternative
 const twelveDataApiKeys = [
   process.env.NEXT_PUBLIC_TWELVE_DATA_API_KEY_1 || '4b0c95181f434ef5be044c825bd15b37',
   process.env.NEXT_PUBLIC_TWELVE_DATA_API_KEY_2 || '4b0c95181f434ef5be044c825bd15b37',
 ];
+
+// Alpha Vantage API keys (FREE alternative)
+const alphaVantageApiKeys = [
+  process.env.NEXT_PUBLIC_ALPHA_VANTAGE_API_KEY_1 || 'demo',
+  process.env.NEXT_PUBLIC_ALPHA_VANTAGE_API_KEY_2 || 'demo',
+];
+
 let twelveDataKeyIndex = 0;
+let alphaVantageKeyIndex = 0;
+
 function getNextTwelveDataApiKey() {
   const key = twelveDataApiKeys[twelveDataKeyIndex];
   twelveDataKeyIndex = (twelveDataKeyIndex + 1) % twelveDataApiKeys.length;
+  return key;
+}
+
+function getNextAlphaVantageApiKey() {
+  const key = alphaVantageApiKeys[alphaVantageKeyIndex];
+  alphaVantageKeyIndex = (alphaVantageKeyIndex + 1) % alphaVantageApiKeys.length;
   return key;
 }
 

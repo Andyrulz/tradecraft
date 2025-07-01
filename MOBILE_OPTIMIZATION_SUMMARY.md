@@ -202,4 +202,4 @@ The detailed trade plan is now fully optimized for mobile with:
 - ✅ Information hierarchy improved
 - ✅ Error and loading states mobile-optimized
 
-The TradeCraft trade plan generator now provides an excellent mobile experience for traders on the go!
+The TradeCraft trade plan generator now provides an excellent mobile experience for traders on the go.
