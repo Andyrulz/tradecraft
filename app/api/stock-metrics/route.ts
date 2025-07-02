@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { FinnhubService } from '@/lib/services/finnhub';
 
 export const dynamic = 'force-dynamic';
 
@@ -32,33 +31,16 @@ export async function GET(request: Request) {
   }
 
   try {
-    const metrics = await FinnhubService.getStockMetrics(symbol, timeframe);
+    // TODO: Replace with FMPService.getStockMetrics(symbol, timeframe)
     return NextResponse.json({
-      metrics,
+      metrics: {},
       success: true
     });
   } catch (error) {
     console.error('Error fetching stock metrics:', error);
-    
-    // Handle specific error cases
-    if (error instanceof Error) {
-      if (error.message.includes('404')) {
-        return NextResponse.json(
-          { error: 'Stock symbol not found' },
-          { status: 404 }
-        );
-      }
-      if (error.message.includes('429')) {
-        return NextResponse.json(
-          { error: 'API rate limit exceeded' },
-          { status: 429 }
-        );
-      }
-    }
-
     return NextResponse.json(
       { error: 'Failed to fetch stock metrics' },
       { status: 500 }
     );
   }
-} 
+}

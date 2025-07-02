@@ -20,7 +20,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from '@/components/ui/button';
-import { FinnhubService } from '@/lib/services/finnhub';
 import { StockMetrics } from '@/lib/types';
 
 interface TradingRecommendationProps {

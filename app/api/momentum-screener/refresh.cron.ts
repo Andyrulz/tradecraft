@@ -1,4 +1,5 @@
-// @vercel/crons 0 */4 * * *
+// Vercel cron jobs are deprecated - using GitHub Actions instead
+// This file is kept for reference but not used
 import CRON from './refresh/cron';
 
 export const runtime = 'nodejs';

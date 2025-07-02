@@ -2,8 +2,8 @@ name: Market Movers Script Cron
 
 on:
   schedule:
-    # Runs at 00:30 UTC every day
-    - cron: "30 0 * * *"
+    # Runs at 03:00 UTC (after momentum screener completes at ~02:15)
+    - cron: "0 3 * * *"
 
 jobs:
   run-market-movers-script:

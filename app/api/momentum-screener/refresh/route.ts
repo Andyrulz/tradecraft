@@ -197,10 +197,46 @@ export async function GET() {
     // Cleanup: Delete universe rows older than 3 days, but never for today
     const todayDate = new Date().toISOString().slice(0, 10);
     const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-    await supabase.from('momentum_screener_daily')
+    
+    console.log('🧹 CLEANUP DEBUG:');
+    console.log(`📅 Today: ${todayDate}`);
+    console.log(`📅 ThreeDaysAgo: ${threeDaysAgo}`);
+    console.log(`🔍 Will delete records where: date < '${threeDaysAgo}' AND date != '${todayDate}'`);
+    
+    // Check what records exist before cleanup
+    const { data: beforeCleanup } = await supabase
+      .from('momentum_screener_daily')
+      .select('date')
+      .order('date');
+    
+    const dateCountsBefore = beforeCleanup?.reduce((acc: any, row: any) => {
+      acc[row.date] = (acc[row.date] || 0) + 1;
+      return acc;
+    }, {}) || {};
+    console.log('📊 Records BEFORE cleanup:', dateCountsBefore);
+    
+    const { error: cleanupError } = await supabase.from('momentum_screener_daily')
       .delete()
       .lt('date', threeDaysAgo)
       .not('date', 'eq', todayDate);
+    
+    if (cleanupError) {
+      console.error('❌ Cleanup error:', cleanupError);
+    } else {
+      console.log('✅ Cleanup completed successfully');
+    }
+    
+    // Check what records exist after cleanup
+    const { data: afterCleanup } = await supabase
+      .from('momentum_screener_daily')
+      .select('date')
+      .order('date');
+    
+    const dateCountsAfter = afterCleanup?.reduce((acc: any, row: any) => {
+      acc[row.date] = (acc[row.date] || 0) + 1;
+      return acc;
+    }, {}) || {};
+    console.log('📊 Records AFTER cleanup:', dateCountsAfter);
     return NextResponse.json({ success: true, totalProcessed, errors });
   } catch (e) {
     return NextResponse.json({ success: false, error: e?.toString() });
@@ -312,13 +348,20 @@ export async function POST() {
     let upsertErrors: any[] = [];
     
     for (const result of top15) {
+      // Remove properties that don't exist in momentum_screener_results table
+      const { success, error, ...resultForDb } = result;
+      
+      console.log(`📝 Upserting ${result.symbol} - columns:`, Object.keys(resultForDb));
+      
       const { error: upsertError } = await supabase
         .from('momentum_screener_results')
-        .upsert(result, { onConflict: 'date,symbol' });
+        .upsert(resultForDb, { onConflict: 'date,symbol' });
       
       if (!upsertError) {
         upserted++;
+        console.log(`✅ Successfully upserted ${result.symbol}`);
       } else {
+        console.error(`❌ Failed to upsert ${result.symbol}:`, upsertError.message);
         upsertErrors.push({ 
           symbol: result.symbol, 
           error: upsertError.message 

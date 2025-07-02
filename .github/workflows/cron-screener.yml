@@ -2,19 +2,29 @@ name: Momentum Screener Cron
 
 on:
   schedule:
-    # Runs at 01:00 and 13:00 UTC every day (1 hour offset to avoid any overlap)
-    - cron: "0 1,13 * * *"
+    # Runs at 02:00 UTC daily (optimal time - low traffic, before market opens)
+    - cron: "0 2 * * *"
+  workflow_dispatch: # Allow manual trigger for testing
 
 jobs:
   run-screener-crons:
     runs-on: ubuntu-latest
+    timeout-minutes: 15 # Allow 15 minutes for the full pipeline (GET + POST)
     steps:
       - name: GET refresh endpoint (populate universe)
         run: |
+          echo "🚀 Starting momentum screener universe population..."
           curl -X GET "https://www.tradingsetup.pro/api/momentum-screener/refresh"
-      - name: Wait before POST (prevent overlap)
+          echo "✅ Universe population completed"
+
+      - name: Wait before POST (allow GET to complete)
         shell: bash
-        run: sleep 60
-      - name: POST refresh endpoint (run screener)
         run: |
+          echo "⏳ Waiting 2 minutes before starting analysis..."
+          sleep 120
+
+      - name: POST refresh endpoint (run screener analysis)
+        run: |
+          echo "🎯 Starting momentum screener analysis (this takes ~8 minutes)..."
           curl -X POST "https://www.tradingsetup.pro/api/momentum-screener/refresh"
+          echo "✅ Momentum screener analysis completed"
