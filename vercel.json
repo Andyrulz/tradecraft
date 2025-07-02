@@ -1,7 +1,7 @@
 {
   "functions": {
     "app/api/momentum-screener/refresh/route.ts": {
-      "maxDuration": 600
+      "maxDuration": 300
     }
   }
 }
