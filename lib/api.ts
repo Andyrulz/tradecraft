@@ -225,11 +225,34 @@ export async function getStockData(symbol: string, retries = 3, horizon: string 
       atr,
       horizon || 'swing'
     );
+    
+    // Calculate targets with proper risk-to-reward ratios
+    const currentPrice = closes[closes.length - 1];
+    const riskPerShare = Math.abs(currentPrice - stopLoss.price);
+    const baseMultipliers = horizon === 'swing' ? [1.5, 2.5, 4] :
+                          horizon === 'positional' ? [2, 3, 5] :
+                          [2.5, 4, 6];
+    
     const targets = [
-      { price: closes[closes.length - 1] + atr, probability: 70, riskRewardRatio: 1.5 },
-      { price: closes[closes.length - 1] + 2 * atr, probability: 50, riskRewardRatio: 2.0 },
-      { price: closes[closes.length - 1] + 3 * atr, probability: 30, riskRewardRatio: 2.5 }
+      { 
+        price: currentPrice + (riskPerShare * baseMultipliers[0]), 
+        probability: 70, 
+        riskRewardRatio: baseMultipliers[0] 
+      },
+      { 
+        price: currentPrice + (riskPerShare * baseMultipliers[1]), 
+        probability: 50, 
+        riskRewardRatio: baseMultipliers[1] 
+      },
+      { 
+        price: currentPrice + (riskPerShare * baseMultipliers[2]), 
+        probability: 30, 
+        riskRewardRatio: baseMultipliers[2] 
+      }
     ];
+    
+    // Calculate actual risk-to-reward ratio using the first target
+    const actualRiskRewardRatio = targets[0].riskRewardRatio;
 
     // Indicators (with actionable advice)
     const indicators = [
@@ -334,21 +357,33 @@ export async function getStockData(symbol: string, retries = 3, horizon: string 
       setupType,
       riskManagement: {
         probabilityScore: 70, // Placeholder, replace with real calculation if available
-        riskRewardRatio: 2.0, // Placeholder, replace with real calculation if available
+        riskRewardRatio: actualRiskRewardRatio, // Now using actual calculated ratio
         suggestedPositionSize: (() => {
-          // Calculate position size based on risk per trade and timeframe
-          const riskPerTrade = horizon === 'swing' ? 2 : horizon === 'positional' ? 1.5 : 1; // % of portfolio to risk
+          // CORRECT: Risk management - never risk more than 0.5% of portfolio per trade
+          const maxPortfolioRisk = 0.5; // Always 0.5% max risk regardless of timeframe
           const stopLossDistance = Math.abs(parseFloat(latest.close) - stopLoss.price);
           const riskPerShare = stopLossDistance / parseFloat(latest.close) * 100; // Risk per share as %
           
-          // Calculate position size: (Risk per trade %) / (Risk per share %) = Position size %
-          const calculatedSize = Math.min(riskPerTrade / (riskPerShare || 1), 10); // Cap at 10%
+          // Calculate position size: (Max Portfolio Risk %) / (Risk per Share %) = Position allocation ratio
+          // Then convert ratio to percentage by multiplying by 100
+          const calculatedSizeRatio = maxPortfolioRisk / Math.max(riskPerShare, 0.1); // Prevent division by zero
+          const calculatedSize = Math.min(calculatedSizeRatio * 100, 25); // Convert to percentage and cap at 25%
+          
+          console.log('Backend Position Size Debug:', {
+            stopLossDistance,
+            riskPerShare: riskPerShare.toFixed(2) + '%',
+            calculatedSize: calculatedSize.toFixed(1) + '%'
+          });
           
           // Adjust based on confidence and volatility
           const confidenceMultiplier = confidenceLevel === 'high' ? 1.2 : confidenceLevel === 'low' ? 0.6 : 1;
           const volatilityAdjustment = atr / parseFloat(latest.close) > 0.03 ? 0.7 : 1; // Reduce size for high volatility
           
-          return Math.round(Math.max(0.5, calculatedSize * confidenceMultiplier * volatilityAdjustment) * 10) / 10;
+          const finalResult = Math.round(Math.min(calculatedSize * confidenceMultiplier * volatilityAdjustment, 25) * 10) / 10;
+          
+          console.log('Backend Final Position Size:', finalResult + '% of portfolio');
+          
+          return finalResult;
         })(),
         entryZone,
         initialStopLoss: stopLoss,

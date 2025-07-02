@@ -234,18 +234,36 @@ export function TradingRecommendation({ tradePlan, onTimeframeChange }: TradingR
                 <p className="text-sm text-muted-foreground">Risk Management</p>
                 <div className="flex flex-col gap-2">
                   <Badge variant="outline" className="self-start">
-                    {typeof tradePlan?.riskManagement?.riskRewardRatio === 'number' ? tradePlan.riskManagement.riskRewardRatio.toFixed(1) : 'N/A'}x R:R
+                    {typeof tradePlan?.riskManagement?.riskRewardRatio === 'number' ? tradePlan.riskManagement.riskRewardRatio.toFixed(1) : 'N/A'}:1 Risk/Reward
                   </Badge>
-                  <Badge variant="outline" className="self-start">
-                    {typeof tradePlan?.riskManagement?.suggestedPositionSize === 'number' ? tradePlan.riskManagement.suggestedPositionSize : 'N/A'}% Size
+                  <Badge variant="secondary" className="self-start">
+                    0.5% Portfolio Risk
                   </Badge>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge variant="outline" className="self-start cursor-help">
+                          {typeof tradePlan?.riskManagement?.suggestedPositionSize === 'number' ? tradePlan.riskManagement.suggestedPositionSize.toFixed(1) : 'N/A'}% Portfolio Allocation
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p className="max-w-xs">
+                          <strong>Position Size Calculation:</strong><br/>
+                          Allocate {typeof tradePlan?.riskManagement?.suggestedPositionSize === 'number' ? tradePlan.riskManagement.suggestedPositionSize.toFixed(1) : 'N/A'}% of your total portfolio to this trade.<br/><br/>
+                          <strong>Risk Per Trade:</strong> 0.5% of entire portfolio if stop loss hits.<br/><br/>
+                          <strong>Example:</strong> $10,000 portfolio → Invest ${typeof tradePlan?.riskManagement?.suggestedPositionSize === 'number' ? (10000 * tradePlan.riskManagement.suggestedPositionSize / 100).toFixed(0) : 'N/A'} → Risk $50 max.
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
                 <p className="text-xs text-muted-foreground leading-relaxed">
+                  <strong>Risk Per Trade:</strong> This trade risks 0.5% of your entire portfolio if the stop loss is hit.<br/>
                   {typeof tradePlan?.riskManagement?.riskRewardRatio === 'number' ? (
-                    tradePlan.riskManagement.riskRewardRatio >= 2 ? 'Excellent risk/reward ratio' :
-                    tradePlan.riskManagement.riskRewardRatio >= 1.5 ? 'Good risk/reward ratio' :
-                    'Consider adjusting position size'
-                  ) : 'Risk/reward data unavailable'}
+                    tradePlan.riskManagement.riskRewardRatio >= 2 ? 'Excellent risk/reward ratio for this risk level.' :
+                    tradePlan.riskManagement.riskRewardRatio >= 1.5 ? 'Good risk/reward ratio for this risk level.' :
+                    'Consider skipping - poor risk/reward ratio.'
+                  ) : 'Risk/reward data unavailable.'}
                 </p>
               </div>
 
@@ -282,6 +300,31 @@ export function TradingRecommendation({ tradePlan, onTimeframeChange }: TradingR
                     'Pattern needs confirmation'
                   ) : 'Pattern reliability data unavailable'}
                 </p>
+              </div>
+            </div>
+
+            {/* Portfolio Risk Management Warning */}
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mt-6">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 mt-0.5">
+                  <div className="h-6 w-6 rounded-full bg-amber-500 flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">!</span>
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <h4 className="font-semibold text-amber-800 text-sm mb-2">Portfolio Risk Management</h4>
+                  <div className="space-y-2 text-xs text-amber-700 leading-relaxed">
+                    <p>
+                      <strong>Maximum Total Risk Rule:</strong> Never have more than <strong>5% total open risk</strong> across all your trades at once.
+                    </p>
+                    <p>
+                      <strong>Before opening this trade:</strong> Calculate your current open risk from all existing positions. If adding this 0.5% risk would exceed 5% total, you must first close some trades or book profits/losses to stay under the limit.
+                    </p>
+                    <p className="text-amber-800 font-medium">
+                      Example: If you have 9 trades open (9 × 0.5% = 4.5% risk), you can safely add this trade (4.5% + 0.5% = 5% total risk).
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 

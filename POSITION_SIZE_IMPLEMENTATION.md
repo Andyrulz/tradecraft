@@ -14,9 +14,7 @@ Position Size % = (Risk per Trade %) / (Risk per Share %) × Adjustments
 
 ### Base Risk per Trade (% of Portfolio)
 
-- **Swing Trading**: 2% of portfolio
-- **Positional Trading**: 1.5% of portfolio
-- **Long Term Trading**: 1% of portfolio
+- **All Timeframes**: 0.5% of portfolio maximum risk per trade
 
 ### Risk per Share Calculation
 
@@ -53,23 +51,26 @@ Risk per Share % = (Stop Loss Distance / Current Price) × 100
 ### Swing Trade Example
 
 - Current Price: $100
-- Stop Loss: $95 (5% risk per share)
-- Base Risk: 2% of portfolio
-- Position Size: 2% ÷ 5% = 0.4% → Adjusted to 0.5% minimum
+- Stop Loss: $98 (2% risk per share)
+- Base Risk: 0.5% of portfolio
+- Position Size: 0.5% ÷ 2% = 25% of portfolio
+- **Result**: Allocate 25% of portfolio (if stop hits, lose exactly 0.5%)
 
 ### Positional Trade Example
 
 - Current Price: $50
-- Stop Loss: $47 (6% risk per share)
-- Base Risk: 1.5% of portfolio
-- High Confidence: 1.5% ÷ 6% × 1.2 = 0.3% → Adjusted to 0.5% minimum
+- Stop Loss: $47.50 (5% risk per share)
+- Base Risk: 0.5% of portfolio
+- Position Size: 0.5% ÷ 5% = 10% of portfolio
+- **Result**: Allocate 10% of portfolio (if stop hits, lose exactly 0.5%)
 
 ### Long Term Example
 
 - Current Price: $200
 - Stop Loss: $180 (10% risk per share)
-- Base Risk: 1% of portfolio
-- Position Size: 1% ÷ 10% = 0.1% → Adjusted to 0.5% minimum
+- Base Risk: 0.5% of portfolio
+- Position Size: 0.5% ÷ 10% = 5% of portfolio
+- **Result**: Allocate 5% of portfolio (wide stop = smaller position, but same 0.5% risk)
 
 ## Integration
 

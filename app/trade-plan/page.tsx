@@ -513,17 +513,17 @@ function TradePlanPage() {
         const maxRisk = horizon === 'swing' ? 8 : horizon === 'positional' ? 15 : 20;
         
         if (swingLowRisk <= maxRisk && swingLowResult.method === 'swing_low_pivot') {
-          console.log(`✅ Using swing low stop loss: $${swingLowResult.price.toFixed(2)} (${swingLowRisk.toFixed(2)}% risk)`);
+          console.log(`✅ ${horizon.toUpperCase()}: Using swing low stop loss: $${swingLowResult.price.toFixed(2)} (${swingLowRisk.toFixed(2)}% risk) vs ${maxRisk}% max`);
           return swingLowResult;
         }
         
         // Step 2: Try ATR-based calculation if swing low too risky
-        console.log(`⚠️ Swing low risk ${swingLowRisk.toFixed(2)}% > ${maxRisk}%, trying ATR fallback`);
+        console.log(`⚠️ ${horizon.toUpperCase()}: Swing low risk ${swingLowRisk.toFixed(2)}% > ${maxRisk}%, trying ATR fallback`);
         const atrResult = getATRBasedStopLoss();
         const atrRisk = ((current.close - atrResult.price) / current.close) * 100;
         
         if (atrRisk <= maxRisk) {
-          console.log(`✅ Using ATR stop loss: $${atrResult.price.toFixed(2)} (${atrRisk.toFixed(2)}% risk)`);
+          console.log(`✅ ${horizon.toUpperCase()}: Using ATR stop loss: $${atrResult.price.toFixed(2)} (${atrRisk.toFixed(2)}% risk) vs ${maxRisk}% max`);
           return atrResult;
         }
         
@@ -541,8 +541,144 @@ function TradePlanPage() {
       }
     };
 
-    // Use enhanced stop loss calculation
-    const initialStopLoss: any = await calculateEnhancedStopLoss(symbol);
+    // Calculate all three stop losses to ensure proper hierarchy
+    const calculateAllStopLosses = async (symbol: string): Promise<{
+      swing: any;
+      positional: any;
+      longterm: any;
+      selected: any;
+    }> => {
+      const stopLosses: {
+        swing: any;
+        positional: any;
+        longterm: any;
+        selected: any;
+      } = {
+        swing: null,
+        positional: null,
+        longterm: null,
+        selected: null
+      };
+
+      // Calculate stop loss for each timeframe
+      for (const timeframe of ['swing', 'positional', 'longterm'] as const) {
+        try {
+          // Get swing low for this timeframe
+          const swingLowPrice = await calculateEnhancedSwingLow(symbol, timeframe);
+          
+          // Risk parameters for this timeframe
+          const riskParams = {
+            swing: { buffer: 0.005, maxRisk: 0.08, minDistance: 0.02 },
+            positional: { buffer: 0.015, maxRisk: 0.15, minDistance: 0.05 },
+            longterm: { buffer: 0.025, maxRisk: 0.25, minDistance: 0.08 }
+          };
+          
+          const params = riskParams[timeframe];
+          let stopLossPrice;
+          let method = 'swing_low_pivot';
+          
+          if (swingLowPrice !== null) {
+            // Apply buffer below swing low
+            let finalStopLoss = swingLowPrice * (1 - params.buffer);
+            
+            // Ensure minimum distance
+            const minStopLossDistance = current.close * params.minDistance;
+            const currentDistance = current.close - finalStopLoss;
+            
+            if (currentDistance < minStopLossDistance) {
+              finalStopLoss = current.close - minStopLossDistance;
+              method = 'minimum_distance_enforced';
+            }
+            
+            // Check maximum risk
+            const maxStopLossDistance = current.close * params.maxRisk;
+            const stopLossDistance = current.close - finalStopLoss;
+            
+            if (stopLossDistance > maxStopLossDistance) {
+              finalStopLoss = current.close - maxStopLossDistance;
+              method = 'maximum_risk_enforced';
+            }
+            
+            stopLossPrice = finalStopLoss;
+          } else {
+            // Fallback to ATR
+            const atrMultiplier = timeframe === 'swing' ? 1.5 : timeframe === 'positional' ? 2 : 2.5;
+            stopLossPrice = current.close - (atr * atrMultiplier);
+            method = 'atr_fallback';
+          }
+          
+          const riskPercent = ((current.close - stopLossPrice) / current.close) * 100;
+          
+          stopLosses[timeframe] = {
+            price: stopLossPrice,
+            type: 'fixed' as const,
+            timeframe,
+            method,
+            riskPercent,
+            description: `${timeframe} stop loss (${method}, ${riskPercent.toFixed(2)}% risk)`
+          };
+          
+        } catch (error) {
+          console.error(`Error calculating ${timeframe} stop loss:`, error);
+          // Fallback to ATR
+          const atrMultiplier = timeframe === 'swing' ? 1.5 : timeframe === 'positional' ? 2 : 2.5;
+          const stopLossPrice = current.close - (atr * atrMultiplier);
+          const riskPercent = ((current.close - stopLossPrice) / current.close) * 100;
+          
+          stopLosses[timeframe] = {
+            price: stopLossPrice,
+            type: 'fixed' as const,
+            timeframe,
+            method: 'atr_fallback_error',
+            riskPercent,
+            description: `${timeframe} stop loss (ATR fallback due to error)`
+          };
+        }
+      }
+      
+      // Verify hierarchy: swing >= positional >= longterm (tighter to wider stops)
+      const swingStop = stopLosses.swing.price;
+      const positionalStop = stopLosses.positional.price;
+      const longtermStop = stopLosses.longterm.price;
+      
+      // Log the hierarchy for debugging
+      console.log('Stop Loss Hierarchy Check:', {
+        swing: `$${swingStop.toFixed(2)} (${stopLosses.swing.riskPercent.toFixed(2)}%)`,
+        positional: `$${positionalStop.toFixed(2)} (${stopLosses.positional.riskPercent.toFixed(2)}%)`,
+        longterm: `$${longtermStop.toFixed(2)} (${stopLosses.longterm.riskPercent.toFixed(2)}%)`
+      });
+      
+      // Enforce hierarchy if needed
+      if (swingStop < positionalStop) {
+        console.warn('⚠️ Hierarchy fix: Swing stop below positional, adjusting...');
+        stopLosses.swing.price = positionalStop;
+        stopLosses.swing.method = 'hierarchy_enforced';
+        stopLosses.swing.riskPercent = ((current.close - positionalStop) / current.close) * 100;
+      }
+      
+      if (positionalStop < longtermStop) {
+        console.warn('⚠️ Hierarchy fix: Positional stop below longterm, adjusting...');
+        stopLosses.positional.price = longtermStop;
+        stopLosses.positional.method = 'hierarchy_enforced';
+        stopLosses.positional.riskPercent = ((current.close - longtermStop) / current.close) * 100;
+      }
+      
+      // Re-check swing after positional adjustment
+      if (stopLosses.swing.price < stopLosses.positional.price) {
+        stopLosses.swing.price = stopLosses.positional.price;
+        stopLosses.swing.method = 'hierarchy_enforced';
+        stopLosses.swing.riskPercent = ((current.close - stopLosses.positional.price) / current.close) * 100;
+      }
+      
+      // Select the appropriate stop loss for current timeframe
+      stopLosses.selected = stopLosses[horizon as keyof typeof stopLosses];
+      
+      return stopLosses;
+    };
+
+    // Use the new comprehensive stop loss calculation
+    const allStopLosses = await calculateAllStopLosses(symbol);
+    const initialStopLoss: any = allStopLosses.selected;
 
     // Targets based on setup type, risk:reward, and timeframe
     const baseMultipliers = horizon === 'swing' ? [1.5, 2.5, 4] :
@@ -592,8 +728,8 @@ function TradePlanPage() {
         pivotType: 'moving_average' as const
       }
     ];
-    // Calculate risk per share (entry - stop loss)
-    const entryPrice = entryZone.low; // Use lower bound of entry zone as entry
+    // Calculate risk per share (current price - stop loss)
+    const entryPrice = current.close; // Use current price as entry (consistent with target calculation)
     const stopLossPrice = initialStopLoss.price;
     // Find the target with the highest probability
     const highestProbTarget = targets.reduce((max, t) => t.probability > max.probability ? t : max, targets[0]);
@@ -648,6 +784,11 @@ function TradePlanPage() {
         price: initialStopLoss.price,
         type: initialStopLoss.type === 'trailing' ? 'trailing' : 'fixed',
       },
+      allStopLosses: {
+        swing: allStopLosses.swing,
+        positional: allStopLosses.positional,
+        longterm: allStopLosses.longterm
+      },
       trailingStops: trailingStops.map(stop => ({
         price: stop.price,
         trigger: stop.atrMultiple ?? 1,
@@ -665,22 +806,39 @@ function TradePlanPage() {
       volumeConfirmation: recentVolume.some(vol => vol > avgVolume * 1.5),
       patternReliability: probabilityScore,
       suggestedPositionSize: (() => {
-        // Calculate position size based on risk management principles
-        const riskPerTrade = horizon === 'swing' ? 2 : horizon === 'positional' ? 1.5 : 1; // % of portfolio to risk
+        // CORRECT: Risk management - never risk more than 0.5% of portfolio per trade
+        const maxPortfolioRisk = 0.5; // Always 0.5% max risk regardless of timeframe
         const stopLossDistance = Math.abs(current.close - initialStopLoss.price);
         const riskPerShare = (stopLossDistance / current.close) * 100; // Risk per share as %
         
-        // Calculate position size: (Risk per trade %) / (Risk per share %) = Position size %
-        const calculatedSize = Math.min(riskPerTrade / (riskPerShare || 1), 10); // Cap at 10%
+        // Calculate position size: (Max Portfolio Risk %) / (Risk per Share %) = Position allocation ratio
+        // Then convert ratio to percentage by multiplying by 100
+        const calculatedSizeRatio = maxPortfolioRisk / Math.max(riskPerShare, 0.00001); // Prevent division by zero
+        const calculatedSize = calculatedSizeRatio * 100; // Convert to percentage: 0.25 → 25%
+        
+        // Debug logging
+        console.log('Position Size Debug:', {
+          stopLossDistance,
+          riskPerShare: riskPerShare.toFixed(2) + '%',
+          calculatedSizeRatio,
+          calculatedSize: calculatedSize.toFixed(1) + '%'
+        });
+        
+        const finalCalculatedSize = Math.min(calculatedSize, 25); // Cap at 25% allocation
         
         // Adjust based on confidence and setup quality
-        const confidenceMultiplier = probabilityScore > 80 ? 1.3 : probabilityScore > 60 ? 1 : 0.7;
+        const confidenceMultiplier = probabilityScore > 80 ? 1.2 : probabilityScore > 60 ? 1 : 0.8;
         const volatilityAdjustment = atr / current.close > 0.03 ? 0.7 : 1; // Reduce size for high volatility
         const volumeAdjustment = recentVolume.some(vol => vol > avgVolume * 1.5) ? 1.1 : 0.9;
         
-        const finalSize = calculatedSize * confidenceMultiplier * volatilityAdjustment * volumeAdjustment;
+        const finalSize = finalCalculatedSize * confidenceMultiplier * volatilityAdjustment * volumeAdjustment;
         
-        return Math.round(Math.max(0.5, Math.min(finalSize, 8)) * 10) / 10; // Between 0.5% and 8%
+        const result = Math.round(Math.min(finalSize, 25) * 10) / 10; // Cap at 25% max
+        
+        // Debug final result
+        console.log('Final Position Size:', result + '% of portfolio');
+        
+        return result;
       })(),
     };
   };
