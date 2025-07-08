@@ -1,4 +1,5 @@
 import { MetadataRoute } from 'next';
+import { TOP_100_STOCKS } from '@/lib/config/top-stocks';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://www.tradingsetup.pro';
@@ -32,12 +33,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${baseUrl}/screener`,
-      lastModified: currentDate,
-      changeFrequency: 'daily',
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/stock-analysis`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 0.8,
@@ -145,5 +140,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  return [...staticPages, ...blogSitemap];
+  // Popular stocks for trade plan SEO (using TOP_100_STOCKS configuration)
+  // Generate trade plan pages for all top 100 stocks
+  const tradePlanPages: MetadataRoute.Sitemap = TOP_100_STOCKS.map(stock => ({
+    url: `${baseUrl}/trade-plan/${stock.symbol}`,
+    lastModified: currentDate,
+    changeFrequency: 'daily' as const,
+    priority: Math.min(0.9, Math.max(0.7, stock.priority / 100)), // Priority based on stock importance
+  }));
+
+  return [...staticPages, ...blogSitemap, ...tradePlanPages];
 }

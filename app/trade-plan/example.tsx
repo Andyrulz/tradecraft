@@ -67,7 +67,7 @@ export default function ExampleTradePlan() {
           </div>
         </div>
         <div className="text-center">
-          <Link href="/trade-plan" className="text-sky-700 underline font-medium">Generate your own trade plan →</Link>
+          <Link href="/trade-plan/start-here" className="text-sky-700 underline font-medium">Generate your own trade plan →</Link>
         </div>
       </div>
     </main>

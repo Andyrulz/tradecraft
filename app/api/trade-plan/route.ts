@@ -3,11 +3,86 @@ import { supabase } from '@/lib/supabase';
 import { getServerSession } from 'next-auth';
 import { getStockData } from '@/lib/api';
 import authOptions from '@/app/api/auth/[...nextauth]/authOptions';
+import { generateTradePlanSEO, extractSEODataFromTradePlan } from '@/lib/seo/trade-plan-seo';
+import { getStockPriority } from '@/lib/config/top-stocks';
 
 // Helper to get today's date in YYYY-MM-DD
 function getToday() {
   const now = new Date();
   return now.toISOString().split('T')[0];
+}
+
+/**
+ * Cache trade plan in background (non-blocking)
+ * 
+ * Always cache EVERY user-generated trade plan with fresh data.
+ * Since we're already making API calls to generate trade plans,
+ * we should always cache the fresh results for better SEO and user experience.
+ */
+async function cacheTradePlanInBackground(symbol: string, tradePlan: any) {
+  try {
+    const upperSymbol = symbol.toUpperCase();
+    const now = new Date();
+    
+    // Get current cache state for analytics
+    const { data: existingCache } = await supabase
+      .from('cached_trade_plans')
+      .select('generation_count')
+      .eq('symbol', upperSymbol)
+      .single();
+    
+    const userDemandCount = existingCache?.generation_count || 0;
+    
+    console.log(`Always caching fresh trade plan for ${upperSymbol}`);
+    
+    // Generate SEO content from the fresh trade plan
+    const seoData = extractSEODataFromTradePlan(tradePlan);
+    const seoContent = generateTradePlanSEO(seoData);
+    
+    // Calculate cache expiration (24 hours from now)
+    const cacheExpiresAt = new Date();
+    cacheExpiresAt.setHours(cacheExpiresAt.getHours() + 24);
+    
+    // Always upsert cache entry with fresh data
+    await supabase
+      .from('cached_trade_plans')
+      .upsert({
+        symbol: upperSymbol,
+        company_name: tradePlan.companyName || upperSymbol,
+        trade_plan: tradePlan,
+        seo_content: JSON.stringify(seoContent),
+        priority: getStockPriority(upperSymbol),
+        is_active: true,
+        cache_expires_at: cacheExpiresAt.toISOString(),
+        generation_count: userDemandCount + 1,
+        last_accessed: now.toISOString(),
+        source: 'user_generated',
+        updated_at: now.toISOString()
+      }, {
+        onConflict: 'symbol'
+      });
+    
+    // Update stock analytics
+    await supabase
+      .from('stock_analytics')
+      .upsert({
+        symbol: upperSymbol,
+        company_name: tradePlan.companyName || upperSymbol,
+        seo_priority: getStockPriority(upperSymbol),
+        popularity_score: userDemandCount + 1,
+        view_count: userDemandCount + 1,
+        last_requested: now.toISOString(),
+        updated_at: now.toISOString()
+      }, {
+        onConflict: 'symbol'
+      });
+    
+    console.log(`Successfully cached fresh data for ${upperSymbol}`);
+      
+  } catch (error) {
+    // Log error but don't throw (background operation)
+    console.error('Background cache operation failed for', symbol, error);
+  }
 }
 
 function validateTradePlan(tradePlan: any): boolean {
@@ -181,6 +256,10 @@ export async function POST(request: Request) {
     if (updateError) {
       return NextResponse.json({ error: 'Failed to update usage' }, { status: 500 });
     }
+
+    // 10. Cache the trade plan (background operation, don't block response)
+    // Always cache fresh trade plans since we already generated the data
+    cacheTradePlanInBackground(symbol, tradePlan);
 
     return NextResponse.json({
       tradePlan,

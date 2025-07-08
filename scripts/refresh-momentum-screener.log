@@ -1,3 +1,17 @@
 [2025-07-03T18:37:38.441Z] STARTING GET
 [2025-07-03T18:37:47.940Z] GET status: 200, response: {"success":true,"totalProcessed":55,"errors":[]}
 [2025-07-03T18:37:47.941Z] Waiting 1 hour before POST...
+[2025-07-03T20:22:54.912Z] STARTING POST
+[2025-07-04T04:32:16.718Z] ERROR: Error: read ECONNRESET
+    at TLSWrap.onStreamRead (node:internal/stream_base_commons:217:20)
+[2025-07-07T06:17:01.098Z] STARTING GET
+[2025-07-07T06:17:10.601Z] GET status: 200, response: {"success":true,"totalProcessed":55,"errors":[]}
+[2025-07-07T06:17:10.602Z] Waiting 1 hour before POST...
+[2025-07-07T07:33:30.843Z] STARTING POST
+[2025-07-07T07:38:33.968Z] POST status: 504, response: An error occurred with your deployment
+
+FUNCTION_INVOCATION_TIMEOUT
+
+bom1::c2d6r-1751873613051-15b21e5782ae
+
+[2025-07-07T07:38:33.969Z] FINISHED

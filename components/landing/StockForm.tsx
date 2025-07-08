@@ -67,8 +67,8 @@ export function StockForm() {
         return;
       }
       
-      // Navigate to trade plan page with query parameters
-      router.push(`/trade-plan?symbol=${values.stockSymbol.toUpperCase()}&horizon=${values.timeHorizon}`);
+      // Navigate to SEO-optimized trade plan page
+      router.push(`/trade-plan/${values.stockSymbol.toUpperCase()}`);
     } catch (error) {
       setValidationError('Error validating stock symbol. Please try again.');
       setIsLoading(false);

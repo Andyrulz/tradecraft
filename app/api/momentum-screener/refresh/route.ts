@@ -80,7 +80,7 @@ async function getStockDataWithRateLimit(
       stoploss,
       targets,
       trade_recommendation,
-      planurl: `/trade-plan?symbol=${symbol}&horizon=swing`,
+      planurl: `/trade-plan/${symbol}`,
       refreshed_at: new Date().toISOString(),
       date: new Date().toISOString().slice(0, 10),
       success: true
@@ -107,7 +107,7 @@ async function getStockDataWithRateLimit(
       stoploss: null,
       targets: [],
       trade_recommendation: 'Data unavailable. Avoid entry.',
-      planurl: `/trade-plan?symbol=${symbol}&horizon=swing`,
+      planurl: `/trade-plan/${symbol}`,
       refreshed_at: new Date().toISOString(),
       date: new Date().toISOString().slice(0, 10),
       success: false,

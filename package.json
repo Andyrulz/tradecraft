@@ -2,14 +2,25 @@
   "name": "nextjs",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "refresh-market-movers-db": "dotenv -e .env.local -- tsx scripts/refresh-market-movers-db.ts",
-    "scrape-market-news": "dotenv -e .env.local -- tsx scripts/scrape-market-news.ts"
+    "scrape-market-news": "dotenv -e .env.local -- tsx scripts/scrape-market-news.ts",
+    "populate-cache": "dotenv -e .env.local -- tsx scripts/run-cache-population.ts",
+    "test-seo": "tsx scripts/test-seo-generation.ts",
+    "test-cache": "dotenv -e .env.local -- tsx scripts/test-cache-simple.ts",
+    "cache:status": "dotenv -e .env.local -- tsx scripts/cache-manager.ts status",
+    "cache:refresh": "dotenv -e .env.local -- tsx scripts/cache-manager.ts refresh",
+    "cache:refresh-top": "dotenv -e .env.local -- tsx scripts/cache-manager.ts refresh-top",
+    "cache:cleanup": "dotenv -e .env.local -- tsx scripts/cache-manager.ts cleanup",
+    "cache:analyze": "dotenv -e .env.local -- tsx scripts/cache-manager.ts analyze",
+    "cache:help": "tsx scripts/cache-manager.ts help",
+    "seo:setup": "tsx scripts/seo-helper.ts submit",
+    "seo:cache": "tsx scripts/seo-helper.ts cache",
+    "seo:preview": "tsx scripts/seo-helper.ts sitemap"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
