@@ -176,7 +176,7 @@ export function TradePlanContent({ symbol, initialCachedData }: TradePlanContent
       {/* SEO-optimized header section */}
       <div className="text-center space-y-4">
         <div className="flex items-center justify-center gap-2 mb-4">
-          <Badge variant="secondary">AI-Generated</Badge>
+          <Badge variant="secondary">AI-Enhanced Analysis</Badge>
           <Badge variant="outline">
             {dataSource === 'live' ? 'Real-Time Data' : 'Cached Data'}
           </Badge>

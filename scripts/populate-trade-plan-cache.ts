@@ -267,11 +267,8 @@ async function processSingleSymbol(
       .from('stock_analytics')
       .upsert({
         symbol,
-        company_name: tradePlan.companyName || symbol,
         seo_priority: getStockPriority(symbol),
         popularity_score: 1, // Initial score
-        view_count: 0,
-        last_requested: new Date().toISOString(),
         updated_at: new Date().toISOString()
       }, {
         onConflict: 'symbol'

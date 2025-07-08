@@ -35,6 +35,16 @@ async function cacheTradePlanInBackground(symbol: string, tradePlan: any) {
     
     console.log(`Always caching fresh trade plan for ${upperSymbol}`);
     
+    // Validate trade plan data before caching
+    if (!tradePlan || !tradePlan.companyName) {
+      console.error(`Invalid trade plan data for ${upperSymbol}:`, {
+        hasData: !!tradePlan,
+        hasCompanyName: !!tradePlan?.companyName,
+        tradePlanKeys: tradePlan ? Object.keys(tradePlan) : []
+      });
+      throw new Error('Invalid trade plan data - missing required fields');
+    }
+    
     // Generate SEO content from the fresh trade plan
     const seoData = extractSEODataFromTradePlan(tradePlan);
     const seoContent = generateTradePlanSEO(seoData);
@@ -43,39 +53,58 @@ async function cacheTradePlanInBackground(symbol: string, tradePlan: any) {
     const cacheExpiresAt = new Date();
     cacheExpiresAt.setHours(cacheExpiresAt.getHours() + 24);
     
+    const cacheData = {
+      symbol: upperSymbol,
+      trade_plan: tradePlan,
+      seo_content: seoContent.content,
+      meta_description: seoContent.description,
+      base_price: tradePlan.currentPrice,
+      last_price_update: now.toISOString(),
+      priority: getStockPriority(upperSymbol),
+      is_active: true,
+      cache_expires_at: cacheExpiresAt.toISOString(),
+      generation_count: userDemandCount + 1,
+      last_accessed: now.toISOString(),
+      source: 'user_generated',
+      updated_at: now.toISOString()
+    };
+    
+    console.log(`Caching data for ${upperSymbol}:`, {
+      symbol: cacheData.symbol,
+      priority: cacheData.priority,
+      generation_count: cacheData.generation_count,
+      tradePlanSize: JSON.stringify(tradePlan).length,
+      seoContentSize: cacheData.seo_content.length
+    });
+    
     // Always upsert cache entry with fresh data
-    await supabase
+    const { data: cacheResult, error: cacheError } = await supabase
       .from('cached_trade_plans')
-      .upsert({
-        symbol: upperSymbol,
-        company_name: tradePlan.companyName || upperSymbol,
-        trade_plan: tradePlan,
-        seo_content: JSON.stringify(seoContent),
-        priority: getStockPriority(upperSymbol),
-        is_active: true,
-        cache_expires_at: cacheExpiresAt.toISOString(),
-        generation_count: userDemandCount + 1,
-        last_accessed: now.toISOString(),
-        source: 'user_generated',
-        updated_at: now.toISOString()
-      }, {
+      .upsert(cacheData, {
         onConflict: 'symbol'
       });
+
+    if (cacheError) {
+      console.error(`Failed to cache trade plan for ${upperSymbol}:`, cacheError);
+      throw new Error(`Cache upsert failed: ${cacheError.message}`);
+    }
     
     // Update stock analytics
-    await supabase
+    const { data: analyticsResult, error: analyticsError } = await supabase
       .from('stock_analytics')
       .upsert({
         symbol: upperSymbol,
-        company_name: tradePlan.companyName || upperSymbol,
         seo_priority: getStockPriority(upperSymbol),
         popularity_score: userDemandCount + 1,
-        view_count: userDemandCount + 1,
-        last_requested: now.toISOString(),
         updated_at: now.toISOString()
       }, {
         onConflict: 'symbol'
       });
+
+    if (analyticsError) {
+      console.error(`Failed to update analytics for ${upperSymbol}:`, analyticsError);
+      // Don't throw here, as cache is more important than analytics
+    }
     
     console.log(`Successfully cached fresh data for ${upperSymbol}`);
       

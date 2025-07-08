@@ -72,8 +72,8 @@ class CacheManager {
     // Get analytics data
     const { data: analyticsData, error: analyticsError } = await supabase
       .from('stock_analytics')
-      .select('symbol, generation_count, last_accessed, popularity_score')
-      .order('generation_count', { ascending: false });
+      .select('symbol, popularity_score, updated_at')
+      .order('popularity_score', { ascending: false });
 
     if (analyticsError) {
       throw new Error(`Failed to fetch analytics data: ${analyticsError.message}`);
@@ -99,8 +99,8 @@ class CacheManager {
       .slice(0, 10)
       .map(entry => ({
         symbol: entry.symbol,
-        generation_count: entry.generation_count,
-        last_accessed: entry.last_accessed || 'Never'
+        generation_count: entry.popularity_score, // Use popularity_score as proxy for generation count
+        last_accessed: entry.updated_at || 'Never'
       }));
 
     // Get oldest cache entries
@@ -220,14 +220,16 @@ class CacheManager {
       const cacheExpiresAt = new Date();
       cacheExpiresAt.setHours(cacheExpiresAt.getHours() + 24);
       
-      // Update cache using direct supabase call (like populate script)
+      // Update cache using direct supabase call (matches populate script exactly)
       const { error: cacheError } = await supabase
         .from('cached_trade_plans')
         .upsert({
           symbol: symbol.toUpperCase(),
-          company_name: tradePlan.companyName || symbol,
-          seo_content: JSON.stringify(seoContent),
           trade_plan: tradePlan,
+          seo_content: seoContent.content,
+          meta_description: seoContent.description,
+          base_price: tradePlan.currentPrice,
+          last_price_update: new Date().toISOString(),
           priority: getStockPriority(symbol),
           is_active: true,
           cache_expires_at: cacheExpiresAt.toISOString(),
@@ -248,11 +250,8 @@ class CacheManager {
         .from('stock_analytics')
         .upsert({
           symbol: symbol.toUpperCase(),
-          company_name: tradePlan.companyName || symbol,
           seo_priority: getStockPriority(symbol),
           popularity_score: 1,
-          view_count: 0,
-          last_requested: new Date().toISOString(),
           updated_at: new Date().toISOString()
         }, {
           onConflict: 'symbol'

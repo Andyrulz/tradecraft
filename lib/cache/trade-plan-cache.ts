@@ -10,24 +10,29 @@ import { supabase } from '../supabase';
 export interface CachedTradePlan {
   id: string;
   symbol: string;
-  company_name: string;
   seo_content: string;
-  trade_plan_data: any; // JSON object containing the full trade plan
+  meta_description: string;
+  trade_plan: any; // JSON object containing the full trade plan
+  base_price: number;
+  last_price_update: string;
   priority: number;
   is_active: boolean;
   source: 'manual' | 'user_generated' | 'automated';
   cache_expires_at: string;
+  generation_count: number;
+  last_accessed: string;
   created_at: string;
   updated_at: string;
 }
 
 export interface StockAnalytics {
   symbol: string;
-  company_name: string;
-  seo_priority: number;
+  market_cap: number;
+  avg_volume: number;
+  sector: string;
+  is_etf: boolean;
   popularity_score: number;
-  view_count: number;
-  last_requested: string;
+  seo_priority: number;
   created_at: string;
   updated_at: string;
 }
@@ -212,23 +217,22 @@ export async function updateStockAnalytics(
   try {
     const now = new Date().toISOString();
     
-    // First, try to get existing record to increment view count
+    // First, try to get existing record to increment popularity score
     const { data: existing } = await supabase
       .from('stock_analytics')
-      .select('view_count')
+      .select('popularity_score')
       .eq('symbol', symbol.toUpperCase())
       .single();
 
-    const currentViewCount = existing?.view_count || 0;
+    const currentPopularityScore = existing?.popularity_score || 0;
 
     const { data, error } = await supabase
       .from('stock_analytics')
       .upsert({
         symbol: symbol.toUpperCase(),
-        view_count: updates.view_count !== undefined 
-          ? updates.view_count 
-          : currentViewCount + 1,
-        last_requested: now,
+        popularity_score: updates.popularity_score !== undefined 
+          ? updates.popularity_score 
+          : currentPopularityScore + 1,
         updated_at: now,
         ...updates,
       }, {
@@ -285,7 +289,7 @@ export async function getTopStocksByPopularity(limit: number = 100): Promise<Sto
       .from('stock_analytics')
       .select('*')
       .order('popularity_score', { ascending: false })
-      .order('view_count', { ascending: false })
+      .order('updated_at', { ascending: false })
       .limit(limit);
 
     if (error) {
@@ -320,20 +324,19 @@ export async function shouldCacheSymbol(symbol: string): Promise<{
     }
 
     // Define caching criteria
-    const highViewThreshold = 10;
     const popularityThreshold = 50;
     
-    if (analytics.view_count >= highViewThreshold || analytics.popularity_score >= popularityThreshold) {
+    if (analytics.popularity_score >= popularityThreshold) {
       return {
         shouldCache: true,
-        reason: `High demand: ${analytics.view_count} views, popularity ${analytics.popularity_score}`,
-        priority: Math.min(100, analytics.popularity_score + (analytics.view_count * 2))
+        reason: `High demand: popularity ${analytics.popularity_score}`,
+        priority: Math.min(100, analytics.popularity_score)
       };
     }
 
     return {
       shouldCache: false,
-      reason: `Low demand: ${analytics.view_count} views, popularity ${analytics.popularity_score}`,
+      reason: `Low demand: popularity ${analytics.popularity_score}`,
       priority: 0
     };
   } catch (error) {

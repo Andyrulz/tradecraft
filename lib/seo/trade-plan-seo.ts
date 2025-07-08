@@ -79,7 +79,7 @@ export function generateTradePlanSEO(data: TradePlanSEOData): SEOContent {
 function generateTitle(symbol: string, companyName: string, direction: string, setupType: string): string {
   const templates = [
     `${symbol} Trade Plan - ${capitalizeFirst(direction)} ${capitalizeFirst(setupType)} Strategy | TradeCraft`,
-    `${symbol} Trading Strategy - AI-Generated ${capitalizeFirst(setupType)} Plan | TradeCraft`,
+    `${symbol} Trading Strategy - Professional ${capitalizeFirst(setupType)} Plan with AI Insights | TradeCraft`,
     `${companyName} (${symbol}) Trade Plan - Professional Trading Analysis | TradeCraft`,
     `${symbol} ${capitalizeFirst(setupType)} Trade Setup - Entry, Exit & Risk Management | TradeCraft`
   ];
@@ -114,7 +114,7 @@ function generateMetaDescription(data: TradePlanSEOData): string {
     ? ` Target: $${data.targets[0].price.toFixed(2)}.`
     : '';
 
-  return `Professional AI-generated trade plan for ${symbol}${price}.${direction} setup${confidence}${timeHorizon}. Includes entry points, stop loss, profit targets, and risk management.${riskReward}${targets} Updated with real-time market data.`.substring(0, 160);
+  return `Professional trade plan for ${symbol} enhanced with AI insights${price}.${direction} setup${confidence}${timeHorizon}. Includes entry points, stop loss, profit targets, and risk management.${riskReward}${targets} Updated with real-time market data.`.substring(0, 160);
 }
 
 /**
@@ -309,7 +309,7 @@ function generateStructuredData(data: TradePlanSEOData): object {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": `${symbol} Trade Plan - Professional Trading Strategy`,
-    "description": `AI-generated trade plan for ${symbol} with entry points, stop loss, targets, and risk management.`,
+    "description": `Professional trade plan for ${symbol} enhanced with AI insights, including entry points, stop loss, targets, and risk management.`,
     "author": {
       "@type": "Organization",
       "name": "TradeCraft",
@@ -384,8 +384,8 @@ export function generateFallbackSEO(symbol: string): SEOContent {
   const upperSymbol = symbol.toUpperCase();
   
   return {
-    title: `${upperSymbol} Trade Plan - AI-Generated Trading Strategy | TradeCraft`,
-    description: `Get a professional AI-generated trade plan for ${upperSymbol} with entry points, stop loss, targets, and risk management. Real-time analysis updated daily.`,
+    title: `${upperSymbol} Trade Plan - Professional Trading Strategy with AI Insights | TradeCraft`,
+    description: `Get a professional trade plan for ${upperSymbol} enhanced with AI insights. Includes entry points, stop loss, targets, and risk management. Real-time analysis updated daily.`,
     keywords: [
       `${upperSymbol} trade plan`,
       `${upperSymbol} trading strategy`,
@@ -398,7 +398,7 @@ export function generateFallbackSEO(symbol: string): SEOContent {
     ],
     content: `# ${upperSymbol} Trade Plan
 
-Professional AI-generated trading strategy for ${upperSymbol}. Get precise entry points, stop loss levels, profit targets, and comprehensive risk management analysis.
+Professional trading strategy for ${upperSymbol} enhanced with AI insights. Get precise entry points, stop loss levels, profit targets, and comprehensive risk management analysis.
 
 ## Features:
 - Real-time technical analysis
@@ -411,7 +411,7 @@ This trade plan provides institutional-quality analysis for individual traders, 
       "@context": "https://schema.org",
       "@type": "Article",
       "headline": `${upperSymbol} Trade Plan - Trading Strategy`,
-      "description": `AI-generated trade plan for ${upperSymbol}`,
+      "description": `Professional trade plan for ${upperSymbol} with AI insights`,
       "author": {
         "@type": "Organization",
         "name": "TradeCraft"
