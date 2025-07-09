@@ -7,23 +7,25 @@ import TestimonialsSection from '@/components/landing/TestimonialsSection';
 import Link from 'next/link';
 import Image from 'next/image';
 import { StructuredData } from '@/components/seo/StructuredData';
+import { HomepageStructuredData } from '@/components/seo/HomepageStructuredData';
 import { generateMetadata as generateSEOMetadata, generateBreadcrumbStructuredData } from '@/lib/seo';
 
 // Generate metadata for the homepage
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'TradeCraft Pro - Advanced Stock Market Analysis & Trading Tools',
-  description: 'Professional stock market analysis tools, real-time market news, momentum stock screeners, and automated trade plan generation. Make informed trading decisions with TradeCraft Pro.',
+  title: 'TradeCraft Pro - Data-Driven Trade Plans Enhanced with AI Insights',
+  description: 'Generate professional data-driven trade plans enhanced with AI insights, discover momentum stocks, track market movers, and stay updated with real-time market news. Built for modern traders.',
   keywords: [
+    'data-driven trade plans',
+    'AI enhanced stock analysis',
     'stock market analysis',
-    'trading tools',
     'momentum stock screener',
-    'stock trade plans',
-    'market news',
-    'stock market research',
-    'trading software',
+    'market movers tracker',
+    'real-time market news',
+    'trading tools',
     'stock analysis tools',
-    'market data',
-    'trading strategies'
+    'trading strategies',
+    'risk management',
+    'technical analysis'
   ],
   canonicalUrl: 'https://www.tradingsetup.pro',
   ogImage: 'https://www.tradingsetup.pro/og-homepage.jpg',
@@ -32,32 +34,32 @@ export const metadata: Metadata = generateSEOMetadata({
 
 const blogPosts = [
 	{
-		slug: 'how-to-spot-next-leading-momentum-stock-using-trade-craft',
-		title: 'How to Spot the Next Leading Momentum Stock Using Trade Craft',
+		slug: 'trade-plan-generator',
+		title: 'How to Generate Professional Trade Plans with AI-Enhanced Analysis',
 		summary:
-			"A step-by-step guide to finding high-potential momentum stocks using Trade Craft's screeners, signals, and trade plans.",
-		date: '2025-05-16',
+			'Complete guide to creating data-driven trade plans using AI insights, risk management, and technical analysis for consistent trading success.',
+		date: '2025-07-08',
 	},
 	{
-		slug: 'identify-breakout-stocks-price-volume',
-		title: 'How I Identify Breakout Stocks Using Price-Volume Analysis',
+		slug: 'momentum-stock-screener',
+		title: 'Finding High-Momentum Stocks: Advanced Screening Techniques',
 		summary:
-			'A deep dive into the exact price and volume patterns I look for before entering a breakout, with real chart examples and actionable tips.',
-		date: '2025-04-10',
+			'Master the art of momentum stock screening with 20+ technical indicators, sector filters, and real-time market data.',
+		date: '2025-07-05',
 	},
 	{
-		slug: 'top-5-momentum-indicators-midcap',
-		title: 'Top 5 Momentum Indicators I Use for Midcap Trading',
+		slug: 'market-movers-analysis',
+		title: 'Market Movers Analysis: How to Profit from Daily Gainers and Losers',
 		summary:
-			'Discover the momentum indicators that consistently help me spot high-potential midcap stocks before they move.',
-		date: '2025-04-20',
+			'Learn to identify and capitalize on market-moving stocks with real-time alerts and detailed breakout analysis.',
+		date: '2025-07-01',
 	},
 	{
-		slug: 'step-by-step-trade-plan-risk-management',
-		title: 'Step-by-Step Guide: Creating a Trade Plan with Risk Management',
+		slug: 'ai-risk-management',
+		title: 'AI-Powered Risk Management: Protecting Capital in Volatile Markets',
 		summary:
-			'A practical, step-by-step walkthrough of building a robust trade plan, including risk controls and real-world examples.',
-		date: '2025-04-28',
+			'Discover how AI-enhanced risk management can improve your trading performance with dynamic stop-losses and position sizing.',
+		date: '2025-06-28',
 	},
 ];
 
@@ -93,6 +95,8 @@ function TrustBadges() {
             alt="Read us on Medium"
             width={100}
             height={32}
+            loading="lazy"
+            sizes="(max-width: 768px) 80px, 100px"
           />
         </a>
         <a
@@ -107,6 +111,8 @@ function TrustBadges() {
             alt="View us on LinkedIn"
             width={100}
             height={32}
+            loading="lazy"
+            sizes="(max-width: 768px) 80px, 100px"
           />
         </a>
         <a
@@ -141,31 +147,44 @@ export default function Home() {
 		<main className="flex-1 bg-background">
 			{/* Homepage Structured Data */}
 			<StructuredData data={breadcrumbData} />
+			<HomepageStructuredData />
 			
 			<HeroSection />
       <TrustBadges />
 			<BenefitsSection />
 			<FeatureSection />
 			<HowItWorks />
-			<section className="container mx-auto px-4 max-w-4xl py-12">
-				<h2 className="text-2xl font-bold mb-6 text-primary">From the Blog</h2>
-				<div className="space-y-8">
+			<section className="container mx-auto px-4 max-w-4xl py-12" aria-labelledby="blog-section">
+				<h2 id="blog-section" className="text-2xl font-bold mb-6 text-primary">From the Blog</h2>
+				<div className="space-y-8" role="list" aria-label="Blog posts">
 					{blogPosts.map(post => (
-						<div key={post.slug} className="border-b border-border pb-6">
+						<article key={post.slug} className="border-b border-border pb-6" role="listitem">
 							<h3 className="text-xl font-semibold mb-2 text-primary">
-								<Link href={`/blog/${post.slug}`} aria-label={post.title}>{post.title}</Link>
+								<Link 
+									href={`/blog/${post.slug}`} 
+									className="hover:underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm"
+									aria-label={`Read blog post: ${post.title}`}
+								>
+									{post.title}
+								</Link>
 							</h3>
 							<p className="text-muted-foreground mb-2">
 								{post.summary}
 							</p>
-							<span className="text-xs text-muted-foreground">{post.date}</span>
-						</div>
+							<time className="text-xs text-muted-foreground" dateTime={post.date}>
+								{new Date(post.date).toLocaleDateString('en-US', { 
+									year: 'numeric', 
+									month: 'long', 
+									day: 'numeric' 
+								})}
+							</time>
+						</article>
 					))}
 				</div>
 				<div className="mt-8">
 					<Link
 						href="/blog"
-						className="text-primary underline font-medium"
+						className="text-primary underline font-medium hover:no-underline focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 rounded-sm"
 						aria-label="View all blog posts"
 					>
 						View all blog posts →

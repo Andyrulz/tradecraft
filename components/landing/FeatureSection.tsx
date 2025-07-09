@@ -47,7 +47,7 @@ export function FeatureSection() {
           </p>
         </div>
         <DiscoverScreener />
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mt-16">
+        {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mt-16">
           {features.map((feature, index) => (
             <div
               key={index}
@@ -56,9 +56,9 @@ export function FeatureSection() {
               <div className="mb-4">{feature.icon}</div>
               <h3 className="text-base sm:text-lg font-semibold mb-2 text-primary leading-tight">{feature.title}</h3>
               <p className="text-sm sm:text-base text-muted-foreground">{feature.description}</p>
-            </div>
+            </div> 
           ))}
-        </div>
+        </div>*/}
       </div>
     </section>
   );

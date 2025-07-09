@@ -4,39 +4,39 @@ export function HowItWorks() {
   const steps = [
     {
       number: '01',
-      title: 'Choose Your Path',
-      description: 'Enter a stock symbol to generate a trade plan, or click “Find Momentum Stocks” to discover today’s top setups.',
+      title: 'Select Your Tool',
+      description: 'Choose from Trade Plans, Momentum Screener, Market Movers, or News - each designed for different trading strategies.',
     },
     {
       number: '02',
-      title: 'Get Instant Results',
-      description: 'Receive a detailed trade plan with entry, targets, and risk—or see the top 10 actionable momentum stocks for today.',
+      title: 'Get AI-Enhanced Analysis',
+      description: 'Receive data-driven insights enhanced with AI analysis, including risk management, entry zones, and market context.',
     },
     {
       number: '03',
-      title: 'Review Analysis',
-      description: 'Explore technical indicators, market context, and actionable insights for your selected stock or screener results.',
+      title: 'Review & Customize',
+      description: 'Analyze technical indicators, adjust parameters, and customize alerts based on your trading style and risk tolerance.',
     },
     {
       number: '04',
-      title: 'Act with Confidence',
-      description: 'Use the generated plan or screener results to make informed trading decisions, every day.',
+      title: 'Execute with Confidence',
+      description: 'Trade with clear entry/exit points, stop-losses, and position sizing - all backed by real-time market data.',
     },
   ];
 
   return (
-    <section id="how-it-works" className="py-20 bg-background">
+    <section id="how-it-works" className="py-20 bg-background" aria-labelledby="how-it-works-heading">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-3xl font-bold mb-6 text-primary tracking-tight">How It Works</h2>
+          <h2 id="how-it-works-heading" className="text-3xl font-bold mb-6 text-primary tracking-tight">How It Works</h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-0">
-            Instantly generate a trade plan <b>or</b> discover high momentum stocks in four simple steps.
+            Generate data-driven trade plans enhanced with AI insights in four simple steps.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8" role="list" aria-label="How TradeCraft works">
           {steps.map((step, index) => (
-            <div key={index} className="relative w-full min-h-[210px]">
+            <div key={index} className="relative w-full min-h-[210px]" role="listitem">
               <div className="bg-background rounded-xl p-5 sm:p-6 shadow-sm border border-border/50 transition-shadow hover:shadow-lg flex flex-col items-center text-center w-full h-full">
                 <div className="text-3xl sm:text-4xl font-bold text-primary mb-3">{step.number}</div>
                 <h3 className="text-base sm:text-lg font-semibold mb-2 text-primary leading-tight">{step.title}</h3>

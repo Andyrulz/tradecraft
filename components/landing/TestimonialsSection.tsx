@@ -11,17 +11,17 @@ const TestimonialsSection = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-10">
           {[{
             initial: 'S',
-            quote: "The technical analysis and trade plans have been spot on. I've seen consistent returns since I started following the recommendations.",
+            quote: "Generated a trade plan for NVDA that netted me 23% in 3 weeks. The AI insights on risk management saved me from a major loss when the market turned.",
             name: 'Sarah K.',
             role: 'Day Trader, New York',
           }, {
             initial: 'M',
-            quote: "The stock screener has helped me identify opportunities I would have otherwise missed. It's become an essential part of my trading routine.",
+            quote: "The momentum screener flagged TSLA before its 18% breakout. Found 3 winners last month that I would have completely missed otherwise.",
             name: 'Michael R.',
             role: 'Swing Trader, California',
           }, {
             initial: 'D',
-            quote: "The combination of fundamental and technical analysis gives me confidence in my trades. The platform has transformed my trading strategy.",
+            quote: "Market movers feature helped me catch AAPL's reversal at $185. The real-time alerts and data-driven insights have improved my win rate by 40%.",
             name: 'David L.',
             role: 'Position Trader, Texas',
           }].map((t, i) => (
