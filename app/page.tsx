@@ -1,7 +1,6 @@
 import { Metadata } from 'next';
 import { HeroSection } from '@/components/landing/HeroSection';
 import { BenefitsSection } from '@/components/landing/BenefitsSection';
-import { FeatureSection } from '@/components/landing/FeatureSection';
 import { HowItWorks } from '@/components/landing/HowItWorks';
 import TestimonialsSection from '@/components/landing/TestimonialsSection';
 import Link from 'next/link';
@@ -65,74 +64,82 @@ const blogPosts = [
 
 function TrustBadges() {
   return (
-    <section className="w-full bg-background border-b border-border py-6">
-      <div className="container mx-auto px-5 max-w-4xl flex flex-wrap items-center justify-center gap-6">
-        <a
-          href="https://www.producthunt.com/products/tradecraft-2"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="View TradeCraft on Product Hunt"
-          className="transition-transform hover:scale-105"
-        >
-          <Image
-            src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=966567&theme=light&t=1748065742670"
-            alt="TradeCraft - Trade with Confidence and Clarity | Product Hunt"
-            width={200}
-            height={44}
-            style={{ width: 200, height: 44 }}
-            loading="lazy"
-          />
-        </a>
-        <a
-          href="https://medium.com/@andrew.labyrinthventures"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Read TradeCraft on Medium"
-          className="transition-transform hover:scale-105"
-        >
-          <Image
-            src="/badges/medium-badge.png"
-            alt="Read us on Medium"
-            width={100}
-            height={32}
-            loading="lazy"
-            sizes="(max-width: 768px) 80px, 100px"
-          />
-        </a>
-        <a
-          href="https://www.linkedin.com/company/trade-craft-pro"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="View TradeCraft on LinkedIn"
-          className="transition-transform hover:scale-105"
-        >
-          <Image
-            src="/badges/linkedin-badge.png"
-            alt="View us on LinkedIn"
-            width={100}
-            height={32}
-            loading="lazy"
-            sizes="(max-width: 768px) 80px, 100px"
-          />
-        </a>
-        <a
-          href="https://www.facebook.com/profile.php?id=61576935563708"
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label="Follow TradeCraft on Facebook"
-          className="transition-transform hover:scale-105 flex items-center gap-2 bg-[#1877F2] text-white px-4 py-2 rounded-lg font-semibold text-sm"
-        >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="shrink-0"
+    <section className="w-full bg-white py-8">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <div className="text-center mb-8">
+          <p className="text-sm text-gray-600 font-medium">Trusted by traders worldwide</p>
+        </div>
+        <div className="flex flex-wrap items-center justify-center gap-8">
+          <a
+            href="https://www.producthunt.com/products/tradecraft-2"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View TradeCraft on Product Hunt"
+            className="transition-all hover:scale-105 hover:shadow-md rounded-lg"
           >
-            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-          </svg>
-          Follow us
-        </a>
+            <Image
+              src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=966567&theme=light&t=1748065742670"
+              alt="TradeCraft - Trade with Confidence and Clarity | Product Hunt"
+              width={200}
+              height={44}
+              style={{ width: 200, height: 44 }}
+              loading="lazy"
+              className="rounded-lg shadow-sm"
+            />
+          </a>
+          <a
+            href="https://medium.com/@andrew.labyrinthventures"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Read TradeCraft on Medium"
+            className="transition-all hover:scale-105 hover:shadow-md rounded-lg p-2 bg-gray-50"
+          >
+            <Image
+              src="/badges/medium-badge.png"
+              alt="Read us on Medium"
+              width={100}
+              height={32}
+              loading="lazy"
+              sizes="(max-width: 768px) 80px, 100px"
+              className="rounded"
+            />
+          </a>
+          <a
+            href="https://www.linkedin.com/company/trade-craft-pro"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="View TradeCraft on LinkedIn"
+            className="transition-all hover:scale-105 hover:shadow-md rounded-lg p-2 bg-gray-50"
+          >
+            <Image
+              src="/badges/linkedin-badge.png"
+              alt="View us on LinkedIn"
+              width={100}
+              height={32}
+              loading="lazy"
+              sizes="(max-width: 768px) 80px, 100px"
+              className="rounded"
+            />
+          </a>
+          <a
+            href="https://www.facebook.com/profile.php?id=61576935563708"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Follow TradeCraft on Facebook"
+            className="transition-all hover:scale-105 hover:shadow-md flex items-center gap-2 bg-[#4267B2] text-white px-4 py-2 rounded-lg font-semibold text-sm shadow-sm"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="shrink-0"
+            >
+              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+            </svg>
+            Follow us
+          </a>
+        </div>
       </div>
     </section>
   );
@@ -148,13 +155,19 @@ export default function Home() {
 			{/* Homepage Structured Data */}
 			<StructuredData data={breadcrumbData} />
 			<HomepageStructuredData />
-			
 			<HeroSection />
-      <TrustBadges />
+			{/* Section Separator */}
+			<div className="border-b border-gray-100"></div>
+			<TrustBadges />
+			{/* Section Separator */}
+			<div className="border-b border-gray-100"></div>
 			<BenefitsSection />
-			<FeatureSection />
+			{/* Section Separator */}
+			<div className="border-b border-gray-100"></div>
 			<HowItWorks />
-			<section className="container mx-auto px-4 max-w-4xl py-12" aria-labelledby="blog-section">
+			{/* Section Separator */}
+			<div className="border-b border-gray-100"></div>
+			<section className="bg-white container mx-auto px-4 max-w-4xl py-20" aria-labelledby="blog-section">
 				<h2 id="blog-section" className="text-2xl font-bold mb-6 text-primary">From the Blog</h2>
 				<div className="space-y-8" role="list" aria-label="Blog posts">
 					{blogPosts.map(post => (
@@ -191,6 +204,8 @@ export default function Home() {
 					</Link>
 				</div>
 			</section>
+			{/* Section Separator */}
+			<div className="border-b border-gray-100"></div>
 			<TestimonialsSection />
 		</main>
 	);

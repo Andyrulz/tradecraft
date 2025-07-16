@@ -61,7 +61,7 @@ export function HeroSection() {
         Skip to main content
       </a>
       
-      <section className="w-full bg-background border-b border-border pt-16 pb-12 sm:pt-20 sm:pb-16" id="main-content">
+      <section className="w-full bg-white pt-16 pb-20 sm:pt-20 sm:pb-24" id="main-content">
         <div className="container mx-auto px-4 flex flex-col items-center justify-center min-h-[60vh] max-w-full">
           <div className="w-full max-w-2xl text-center mx-auto">
             <p className="text-sm text-primary font-semibold mb-2 tracking-wide uppercase">Detailed Trade plans, signals & screeners</p>
@@ -82,17 +82,19 @@ export function HeroSection() {
               aria-label="Generate trade plans with AI insights"
               role="gridcell"
             >
-              <div className="bg-primary/5 rounded-xl p-5 sm:p-6 shadow-sm border-2 border-primary/30 flex flex-col items-center text-center transition-all hover:shadow-lg hover:border-primary/50 hover:bg-primary/10 focus-within:border-primary/50 w-full min-h-[210px] cursor-pointer relative">
-                <div className="absolute -top-2 -right-2 bg-primary text-primary-foreground text-xs px-2 py-1 rounded-full font-medium">
+              <div className="bg-white rounded-xl p-5 sm:p-6 shadow-md border-2 border-slate-200 flex flex-col items-center text-center transition-all hover:shadow-lg hover:border-slate-300 hover:bg-slate-50 focus-within:border-slate-300 w-full min-h-[210px] cursor-pointer relative">
+                <div className="absolute -top-2 -right-2 bg-slate-700 text-white text-xs px-3 py-1 rounded-full font-semibold shadow-sm">
                   Popular
                 </div>
                 <div className="mb-4" aria-hidden="true">
-                  <TrendingUp className="h-10 w-10 text-primary" />
+                  <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center shadow-sm">
+                    <TrendingUp className="h-6 w-6 text-slate-700" />
+                  </div>
                 </div>
-                <h3 className="text-base sm:text-lg font-semibold mb-2 text-primary leading-tight">Trade Plans</h3>
-                <p className="text-sm sm:text-base text-muted-foreground mb-4">Generate data-driven trade plans enhanced with AI insights and risk management.</p>
+                <h3 className="text-base sm:text-lg font-bold mb-2 text-gray-900 leading-tight">Trade Plans</h3>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 leading-relaxed">Generate data-driven trade plans enhanced with AI insights and risk management.</p>
                 <div className="mt-auto">
-                  <div className="bg-primary text-primary-foreground px-4 py-2 rounded-lg font-medium text-sm group-hover:bg-primary/90 transition-colors">
+                  <div className="bg-slate-700 text-white px-5 py-2 rounded-lg font-semibold text-sm group-hover:bg-slate-800 transition-all shadow-sm">
                     Generate Plan →
                   </div>
                 </div>
@@ -105,14 +107,16 @@ export function HeroSection() {
               aria-label="Screen stocks for momentum opportunities"
               role="gridcell"
             >
-              <div className="bg-background rounded-xl p-5 sm:p-6 shadow-sm border border-border flex flex-col items-center text-center transition-all hover:shadow-lg hover:border-primary/20 hover:bg-muted/20 focus-within:border-primary/20 w-full min-h-[210px] cursor-pointer">
+              <div className="bg-white rounded-xl p-5 sm:p-6 shadow-md border-2 border-emerald-200 flex flex-col items-center text-center transition-all hover:shadow-lg hover:border-emerald-300 hover:bg-emerald-50 focus-within:border-emerald-300 w-full min-h-[210px] cursor-pointer">
                 <div className="mb-4" aria-hidden="true">
-                  <BarChart3 className="h-10 w-10 text-chart-1" />
+                  <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center shadow-sm">
+                    <BarChart3 className="h-6 w-6 text-emerald-700" />
+                  </div>
                 </div>
-                <h3 className="text-base sm:text-lg font-semibold mb-2 text-primary leading-tight">Stock Screener</h3>
-                <p className="text-sm sm:text-base text-muted-foreground mb-4">Discover high-momentum stocks with advanced screening tools and indicators.</p>
+                <h3 className="text-base sm:text-lg font-bold mb-2 text-gray-900 leading-tight">Stock Screener</h3>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 leading-relaxed">Discover high-momentum stocks with advanced screening tools and indicators.</p>
                 <div className="mt-auto">
-                  <div className="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg font-medium text-sm group-hover:bg-secondary/90 transition-colors">
+                  <div className="bg-emerald-700 text-white px-5 py-2 rounded-lg font-semibold text-sm group-hover:bg-emerald-800 transition-all shadow-sm">
                     Screen Stocks →
                   </div>
                 </div>
@@ -125,14 +129,16 @@ export function HeroSection() {
               aria-label="View market movers and gainers"
               role="gridcell"
             >
-              <div className="bg-background rounded-xl p-5 sm:p-6 shadow-sm border border-border flex flex-col items-center text-center transition-all hover:shadow-lg hover:border-primary/20 hover:bg-muted/20 focus-within:border-primary/20 w-full min-h-[210px] cursor-pointer">
+              <div className="bg-white rounded-xl p-5 sm:p-6 shadow-md border-2 border-amber-200 flex flex-col items-center text-center transition-all hover:shadow-lg hover:border-amber-300 hover:bg-amber-50 focus-within:border-amber-300 w-full min-h-[210px] cursor-pointer">
                 <div className="mb-4" aria-hidden="true">
-                  <Zap className="h-10 w-10 text-chart-2" />
+                  <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center shadow-sm">
+                    <Zap className="h-6 w-6 text-amber-700" />
+                  </div>
                 </div>
-                <h3 className="text-base sm:text-lg font-semibold mb-2 text-primary leading-tight">Market Movers</h3>
-                <p className="text-sm sm:text-base text-muted-foreground mb-4">Track the biggest gainers and losers in real-time and stay updated with market trends.</p>
+                <h3 className="text-base sm:text-lg font-bold mb-2 text-gray-900 leading-tight">Market Movers</h3>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 leading-relaxed">Track the biggest gainers and losers in real-time and stay updated with market trends.</p>
                 <div className="mt-auto">
-                  <div className="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg font-medium text-sm group-hover:bg-secondary/90 transition-colors">
+                  <div className="bg-amber-700 text-white px-5 py-2 rounded-lg font-semibold text-sm group-hover:bg-amber-800 transition-all shadow-sm">
                     View Movers →
                   </div>
                 </div>
@@ -145,14 +151,16 @@ export function HeroSection() {
               aria-label="Read market news and insights"
               role="gridcell"
             >
-              <div className="bg-background rounded-xl p-5 sm:p-6 shadow-sm border border-border flex flex-col items-center text-center transition-all hover:shadow-lg hover:border-primary/20 hover:bg-muted/20 focus-within:border-primary/20 w-full min-h-[210px] cursor-pointer">
+              <div className="bg-white rounded-xl p-5 sm:p-6 shadow-md border-2 border-gray-200 flex flex-col items-center text-center transition-all hover:shadow-lg hover:border-gray-300 hover:bg-gray-50 focus-within:border-gray-300 w-full min-h-[210px] cursor-pointer">
                 <div className="mb-4" aria-hidden="true">
-                  <Newspaper className="h-10 w-10 text-chart-3" />
+                  <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center shadow-sm">
+                    <Newspaper className="h-6 w-6 text-gray-600" />
+                  </div>
                 </div>
-                <h3 className="text-base sm:text-lg font-semibold mb-2 text-primary leading-tight">Market News</h3>
-                <p className="text-sm sm:text-base text-muted-foreground mb-4">Stay updated with AI-curated market news and insights from trusted sources.</p>
+                <h3 className="text-base sm:text-lg font-bold mb-2 text-gray-900 leading-tight">Market News</h3>
+                <p className="text-sm sm:text-base text-gray-600 mb-4 leading-relaxed">Stay updated with AI-curated market news and insights from trusted sources.</p>
                 <div className="mt-auto">
-                  <div className="bg-secondary text-secondary-foreground px-4 py-2 rounded-lg font-medium text-sm group-hover:bg-secondary/90 transition-colors">
+                  <div className="bg-gray-600 text-white px-5 py-2 rounded-lg font-semibold text-sm group-hover:bg-gray-700 transition-all shadow-sm">
                     Read News →
                   </div>
                 </div>
@@ -160,6 +168,137 @@ export function HeroSection() {
             </Link>
           </div>
         </div>
+          
+          {/* Dashboard Preview Mockup */}
+          <div className="w-full max-w-5xl mx-auto mb-8 relative mt-20">
+            <div className="relative bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden">
+              {/* Browser Header */}
+              <div className="bg-gray-100 px-4 py-3 flex items-center gap-2 border-b border-gray-200">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                </div>
+                <div className="flex-1 text-center">
+                  <div className="bg-white rounded-md px-3 py-1 text-sm text-gray-600 inline-block">
+                    tradingsetup.pro/trade-plan
+                  </div>
+                </div>
+              </div>
+              
+              {/* Dashboard Content */}
+              <div className="p-6 bg-gradient-to-br from-gray-50 to-slate-50">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Stock Analysis Card */}                    <div className="bg-white rounded-xl p-5 shadow-sm border">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center">
+                          <TrendingUp className="h-5 w-5 text-white" />
+                        </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">AAPL</h3>
+                        <p className="text-sm text-gray-600">Apple Inc.</p>
+                      </div>
+                    </div>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Current Price</span>
+                        <span className="font-semibold text-emerald-600">$185.25</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">RSI</span>
+                        <span className="font-semibold">67.4</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Volume</span>
+                        <span className="font-semibold">2.1M</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Trade Plan Card */}                    <div className="bg-white rounded-xl p-5 shadow-sm border">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center">
+                          <BarChart3 className="h-5 w-5 text-white" />
+                        </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Trade Plan</h3>
+                        <p className="text-sm text-gray-600">AI Generated</p>
+                      </div>
+                    </div>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Entry</span>
+                        <span className="font-semibold text-slate-600">$183.50</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Stop Loss</span>
+                        <span className="font-semibold text-red-600">$179.00</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Target</span>
+                        <span className="font-semibold text-emerald-600">$192.00</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Market Sentiment Card */}                    <div className="bg-white rounded-xl p-5 shadow-sm border">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center">
+                          <Zap className="h-5 w-5 text-white" />
+                        </div>
+                      <div>
+                        <h3 className="font-semibold text-gray-900">Sentiment</h3>
+                        <p className="text-sm text-gray-600">AI Analysis</p>
+                      </div>
+                    </div>
+                    <div className="space-y-2 text-sm">
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Bullish</span>
+                        <span className="font-semibold text-emerald-600">73%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Bearish</span>
+                        <span className="font-semibold text-red-600">27%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-600">Confidence</span>
+                        <span className="font-semibold">High</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Chart Preview */}
+                <div className="mt-6 bg-white rounded-xl p-5 shadow-sm border">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-semibold text-gray-900">Price Chart</h3>
+                    <div className="flex gap-2">
+                      <span className="text-xs bg-slate-100 text-slate-800 px-2 py-1 rounded">1D</span>
+                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">5D</span>
+                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">1M</span>
+                    </div>
+                  </div>
+                  <div className="h-24 bg-gradient-to-r from-gray-100 to-gray-200 rounded-lg flex items-end justify-center">
+                    <div className="text-sm text-gray-600">Interactive Chart Preview</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Floating Stats */}
+            <div className="absolute -top-4 -left-4 bg-white rounded-lg shadow-lg p-3 border">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                <span className="text-sm font-medium text-gray-900">Live Data</span>
+              </div>
+            </div>
+            
+            <div className="absolute -bottom-4 -right-4 bg-white rounded-lg shadow-lg p-3 border">
+              <div className="flex items-center gap-2">
+                <Lock className="h-4 w-4 text-emerald-500" />
+                <span className="text-sm font-medium text-gray-900">Secure</span>
+              </div>
+            </div>        </div>
         
         {/* <div className="w-full max-w-2xl text-center mx-auto">
           <div className="flex flex-wrap items-center gap-4 mt-6 justify-center max-w-full">

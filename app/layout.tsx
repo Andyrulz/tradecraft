@@ -1,4 +1,5 @@
 import './globals.css';
+import './mobile-enhancements.css';
 import { Inter } from 'next/font/google';
 import { Footer } from '@/components/layout/Footer';
 import AuthSessionProvider from '@/components/SessionProvider';
