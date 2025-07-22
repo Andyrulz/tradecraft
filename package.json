@@ -18,6 +18,7 @@
     "cache:cleanup": "dotenv -e .env.local -- tsx scripts/cache-manager.ts cleanup",
     "cache:analyze": "dotenv -e .env.local -- tsx scripts/cache-manager.ts analyze",
     "cache:help": "tsx scripts/cache-manager.ts help",
+    "auto-refresh": "dotenv -e .env.local -- tsx scripts/auto-refresh.ts",
     "seo:setup": "tsx scripts/seo-helper.ts submit",
     "seo:cache": "tsx scripts/seo-helper.ts cache",
     "seo:preview": "tsx scripts/seo-helper.ts sitemap"

@@ -102,6 +102,46 @@ const blogPosts = [
     href: '/blog/top-5-momentum-indicators-midcap',
     title: 'Top 5 Momentum Indicators for Midcap Stocks',
     description: 'Tools and tips for midcap momentum trading.'
+  },
+  {
+    href: '/blog/complete-guide-to-swing-trading-stocks',
+    title: 'Complete Guide to Swing Trading Stocks',
+    description: 'Master swing trading with proven strategies, risk management, and position sizing techniques.'
+  },
+  {
+    href: '/blog/technical-analysis-guide-for-stock-trading',
+    title: 'Technical Analysis Guide for Stock Trading',
+    description: 'Complete guide to charts, indicators, patterns, and technical analysis strategies for successful trading.'
+  },
+  {
+    href: '/blog/risk-management-in-stock-trading',
+    title: 'Risk Management in Stock Trading',
+    description: 'Essential risk management strategies, position sizing, and portfolio protection techniques for traders.'
+  },
+  {
+    href: '/blog/options-trading-strategies-for-beginners',
+    title: 'Options Trading Strategies for Beginners',
+    description: 'Learn covered calls, protective puts, spreads, and risk management for successful options trading.'
+  },
+  {
+    href: '/blog/day-trading-strategies-that-work',
+    title: 'Day Trading Strategies That Actually Work',
+    description: 'Proven day trading strategies including scalping, momentum trading, and gap trading with risk management.'
+  },
+  {
+    href: '/blog/fundamental-analysis-complete-guide',
+    title: 'Fundamental Analysis Complete Guide',
+    description: 'Master financial statements, ratios, valuation methods, and company analysis for informed investing.'
+  },
+  {
+    href: '/blog/cryptocurrency-trading-strategies-guide',
+    title: 'Cryptocurrency Trading Strategies Guide',
+    description: 'Complete guide to crypto trading including DCA, arbitrage, DeFi, and risk management strategies.'
+  },
+  {
+    href: '/blog/trading-psychology-master-your-mind',
+    title: 'Trading Psychology: Master Your Mind',
+    description: 'Control emotions, overcome biases, and develop the mental discipline needed for consistent trading profits.'
   }
 ];
 

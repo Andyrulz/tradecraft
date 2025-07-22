@@ -5,6 +5,7 @@ import { getCachedTradePlan } from '@/lib/cache/trade-plan-cache';
 import { generateTradePlanSEO, extractSEODataFromTradePlan, generateFallbackSEO } from '@/lib/seo/trade-plan-seo';
 import { TOP_100_STOCKS } from '@/lib/config/top-stocks';
 import { isValidStockSymbol } from '@/lib/config/top-stocks';
+import { onStockPageAccess } from '@/lib/cache/auto-refresh';
 
 // Generate static params for all cached stocks
 export async function generateStaticParams() {
@@ -112,6 +113,10 @@ export default async function TradePlanPage({ params }: { params: Promise<{ symb
   if (!isValidStockSymbol(upperSymbol)) {
     notFound();
   }
+
+  // Trigger auto-refresh in background (non-blocking)
+  // This ensures fresh cache for SEO and future visitors
+  onStockPageAccess(upperSymbol);
 
   // Try to get cached content for initial page load
   let cachedTradePlan = null;

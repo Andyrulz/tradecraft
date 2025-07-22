@@ -12,6 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, TrendingUp, Shield, Target, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
+import { onStockPageAccess } from '@/lib/cache/auto-refresh';
 
 interface TradePlanContentProps {
   symbol: string;
@@ -42,7 +43,21 @@ export function TradePlanContent({ symbol, initialCachedData }: TradePlanContent
       setLoading(false);
       initializedRef.current = true;
     }
-  }, [initialCachedData]); // Safe to include initialCachedData as it's a prop
+
+    // Trigger background cache refresh on component mount
+    // This ensures that popular stocks get fresh data
+    if (symbol) {
+      // Call the server-side auto-refresh function via API
+      fetch('/api/cache/auto-refresh', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ symbol, source: 'client_interaction' })
+      }).catch(error => {
+        // Silently fail - this is a background operation
+        console.log('Background refresh trigger failed:', error);
+      });
+    }
+  }, [initialCachedData, symbol]); // Safe to include initialCachedData and symbol as they're props
 
   const fetchTradePlan = useCallback(async () => {
     // Always try to get live data, even if we have cached data

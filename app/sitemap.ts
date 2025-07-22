@@ -130,7 +130,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     'how-to-spot-next-leading-momentum-stock-using-trade-craft',
     'identify-breakout-stocks-price-volume',
     'mastering-market-conditions-the-edge-most-traders-ignore',
-    'step-by-step-trade-plan-risk-management'
+    'step-by-step-trade-plan-risk-management',
+    'complete-guide-to-swing-trading-stocks',
+    'technical-analysis-guide-for-stock-trading',
+    'risk-management-in-stock-trading',
+    'options-trading-strategies-for-beginners',
+    'day-trading-strategies-that-work',
+    'fundamental-analysis-complete-guide',
+    'cryptocurrency-trading-strategies-guide',
+    'trading-psychology-master-your-mind'
   ];
 
   const blogSitemap: MetadataRoute.Sitemap = blogPosts.map(slug => ({

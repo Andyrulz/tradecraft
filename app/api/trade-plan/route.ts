@@ -288,6 +288,7 @@ export async function POST(request: Request) {
 
     // 10. Cache the trade plan (background operation, don't block response)
     // Always cache fresh trade plans since we already generated the data
+    // This provides fresh content for SEO and future visitors
     cacheTradePlanInBackground(symbol, tradePlan);
 
     return NextResponse.json({
