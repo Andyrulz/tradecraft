@@ -26,9 +26,9 @@ export function Header({ setOverlayOpen }: { setOverlayOpen?: (open: boolean) =>
 				{/* Desktop nav */}
 				<nav className="hidden md:flex items-center space-x-8">
 					<Link href="/" className="text-muted-foreground hover:text-primary transition-colors font-medium">Home</Link>
-					<Link href="/#how-it-works" className="text-muted-foreground hover:text-primary transition-colors font-medium">How It Works</Link>
-					<Link href="/#benefits" className="text-muted-foreground hover:text-primary transition-colors font-medium">Benefits</Link>
+					<Link href="/#features" className="text-muted-foreground hover:text-primary transition-colors font-medium">Features</Link>
 					<Link href="/pricing" className="text-muted-foreground hover:text-primary transition-colors font-medium">Pricing</Link>
+					<Link href="/about" className="text-muted-foreground hover:text-primary transition-colors font-medium">About Me</Link>
 					<Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors font-medium">Contact</Link>
 				</nav>
 				{/* Mobile nav hamburger */}
@@ -79,9 +79,9 @@ export function Header({ setOverlayOpen }: { setOverlayOpen?: (open: boolean) =>
 				</div>
 				<nav className="flex flex-col gap-2 px-6 py-4">
 					<Link href="/" className="py-3 text-lg text-primary hover:text-primary/80 font-semibold" onClick={() => setMobileNavOpen(false)}>Home</Link>
-					<Link href="/#how-it-works" className="py-3 text-lg text-primary hover:text-primary/80 font-semibold" onClick={() => setMobileNavOpen(false)}>How It Works</Link>
-					<Link href="/#benefits" className="py-3 text-lg text-primary hover:text-primary/80 font-semibold" onClick={() => setMobileNavOpen(false)}>Benefits</Link>
+					<Link href="/#features" className="py-3 text-lg text-primary hover:text-primary/80 font-semibold" onClick={() => setMobileNavOpen(false)}>Features</Link>
 					<Link href="/pricing" className="py-3 text-lg text-primary hover:text-primary/80 font-semibold" onClick={() => setMobileNavOpen(false)}>Pricing</Link>
+					<Link href="/about" className="py-3 text-lg text-primary hover:text-primary/80 font-semibold" onClick={() => setMobileNavOpen(false)}>About Me</Link>
 					<Link href="/contact" className="py-3 text-lg text-primary hover:text-primary/80 font-semibold" onClick={() => setMobileNavOpen(false)}>Contact</Link>
 					
 					{/* Mobile auth buttons */}

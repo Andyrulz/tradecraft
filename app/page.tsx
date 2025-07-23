@@ -11,20 +11,22 @@ import { generateMetadata as generateSEOMetadata, generateBreadcrumbStructuredDa
 
 // Generate metadata for the homepage
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'TradeCraft Pro - Data-Driven Trade Plans Enhanced with AI Insights',
-  description: 'Generate professional data-driven trade plans enhanced with AI insights, discover momentum stocks, track market movers, and stay updated with real-time market news. Built for modern traders.',
+  title: 'TradeCraft Pro - Advanced Trading Strategy & AI Stock Analysis Platform',
+  description: 'Build winning trading strategies with AI-powered analysis, systematic trade planning, momentum screening, and professional market analysis tools. Proven trading strategy development platform.',
   keywords: [
-    'data-driven trade plans',
+    'trading strategy',
+    'AI trading strategy',
+    'systematic trading strategy',
+    'trading strategy development',
+    'momentum trading strategy',
+    'professional trading strategy',
+    'trading strategy framework',
     'AI enhanced stock analysis',
-    'stock market analysis',
-    'momentum stock screener',
-    'market movers tracker',
-    'real-time market news',
-    'trading tools',
-    'stock analysis tools',
-    'trading strategies',
-    'risk management',
-    'technical analysis'
+    'stock market trading strategies',
+    'trading strategy tools',
+    'trading strategy platform',
+    'systematic trade planning',
+    'trading strategy methodology'
   ],
   canonicalUrl: 'https://www.tradingsetup.pro',
   ogImage: 'https://www.tradingsetup.pro/og-homepage.jpg',
@@ -34,9 +36,9 @@ export const metadata: Metadata = generateSEOMetadata({
 const blogPosts = [
 	{
 		slug: 'trade-plan-generator',
-		title: 'How to Generate Professional Trade Plans with AI-Enhanced Analysis',
+		title: 'How to Build Systematic Trading Strategies with AI-Enhanced Analysis',
 		summary:
-			'Complete guide to creating data-driven trade plans using AI insights, risk management, and technical analysis for consistent trading success.',
+			'Complete guide to developing systematic trading strategies using AI insights, risk management, and professional analysis for consistent market success.',
 		date: '2025-07-08',
 	},
 	{

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -43,6 +44,7 @@ export function StockForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [validationError, setValidationError] = useState('');
   const router = useRouter();
+  const { data: session } = useSession();
 
   // Initialize form
   const form = useForm<z.infer<typeof formSchema>>({
@@ -59,6 +61,15 @@ export function StockForm() {
     setValidationError('');
     
     try {
+      // SECURITY: Check authentication before proceeding
+      if (!session || !session.user?.email) {
+        // Redirect to sign-in with return URL
+        const returnUrl = `/trade-plan/${values.stockSymbol.toUpperCase()}`;
+        router.push(`/auth/signin?callbackUrl=${encodeURIComponent(returnUrl)}`);
+        setIsLoading(false);
+        return;
+      }
+
       const isValid = await validateStockSymbol(values.stockSymbol);
       
       if (!isValid) {

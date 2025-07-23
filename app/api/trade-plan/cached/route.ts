@@ -1,8 +1,16 @@
 import { NextResponse } from 'next/server';
 import { getCachedTradePlan } from '@/lib/cache/trade-plan-cache';
+import { getServerSession } from 'next-auth';
+import authOptions from '@/app/api/auth/[...nextauth]/authOptions';
 
 export async function GET(request: Request) {
   try {
+    // Check authentication to prevent abuse of cached endpoint
+    const session = await getServerSession(authOptions);
+    if (!session || !session.user?.email) {
+      return NextResponse.json({ error: 'Unauthorized access to cached data' }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const symbol = searchParams.get('symbol');
 

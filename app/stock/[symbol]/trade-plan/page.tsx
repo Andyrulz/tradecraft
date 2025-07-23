@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth';
+import authOptions from '@/app/api/auth/[...nextauth]/authOptions';
 import { TOP_100_STOCKS, isValidStockSymbol } from '@/lib/config/top-stocks';
 import { generateMetadata as generateSEOMetadata, generateBreadcrumbStructuredData } from '@/lib/seo';
 import { StructuredData } from '@/components/seo/StructuredData';
@@ -51,6 +53,13 @@ export async function generateMetadata({ params }: StockTradePlanPageProps): Pro
 export default async function StockTradePlanPage({ params }: StockTradePlanPageProps) {
   const { symbol } = await params;
   const symbolUpper = symbol.toUpperCase();
+  
+  // SECURITY: Require authentication for trade plan pages
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user?.email) {
+    // Redirect to sign-in page with return URL
+    redirect(`/auth/signin?callbackUrl=/stock/${symbolUpper}/trade-plan`);
+  }
   
   // Check if stock exists
   if (!isValidStockSymbol(symbolUpper)) {

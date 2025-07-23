@@ -12,6 +12,7 @@ const navSections = [
 		header: 'General',
 		items: [
 			{ label: 'Home', href: '/', icon: Menu },
+			{ label: 'Features', href: '/#features', icon: BarChart2 },
       { label: 'Benefits', href: '/#benefits', icon: FileBarChart2 },
       { label: 'Pricing', href: '/pricing', icon: FileBarChart2 },
 		],
@@ -81,7 +82,9 @@ export function Sidebar({ isCollapsed = false, setCollapsed, setOverlayOpen }: {
               const Icon = item.icon;
               let isActive = false;
               if (item.label === 'Home') {
-                isActive = pathname === '/' && (hash !== '#benefits');
+                isActive = pathname === '/' && (hash !== '#benefits' && hash !== '#features');
+              } else if (item.label === 'Features') {
+                isActive = pathname === '/' && hash === '#features';
               } else if (item.label === 'Benefits') {
                 isActive = pathname === '/' && hash === '#benefits';
               } else {
@@ -169,6 +172,17 @@ export function Sidebar({ isCollapsed = false, setCollapsed, setOverlayOpen }: {
 }
 
 function SidebarContent({ onClick, skipGeneral = false, collapsed, pathname, session }: { onClick?: () => void, skipGeneral?: boolean, collapsed: boolean, pathname: string, session: any }) {
+	const [hash, setHash] = useState('');
+
+	useEffect(() => {
+		if (typeof window !== 'undefined') {
+			const updateHash = () => setHash(window.location.hash);
+			updateHash();
+			window.addEventListener('hashchange', updateHash);
+			return () => window.removeEventListener('hashchange', updateHash);
+		}
+	}, []);
+
 	return (
 		<nav className="flex flex-col gap-1 mt-2">
 			{navSections.map((section, sIdx) => {
@@ -184,7 +198,16 @@ function SidebarContent({ onClick, skipGeneral = false, collapsed, pathname, ses
 						<ul className="flex flex-col gap-0.5">
 							{section.items.map((item) => {
 								const Icon = item.icon;
-								const isActive = pathname === item.href;
+								let isActive = false;
+								if (item.label === 'Home') {
+									isActive = pathname === '/' && (hash !== '#benefits' && hash !== '#features');
+								} else if (item.label === 'Features') {
+									isActive = pathname === '/' && hash === '#features';
+								} else if (item.label === 'Benefits') {
+									isActive = pathname === '/' && hash === '#benefits';
+								} else {
+									isActive = pathname === item.href;
+								}
 								return (
 									<li key={item.href}>
 										<Link

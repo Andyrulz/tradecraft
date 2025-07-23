@@ -4,8 +4,8 @@ export function HowItWorks() {
   const steps = [
     {
       number: '01',
-      title: 'Select Your Tool',
-      description: 'Choose from Trade Plans, Momentum Screener, Market Movers, or News - each designed for different trading strategies.',
+      title: 'Choose Your Trading Strategy Tool',
+      description: 'Select from AI Trade Plans, Strategy-Based Screener, Market Movers, or News - each designed for systematic trading strategy development.',
       icon: <Target className="h-6 w-6 text-white" />,
       gradient: 'from-slate-600 to-slate-700',
       bgGradient: 'from-slate-50 to-gray-50',
@@ -13,8 +13,8 @@ export function HowItWorks() {
     },
     {
       number: '02',
-      title: 'Get AI-Enhanced Analysis',
-      description: 'Receive data-driven insights enhanced with AI analysis, including risk management, entry zones, and market context.',
+      title: 'Get AI Trading Strategy Analysis',
+      description: 'Receive data-driven trading strategy insights with AI analysis, including risk management, entry zones, and strategic market context.',
       icon: <Search className="h-6 w-6 text-white" />,
       gradient: 'from-emerald-600 to-emerald-700',
       bgGradient: 'from-emerald-50 to-green-50',
@@ -22,8 +22,8 @@ export function HowItWorks() {
     },
     {
       number: '03',
-      title: 'Review & Customize',
-      description: 'Analyze technical indicators, adjust parameters, and customize alerts based on your trading style and risk tolerance.',
+      title: 'Refine Your Trading Strategy',
+      description: 'Analyze technical indicators, adjust strategy parameters, and customize alerts based on your trading strategy style and risk tolerance.',
       icon: <Settings className="h-6 w-6 text-white" />,
       gradient: 'from-amber-600 to-amber-700',
       bgGradient: 'from-amber-50 to-orange-50',
@@ -31,8 +31,8 @@ export function HowItWorks() {
     },
     {
       number: '04',
-      title: 'Execute with Confidence',
-      description: 'Trade with clear entry/exit points, stop-losses, and position sizing - all backed by real-time market data.',
+      title: 'Execute Trading Strategy with Confidence',
+      description: 'Trade with clear strategy-based entry/exit points, stop-losses, and position sizing - all backed by real-time market data.',
       icon: <TrendingUp className="h-6 w-6 text-white" />,
       gradient: 'from-gray-600 to-gray-700',
       bgGradient: 'from-gray-50 to-slate-50',
@@ -45,13 +45,13 @@ export function HowItWorks() {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <div className="inline-block bg-gradient-to-r from-slate-600 to-gray-700 bg-clip-text text-transparent font-semibold text-sm tracking-wide uppercase mb-4">
-            Simple Process
+            Trading Strategy Development Process
           </div>
           <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-primary tracking-tight">
-            How It Works
+            How Our Trading Strategy Platform Works
           </h2>
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Generate data-driven trade plans enhanced with AI insights in four simple steps.
+            Build systematic trading strategies with AI-enhanced insights in four strategic steps.
           </p>
         </div>
 

@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
+import { getServerSession } from 'next-auth';
+import authOptions from '@/app/api/auth/[...nextauth]/authOptions';
 import { TradePlanContent } from '@/components/trade-plan-seo/TradePlanContent';
 import { getCachedTradePlan } from '@/lib/cache/trade-plan-cache';
 import { generateTradePlanSEO, extractSEODataFromTradePlan, generateFallbackSEO } from '@/lib/seo/trade-plan-seo';
@@ -108,6 +110,13 @@ export async function generateMetadata({ params }: { params: Promise<{ symbol: s
 export default async function TradePlanPage({ params }: { params: Promise<{ symbol: string }> }) {
   const { symbol } = await params;
   const upperSymbol = symbol.toUpperCase();
+
+  // SECURITY: Require authentication for trade plan pages
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user?.email) {
+    // Redirect to sign-in page with return URL
+    redirect(`/auth/signin?callbackUrl=/trade-plan/${upperSymbol}`);
+  }
 
   // Basic validation for stock symbols
   if (!isValidStockSymbol(upperSymbol)) {

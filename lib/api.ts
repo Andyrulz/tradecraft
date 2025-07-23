@@ -105,6 +105,7 @@ export async function getStockData(symbol: string, retries = 3, horizon: string 
       outputsize = 104;
     }
     // Fetch historical + live price data from Twelve Data
+    console.log(`📈 Making main time_series API call for ${symbol} (${interval}, outputsize: ${outputsize})`);
     const twelveDataApiKey = getNextTwelveDataApiKey();
     if (!twelveDataApiKey || twelveDataApiKey === 'undefined' || twelveDataApiKey.length < 10) {
       console.error('Twelve Data API key is missing or invalid:', twelveDataApiKey);
@@ -187,6 +188,7 @@ export async function getStockData(symbol: string, retries = 3, horizon: string 
     }
 
     // Fetch indicators from Twelve Data (with key rotation)
+    console.log(`📊 Making 3 indicator API calls for ${symbol} (RSI, MACD, Bollinger Bands)`);
     const rsiKey = getNextTwelveDataApiKey();
     const macdKey = getNextTwelveDataApiKey();
     const bbKey = getNextTwelveDataApiKey();
@@ -218,16 +220,30 @@ export async function getStockData(symbol: string, retries = 3, horizon: string 
       high: closes[closes.length - 1] + atr
     };
     
-    // Use enhanced stop loss calculation with swing low priority
-    const stopLoss = await calculateEnhancedStopLoss(
-      symbol,
-      closes[closes.length - 1],
-      atr,
-      horizon || 'swing'
-    );
-    
     // Calculate targets with proper risk-to-reward ratios
     const currentPrice = closes[closes.length - 1];
+    
+    // Use enhanced stop loss calculation with already-fetched price history
+    // For longterm horizon using weekly data, we need to pass daily-compatible data for swing calculations
+    let priceHistoryForStopLoss = priceHistory;
+    
+    // If longterm uses weekly data but we need daily granularity for swing low detection,
+    // we should pass null to let the function decide or fetch daily data if needed
+    if (horizon === 'longterm' && interval === '1week') {
+      console.log('Longterm horizon uses weekly data - swing low calculation may need daily data');
+      // Don't pass weekly data to swing low calculation as it needs daily granularity
+      priceHistoryForStopLoss = null;
+    }
+    
+    const stopLoss = await calculateEnhancedStopLoss(
+      symbol,
+      currentPrice,
+      atr,
+      horizon,
+      priceHistoryForStopLoss, // Pass appropriate price history
+      'breakout' // setupType
+    );
+    
     const riskPerShare = Math.abs(currentPrice - stopLoss.price);
     const baseMultipliers = horizon === 'swing' ? [1.5, 2.5, 4] :
                           horizon === 'positional' ? [2, 3, 5] :
@@ -548,6 +564,7 @@ async function fetchTimeframeData(
     const outputsize = outputSizes[timeframe];
 
     // Use the same API key rotation as the main function
+    console.log(`📅 Making fetchTimeframeData API call for ${symbol} (${timeframe}, daily data)`);
     const apiKey = getNextTwelveDataApiKey();
     const response = await fetch(
       `https://api.twelvedata.com/time_series?symbol=${symbol}&interval=1day&outputsize=${outputsize}&apikey=${apiKey}`
@@ -582,11 +599,14 @@ async function calculateEnhancedStopLoss(
   currentPrice: number,
   atr: number,
   horizon: string,
+  priceHistory?: { open: number; high: number; low: number; close: number }[] | null, // Accept pre-fetched data
   setupType: string = 'bullish_breakout'
 ): Promise<any> {
+  console.log(`🔍 calculateEnhancedStopLoss called for ${symbol}, horizon: ${horizon}, priceHistory length: ${priceHistory?.length || 'null'}`);
+  
   try {
-    // Step 1: Try swing low calculation
-    const swingLowResult = await calculateSwingLowStopLoss(symbol, currentPrice, atr, horizon, setupType);
+    // Step 1: Try swing low calculation with existing price history
+    const swingLowResult = await calculateSwingLowStopLoss(symbol, currentPrice, atr, horizon, setupType, priceHistory || undefined);
     
     // Check if swing low risk is acceptable
     const swingLowRisk = ((currentPrice - swingLowResult.price) / currentPrice) * 100;
@@ -622,17 +642,26 @@ async function calculateEnhancedStopLoss(
 }
 
 async function calculateSwingLowStopLoss(
-  symbol: string, 
-  currentPrice: number, 
-  atr: number, 
+  symbol: string,
+  currentPrice: number,
+  atr: number,
   horizon: string,
-  setupType: string
+  setupType: string,
+  priceHistory?: { open: number; high: number; low: number; close: number }[] // Accept pre-fetched data
 ): Promise<any> {
+  console.log(`📊 calculateSwingLowStopLoss called for ${symbol}, horizon: ${horizon}, priceHistory length: ${priceHistory?.length || 'undefined'}`);
+  
   try {
-    // Fetch daily data for consistent swing low detection
-    const timeframeData = await fetchTimeframeData(symbol, horizon as 'swing' | 'positional' | 'longterm');
+    // Use existing price history if provided, otherwise fetch new data
+    let timeframeData = priceHistory;
     
-    if (timeframeData.length === 0) {
+    if (!timeframeData || timeframeData.length === 0) {
+      // Only fetch if we don't have existing data (fallback)
+      console.log('⚠️ No price history provided, fetching timeframe data for swing low calculation - THIS MAKES AN EXTRA API CALL');
+      timeframeData = await fetchTimeframeData(symbol, horizon as 'swing' | 'positional' | 'longterm');
+    } else {
+      console.log('✅ Using existing price history for swing low calculation (avoiding duplicate API call)');
+    }    if (timeframeData.length === 0) {
       console.warn('No timeframe data available, falling back to ATR-based stop loss');
       return getATRBasedStopLoss(currentPrice, atr, horizon, setupType);
     }

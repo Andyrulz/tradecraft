@@ -12,33 +12,33 @@ export function BenefitsSection() {
   const benefits = [
     {
       icon: TrendingUp,
-      title: 'Data-Driven Trade Plans',
-      description: 'Generate professional trade plans with AI insights, including precise entry zones, stop losses, and price targets for any stock.',
+      title: 'AI Trading Strategy Builder',
+      description: 'Generate systematic trading strategies with AI-powered trade plans, precise entry zones, stop losses, and price targets for any stock.',
     },
     {
       icon: BarChart3,
-      title: 'Advanced Stock Screener',
-      description: 'Discover high-momentum stocks with 20+ technical indicators, sector filters, and real-time market data.',
+      title: 'Strategy-Based Stock Screener',
+      description: 'Discover stocks that match your trading strategy with 20+ technical indicators, momentum filters, and real-time market data.',
     },
     {
       icon: Shield,
-      title: 'Risk Management',
-      description: 'Smart position sizing and risk controls with dynamic stop-loss recommendations based on market volatility.',
+      title: 'Risk Management Strategy Tools',
+      description: 'Build disciplined trading strategies with professional position sizing and dynamic risk controls based on market volatility analysis.',
     },
     {
       icon: Zap,
-      title: 'Real-Time Market Movers',
-      description: 'Track the biggest gainers, losers, and breakouts with instant alerts and detailed analysis.',
+      title: 'Real-Time Strategy Monitoring',
+      description: 'Track your trading strategy performance with market movers, breakout alerts, and detailed technical analysis for strategy optimization.',
     },
     {
       icon: Newspaper,
-      title: 'Curated Market News',
-      description: 'AI-filtered market news and insights from trusted sources, prioritized by relevance to your trading strategy.',
+      title: 'Strategy-Focused Market News',
+      description: 'AI-curated market insights filtered for trading strategy relevance, helping you adapt your approach to changing market conditions.',
     },
     {
       icon: Lock,
-      title: 'Secure & Reliable',
-      description: 'Enterprise-grade security with real-time data updates and 99.9% uptime for consistent trading performance.',
+      title: 'Professional Strategy Platform',
+      description: 'Enterprise-grade trading strategy development platform with real-time data updates and 99.9% uptime for consistent performance.',
     },
   ];
 
@@ -47,11 +47,11 @@ export function BenefitsSection() {
       <div className="container mx-auto px-4 max-w-7xl">
         <div className="text-center mb-16">
           <h2 id="benefits-heading" className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6 text-primary">
-            Why Choose TradeCraft?
+             TradeCraft is your Smart Trade Manager
           </h2>
           <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-            Professional-grade trading tools designed to give you the edge in today&apos;s markets. 
-            Make informed decisions with data-driven insights and advanced analytics.
+            Professional trading strategy development tools designed to build systematic approaches and consistent market performance. 
+            Create winning strategies with data-driven insights and advanced market analysis.
           </p>
         </div>
         

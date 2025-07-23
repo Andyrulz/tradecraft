@@ -21,6 +21,10 @@ interface TradePlanContentProps {
 
 export function TradePlanContent({ symbol, initialCachedData }: TradePlanContentProps) {
   const { data: session } = useSession();
+  
+  // Generate unique ID for this component instance
+  const componentId = useRef(Math.random().toString(36).substr(2, 9));
+  
   const [tradePlan, setTradePlan] = useState<any>(initialCachedData || null);
   const [loading, setLoading] = useState(!initialCachedData); // Don't show loading if we have cached data
   const [error, setError] = useState<string | null>(null);
@@ -29,6 +33,8 @@ export function TradePlanContent({ symbol, initialCachedData }: TradePlanContent
   );
   const initializedRef = useRef(false);
   const tradePlanRef = useRef(tradePlan);
+  const requestInProgressRef = useRef(false);
+  const autoRefreshTriggeredRef = useRef(false);
 
   // Keep ref updated with current tradePlan state
   useEffect(() => {
@@ -44,30 +50,32 @@ export function TradePlanContent({ symbol, initialCachedData }: TradePlanContent
       initializedRef.current = true;
     }
 
-    // Trigger background cache refresh on component mount
-    // This ensures that popular stocks get fresh data
-    if (symbol) {
-      // Call the server-side auto-refresh function via API
-      fetch('/api/cache/auto-refresh', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ symbol, source: 'client_interaction' })
-      }).catch(error => {
-        // Silently fail - this is a background operation
-        console.log('Background refresh trigger failed:', error);
-      });
+    // New strategy: Use cached data only, no auto-refresh triggers
+    // Fresh data generation is exclusively driven by user requests
+    if (symbol && !autoRefreshTriggeredRef.current) {
+      autoRefreshTriggeredRef.current = true;
+      console.log(`[${componentId.current}] Using cache-only strategy for ${symbol} - no API calls triggered`);
     }
-  }, [initialCachedData, symbol]); // Safe to include initialCachedData and symbol as they're props
+  }, [symbol, initialCachedData]); // Include initialCachedData dependency
 
   const fetchTradePlan = useCallback(async () => {
-    // Always try to get live data, even if we have cached data
+    // Prevent multiple simultaneous requests from the same component
+    if (requestInProgressRef.current) {
+      console.log(`[${componentId.current}] Request already in progress, skipping duplicate call`);
+      return;
+    }
+
+    // Always try to get live data for authenticated users
     try {
+      requestInProgressRef.current = true;
       setError(null);
       
       // Only show loading if we don't have any data
       if (!tradePlanRef.current && !initialCachedData) {
         setLoading(true);
       }
+
+      console.log(`🚀 [${componentId.current}] Fetching trade plan for ${symbol}`);
 
       // Call your existing trade plan API for live data
       const response = await fetch('/api/trade-plan', {
@@ -82,17 +90,100 @@ export function TradePlanContent({ symbol, initialCachedData }: TradePlanContent
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate trade plan');
+        // Handle rate limiting specifically
+        if (response.status === 429) {
+          const errorData = await response.json();
+          console.log('Rate limit 429 response:', errorData);
+          
+          // Check if this is a cooldown error (temporary) vs quota exceeded (needs upgrade)
+          if (errorData.cooldown) {
+            // This is a cooldown error - show temporary message instead of upgrade prompt
+            throw new Error(JSON.stringify({
+              type: 'COOLDOWN_ERROR',
+              status: 429,
+              message: 'Please wait a moment before making another request',
+              ...errorData
+            }));
+          } else if (errorData.quotaExceeded) {
+            // This is a real quota exceeded error - show upgrade prompt
+            console.log('Quota exceeded, should show upgrade prompt', errorData);
+            throw new Error(JSON.stringify({
+              type: 'RATE_LIMIT_EXCEEDED',
+              status: 429,
+              ...errorData
+            }));
+          } else {
+            // Unknown 429 error - treat as rate limit
+            throw new Error(JSON.stringify({
+              type: 'RATE_LIMIT_EXCEEDED',
+              status: 429,
+              ...errorData
+            }));
+          }
+        }
+        
+        // For other errors, try to get the error message from response
+        try {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to generate trade plan');
+        } catch {
+          throw new Error('Failed to generate trade plan');
+        }
       }
 
       const data = await response.json();
       setTradePlan(data.tradePlan || data); // Handle both response formats
       setDataSource('live');
       setLoading(false);
+      requestInProgressRef.current = false;
       
     } catch (err) {
+      requestInProgressRef.current = false;
       console.error('Failed to fetch live trade plan:', err);
       
+      // Check if this is a rate limiting error
+      let isRateLimitError = false;
+      let isCooldownError = false;
+      let rateLimitData = null;
+      
+      try {
+        if (err instanceof Error && err.message.startsWith('{')) {
+          const errorData = JSON.parse(err.message);
+          if (errorData.type === 'RATE_LIMIT_EXCEEDED') {
+            isRateLimitError = true;
+            rateLimitData = errorData;
+          } else if (errorData.type === 'COOLDOWN_ERROR') {
+            isCooldownError = true;
+            rateLimitData = errorData;
+          }
+        }
+      } catch (parseErr) {
+        // Not a JSON error message, continue with normal error handling
+      }
+      
+      // If cooldown error, show temporary message (backend should handle deduplication now)
+      if (isCooldownError) {
+        console.log('Cooldown error - this should not happen with backend deduplication');
+        setError('Please wait a moment and try again');
+        setDataSource('error');
+        setLoading(false);
+        requestInProgressRef.current = false;
+        return;
+      }
+      
+      // If rate limit exceeded, don't fall back to cached data - show upgrade prompt
+      if (isRateLimitError) {
+        setError(JSON.stringify({
+          type: 'QUOTA_EXCEEDED',
+          ...rateLimitData
+        }));
+        setDataSource('error');
+        setLoading(false);
+        requestInProgressRef.current = false;
+        return;
+      }
+      
+      // Only fall back to cached data for non-rate-limit errors
       // If live data fails and we don't have current trade plan data, try to fetch cached data
       if (!tradePlanRef.current && !initialCachedData) {
         try {
@@ -103,6 +194,7 @@ export function TradePlanContent({ symbol, initialCachedData }: TradePlanContent
               setTradePlan(cachedData.tradePlan);
               setDataSource('cached');
               setLoading(false);
+              requestInProgressRef.current = false;
               return;
             }
           }
@@ -121,12 +213,16 @@ export function TradePlanContent({ symbol, initialCachedData }: TradePlanContent
         setDataSource('error');
         setLoading(false);
       }
+      requestInProgressRef.current = false;
     }
-  }, [symbol, initialCachedData]); // Now we can safely exclude tradePlan
+  }, [symbol, initialCachedData]); // Keep dependencies for callback
 
   useEffect(() => {
+    // Always fetch fresh data for authenticated users (cache is just for temporary display)
+    // This ensures users get live data within their plan limits and proper quota checking
+    console.log(`[${componentId.current}] Fetching fresh trade plan for authenticated user: ${symbol}`);
     fetchTradePlan();
-  }, [fetchTradePlan]);
+  }, [fetchTradePlan, symbol]);
 
   if (loading) {
     return (
@@ -141,6 +237,70 @@ export function TradePlanContent({ symbol, initialCachedData }: TradePlanContent
   }
 
   if (error || !tradePlan) {
+    // Check if this is a quota exceeded error
+    let isQuotaError = false;
+    let quotaData = null;
+    
+    try {
+      if (error && error.startsWith('{')) {
+        const errorData = JSON.parse(error);
+        if (errorData.type === 'QUOTA_EXCEEDED' || errorData.type === 'RATE_LIMIT_EXCEEDED') {
+          isQuotaError = true;
+          quotaData = errorData;
+        }
+      }
+    } catch (parseErr) {
+      // Not a JSON error, continue with normal error handling
+    }
+    
+    if (isQuotaError && quotaData) {
+      // Show quota exceeded / upgrade prompt
+      return (
+        <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6">
+          <Card className="max-w-lg">
+            <CardHeader>
+              <CardTitle className="text-center text-blue-900">Daily Quota Reached</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center space-y-4">
+              <div className="flex items-center justify-center mb-4">
+                <svg width="48" height="48" fill="none" viewBox="0 0 48 48" className="mb-2">
+                  <circle cx="24" cy="24" r="24" fill="#DBEAFE"/>
+                  <path d="M24 14v10" stroke="#2563EB" strokeWidth="2.5" strokeLinecap="round"/>
+                  <circle cx="24" cy="32" r="2" fill="#2563EB"/>
+                </svg>
+              </div>
+              
+              <p className="text-muted-foreground">
+                {quotaData.upgradeMessage || 'You have used up your daily quota. Upgrade for more requests!'}
+              </p>
+              
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="text-sm text-blue-800">
+                  <strong>Free Plan:</strong> 1 trade plan per day<br/>
+                  <strong>Pro Plan:</strong> 100 trade plans per day<br/>
+                  <strong>Premium Plan:</strong> 1000 trade plans per day
+                </p>
+              </div>
+              
+              <div className="flex flex-col gap-2">
+                <Link href={quotaData.ctaLink || '/pricing'}>
+                  <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600">
+                    {quotaData.cta || 'Upgrade Now'}
+                  </Button>
+                </Link>
+                <Link href="/trade-plan/demo">
+                  <Button variant="outline" className="w-full">
+                    Try TSLA Demo
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      );
+    }
+    
+    // Normal error handling for non-quota errors
     return (
       <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6">
         <Card className="max-w-md">

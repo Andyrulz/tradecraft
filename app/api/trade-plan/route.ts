@@ -141,6 +141,31 @@ function validateTradePlan(tradePlan: any): boolean {
 
 export const dynamic = 'force-dynamic';
 
+// Simple in-memory rate limiting to prevent rapid successive calls
+const userRequestTracker = new Map<string, number>();
+
+// Request deduplication to prevent simultaneous requests for same user+symbol
+const activeRequests = new Map<string, Promise<any>>();
+
+// Clean up old entries every 5 minutes to prevent memory leaks
+setInterval(() => {
+  const fiveMinutesAgo = Date.now() - 5 * 60 * 1000;
+  const entries = Array.from(userRequestTracker.entries());
+  for (const [email, timestamp] of entries) {
+    if (timestamp < fiveMinutesAgo) {
+      userRequestTracker.delete(email);
+    }
+  }
+  
+  // Also clean up completed active requests
+  const activeEntries = Array.from(activeRequests.entries());
+  for (const [key, promise] of activeEntries) {
+    // Remove resolved/rejected promises
+    promise.then(() => activeRequests.delete(key))
+           .catch(() => activeRequests.delete(key));
+  }
+}, 5 * 60 * 1000);
+
 export async function POST(request: Request) {
   // 1. Get user session
   const session = await getServerSession(authOptions);
@@ -149,6 +174,29 @@ export async function POST(request: Request) {
   }
   const email = session.user.email;
   const today = getToday();
+
+  // Temporarily disable cooldown to debug the issue
+  // TODO: Re-enable with proper logic once we identify the root cause
+  /*
+  // Check for rapid successive requests (prevent spam/race conditions)
+  const lastRequestTime = userRequestTracker.get(email) || 0;
+  const now = Date.now();
+  const timeSinceLastRequest = now - lastRequestTime;
+  
+  // Only apply cooldown for very rapid requests (< 200ms) to prevent double-clicks
+  // This allows normal usage while preventing spam
+  if (timeSinceLastRequest > 0 && timeSinceLastRequest < 200) { 
+    console.log(`🚫 Rate limit: User ${email} making requests too quickly (${timeSinceLastRequest}ms gap)`);
+    return NextResponse.json({ 
+      error: 'Please wait a moment before making another request',
+      cooldown: true,
+      timeSinceLastRequest: timeSinceLastRequest
+    }, { status: 429 });
+  }
+  
+  // Set the tracker after the check to avoid blocking the first request
+  userRequestTracker.set(email, now);
+  */
 
   // 2. Get user from users table
   let { data: user, error: userError } = await supabase
@@ -187,7 +235,9 @@ export async function POST(request: Request) {
   let planType = 'free';
   if (sub && sub.plan_type) {
     planType = sub.plan_type;
+    console.log(`✅ Found plan type for user ${email}: ${planType}`);
   } else {
+    console.log(`⚠️ No subscription found for user ${email}, creating free plan`);
     await supabase.from('user_subscriptions').insert({ user_id: userId, plan_type: 'free' });
   }
 
@@ -222,6 +272,9 @@ export async function POST(request: Request) {
   let planLimit = 1;
   if (planType === 'pro') planLimit = 100;
   if (planType === 'premium') planLimit = 1000;
+  
+  console.log(`📊 Quota check for user ${email}: planType=${planType}, limit=${planLimit}, current=${usage.request_count}`);
+  
   if (usage.request_count >= planLimit) {
     let upgradeMessage = '';
     let cta = '';
@@ -262,43 +315,80 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Symbol is required' }, { status: 400 });
   }
 
-  // 8. Generate trade plan (calls getStockData, analytics, etc.)
-  try {
-    const tradePlan = await getStockData(symbol, 3, horizon); // pass horizon
-    // ...additional analytics as needed...
-
-    // Validate trade plan before proceeding
-    if (!validateTradePlan(tradePlan)) {
-      return NextResponse.json({ error: 'Failed to generate a complete trade plan. Please try again later.' }, { status: 500 });
+  // 7.5. Check for duplicate active requests for same user+symbol
+  const requestKey = `${email}:${symbol.toUpperCase()}`;
+  if (activeRequests.has(requestKey)) {
+    console.log(`⚠️ Duplicate request detected for ${email} + ${symbol}, waiting for existing request`);
+    try {
+      // Wait for the existing request to complete and return its result
+      const existingResult = await activeRequests.get(requestKey);
+      return NextResponse.json(existingResult);
+    } catch (error) {
+      // If existing request failed, continue with new request
+      console.log(`Existing request failed, proceeding with new request`);
+      activeRequests.delete(requestKey);
     }
+  }
 
-    // 9. Increment usage
-    const { error: updateError } = await supabase
-      .from('user_usage')
-      .update({
+  // 8. Generate fresh trade plan for user request (always fresh for paying users)
+  console.log(`🔄 Generating fresh trade plan for user request: ${symbol}`);
+  
+  // Create a promise for this request to handle deduplication
+  const tradePlanPromise = (async () => {
+    try {
+      const tradePlan = await getStockData(symbol, 3, horizon); // pass horizon
+      // ...additional analytics as needed...
+
+      // Validate trade plan before proceeding
+      if (!validateTradePlan(tradePlan)) {
+        throw new Error('Failed to generate a complete trade plan. Please try again later.');
+      }
+
+      // 9. Increment usage with atomic update
+      const { data: updateResult, error: updateError } = await supabase
+        .from('user_usage')
+        .update({
+          request_count: usage.request_count + 1,
+          total_requests: usage.total_requests + 1,
+          last_request_at: new Date().toISOString()
+        })
+        .eq('user_id', userId)
+        .eq('date', today)
+        .select();
+        
+      if (updateError) {
+        console.error(`❌ Failed to update usage for user ${email}:`, updateError);
+        throw new Error('Failed to update usage');
+      }
+
+      // 10. Cache the trade plan (background operation, don't block response)
+      // Always cache fresh trade plans since we already generated the data
+      // This provides fresh content for SEO and future visitors
+      cacheTradePlanInBackground(symbol, tradePlan);
+
+      return {
+        tradePlan,
         request_count: usage.request_count + 1,
         total_requests: usage.total_requests + 1,
-        last_request_at: new Date().toISOString()
-      })
-      .eq('user_id', userId)
-      .eq('date', today);
-    if (updateError) {
-      return NextResponse.json({ error: 'Failed to update usage' }, { status: 500 });
+        quotaExceeded: false,
+        date: today
+      };
+    } catch (err) {
+      throw new Error('Failed to generate trade plan');
     }
+  })();
 
-    // 10. Cache the trade plan (background operation, don't block response)
-    // Always cache fresh trade plans since we already generated the data
-    // This provides fresh content for SEO and future visitors
-    cacheTradePlanInBackground(symbol, tradePlan);
+  // Store the promise for deduplication
+  activeRequests.set(requestKey, tradePlanPromise);
 
-    return NextResponse.json({
-      tradePlan,
-      request_count: usage.request_count + 1,
-      total_requests: usage.total_requests + 1,
-      quotaExceeded: false,
-      date: today
-    });
+  try {
+    const result = await tradePlanPromise;
+    // Clean up the request tracker
+    activeRequests.delete(requestKey);
+    return NextResponse.json(result);
   } catch (err) {
-    return NextResponse.json({ error: 'Failed to generate trade plan' }, { status: 500 });
+    // Clean up the request tracker
+    activeRequests.delete(requestKey);
+    return NextResponse.json({ error: err instanceof Error ? err.message : 'Failed to generate trade plan' }, { status: 500 });
   }
 }

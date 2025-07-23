@@ -11,34 +11,20 @@ export async function POST(request: Request) {
 
     const upperSymbol = symbol.toUpperCase();
 
-    // Check if refresh is needed
-    const needsRefresh = await shouldRefreshCache(upperSymbol, maxAgeHours);
+    // New strategy: Don't auto-refresh, let user requests drive fresh data
+    console.log(`📋 Auto-refresh disabled for ${upperSymbol} (source: ${source}) - using cache-only strategy`);
     
-    if (needsRefresh) {
-      // Start background refresh (non-blocking)
-      refreshCacheInBackground(upperSymbol, {
-        maxAgeHours,
-        source
-      }).catch(error => {
-        console.error('Background refresh failed:', error);
-      });
-
-      return NextResponse.json({ 
-        message: 'Background refresh triggered',
-        symbol: upperSymbol,
-        source
-      });
-    } else {
-      return NextResponse.json({ 
-        message: 'Cache is fresh, no refresh needed',
-        symbol: upperSymbol 
-      });
-    }
+    return NextResponse.json({ 
+      message: 'Auto-refresh disabled - using user-driven cache strategy',
+      symbol: upperSymbol,
+      source,
+      strategy: 'cache_only'
+    });
 
   } catch (error) {
     console.error('Auto-refresh API error:', error);
     return NextResponse.json(
-      { error: 'Failed to trigger auto-refresh' },
+      { error: 'Failed to process auto-refresh request' },
       { status: 500 }
     );
   }

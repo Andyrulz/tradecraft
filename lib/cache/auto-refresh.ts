@@ -17,6 +17,9 @@ interface CacheRefreshOptions {
   source?: string; // Track where the refresh came from
 }
 
+// Global cache for active refresh operations to prevent duplicates
+const activeRefreshOperations = new Map<string, Promise<any>>();
+
 /**
  * Check if cache needs refresh based on age and staleness
  */
@@ -63,6 +66,13 @@ export async function refreshCacheInBackground(
   const upperSymbol = symbol.toUpperCase();
 
   try {
+    // Check if there's already an active refresh operation for this symbol
+    if (activeRefreshOperations.has(upperSymbol)) {
+      console.log(`🔄 Refresh already in progress for ${upperSymbol}, waiting for existing operation (source: ${source})`);
+      await activeRefreshOperations.get(upperSymbol);
+      return;
+    }
+
     // Check if refresh is needed (unless forced)
     if (!forceRefresh) {
       const needsRefresh = await shouldRefreshCache(upperSymbol, maxAgeHours);
@@ -74,89 +84,99 @@ export async function refreshCacheInBackground(
 
     console.log(`🔄 Auto-refreshing cache for ${upperSymbol} (source: ${source})`);
 
-    // Generate fresh trade plan
-    const tradePlan = await getStockData(upperSymbol, 3, 'swing');
+    // Create and store the refresh operation promise
+    const refreshPromise = (async () => {
+      // Generate fresh trade plan
+      const tradePlan = await getStockData(upperSymbol, 3, 'swing');
 
-    // Validate trade plan data
-    if (!tradePlan || !tradePlan.companyName) {
-      console.error(`Invalid trade plan data for auto-refresh: ${upperSymbol}`);
-      return;
-    }
+      // Validate trade plan data
+      if (!tradePlan || !tradePlan.companyName) {
+        console.error(`Invalid trade plan data for auto-refresh: ${upperSymbol}`);
+        return;
+      }
 
-    // Generate SEO content
-    const seoData = extractSEODataFromTradePlan(tradePlan);
-    const seoContent = generateTradePlanSEO(seoData);
+      // Generate SEO content
+      const seoData = extractSEODataFromTradePlan(tradePlan);
+      const seoContent = generateTradePlanSEO(seoData);
 
-    // Get current cache state for analytics
-    const { data: existingCache } = await supabase
-      .from('cached_trade_plans')
-      .select('generation_count')
-      .eq('symbol', upperSymbol)
-      .single();
+      // Get current cache state for analytics
+      const { data: existingCache } = await supabase
+        .from('cached_trade_plans')
+        .select('generation_count')
+        .eq('symbol', upperSymbol)
+        .single();
 
-    const generationCount = existingCache?.generation_count || 0;
-    const now = new Date();
-    const cacheExpiresAt = new Date();
-    cacheExpiresAt.setHours(cacheExpiresAt.getHours() + 24);
+      const generationCount = existingCache?.generation_count || 0;
+      
+      const now = new Date();
+      const cacheExpiresAt = new Date();
+      cacheExpiresAt.setHours(cacheExpiresAt.getHours() + 24);
 
-    // Update cache
-    const { error: cacheError } = await supabase
-      .from('cached_trade_plans')
-      .upsert({
-        symbol: upperSymbol,
-        trade_plan: tradePlan,
-        seo_content: seoContent.content,
-        meta_description: seoContent.description,
-        base_price: tradePlan.currentPrice,
-        last_price_update: now.toISOString(),
-        priority: getStockPriority(upperSymbol),
-        is_active: true,
-        cache_expires_at: cacheExpiresAt.toISOString(),
-        generation_count: generationCount + 1,
-        last_accessed: now.toISOString(),
-        source: source,
-        updated_at: now.toISOString()
-      }, {
-        onConflict: 'symbol'
-      });
+      // Update cache
+      const { error: cacheError } = await supabase
+        .from('cached_trade_plans')
+        .upsert({
+          symbol: upperSymbol,
+          trade_plan: tradePlan,
+          seo_content: seoContent.content,
+          meta_description: seoContent.description,
+          base_price: tradePlan.currentPrice,
+          last_price_update: now.toISOString(),
+          priority: getStockPriority(upperSymbol),
+          is_active: true,
+          cache_expires_at: cacheExpiresAt.toISOString(),
+          generation_count: generationCount + 1,
+          last_accessed: now.toISOString(),
+          source: source,
+          updated_at: now.toISOString()
+        }, {
+          onConflict: 'symbol'
+        });
 
-    if (cacheError) {
-      console.error(`Failed to auto-refresh cache for ${upperSymbol}:`, cacheError);
-      return;
-    }
+      if (cacheError) {
+        console.error(`Failed to auto-refresh cache for ${upperSymbol}:`, cacheError);
+        return;
+      }
 
-    // Update analytics
-    await supabase
-      .from('stock_analytics')
-      .upsert({
-        symbol: upperSymbol,
-        seo_priority: getStockPriority(upperSymbol),
-        popularity_score: generationCount + 1,
-        updated_at: now.toISOString()
-      }, {
-        onConflict: 'symbol'
-      });
+      // Update analytics
+      await supabase
+        .from('stock_analytics')
+        .upsert({
+          symbol: upperSymbol,
+          seo_priority: getStockPriority(upperSymbol),
+          popularity_score: generationCount + 1,
+          updated_at: now.toISOString()
+        }, {
+          onConflict: 'symbol'
+        });
 
-    console.log(`✅ Successfully auto-refreshed cache for ${upperSymbol}`);
+      console.log(`✅ Successfully auto-refreshed cache for ${upperSymbol}`);
+    })();
+
+    // Store the promise in the active operations map
+    activeRefreshOperations.set(upperSymbol, refreshPromise);
+
+    // Execute the refresh operation
+    await refreshPromise;
 
   } catch (error) {
     console.error(`❌ Auto-refresh failed for ${upperSymbol}:`, error);
     // Don't throw - this is a background operation
+  } finally {
+    // Always clean up the active operation
+    activeRefreshOperations.delete(upperSymbol);
   }
 }
 
 /**
  * Auto-refresh cache when a stock is accessed via SEO pages
- * This ensures fresh content for search engines and users
+ * Now only serves cached data - fresh generation happens via user requests
+ * This ensures we don't waste API calls on automatic background refreshes
  */
 export async function onStockPageAccess(symbol: string): Promise<void> {
-  // Start refresh in background (non-blocking)
-  refreshCacheInBackground(symbol, {
-    maxAgeHours: 8, // Refresh if older than 8 hours
-    source: 'seo_page_access'
-  }).catch(error => {
-    console.error('Background auto-refresh failed:', error);
-  });
+  // Don't trigger background refresh - let user requests drive fresh data generation
+  // SEO pages and automatic access should use existing cache only
+  console.log(`📋 SEO page access for ${symbol} - using existing cache only`);
 }
 
 /**

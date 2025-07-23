@@ -29,7 +29,7 @@
 const ALPHA_VANTAGE_BASE = "https://www.alphavantage.co/query";
 
 // Price Data
-`${ALPHA_VANTAGE_BASE}?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${key}`// Technical Indicators
+`${ALPHA_VANTAGE_BASE}?function=TIME_SERIES_DAILY&symbol=${symbol}&apikey=${key}` // Technical Indicators
 `${ALPHA_VANTAGE_BASE}?function=RSI&symbol=${symbol}&interval=daily&time_period=14&apikey=${key}``${ALPHA_VANTAGE_BASE}?function=MACD&symbol=${symbol}&interval=daily&apikey=${key}``${ALPHA_VANTAGE_BASE}?function=BBANDS&symbol=${symbol}&interval=daily&time_period=20&apikey=${key}`;
 ```
 
