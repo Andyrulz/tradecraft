@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { FinnhubService } from '@/lib/services/finnhub';
 
 export const dynamic = 'force-dynamic';
 
@@ -31,10 +32,11 @@ export async function GET(request: Request) {
   }
 
   try {
-    // TODO: Replace with FMPService.getStockMetrics(symbol, timeframe)
+    const metrics = await FinnhubService.getStockMetrics(symbol, timeframe);
+    
     return NextResponse.json({
-      metrics: {},
-      success: true
+      success: true,
+      metrics
     });
   } catch (error) {
     console.error('Error fetching stock metrics:', error);

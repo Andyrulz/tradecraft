@@ -5,9 +5,60 @@ const nextConfig = {
     ignoreDuringBuilds: true,
   },
   
+  // Performance optimizations
+  compress: true,
+  
+  // Experimental features for performance
+  experimental: {
+    scrollRestoration: true,
+  },
+  
+  // Compiler optimizations
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error']
+    } : false,
+  },
+  
   // Custom headers for caching optimization
   async headers() {
     return [
+      // Performance headers for all pages
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'X-DNS-Prefetch-Control',
+            value: 'on'
+          },
+          {
+            key: 'X-Frame-Options',
+            value: 'DENY'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
+          },
+          {
+            key: 'Referrer-Policy',
+            value: 'origin-when-cross-origin'
+          },
+          {
+            key: 'Permissions-Policy',
+            value: 'camera=(), microphone=(), geolocation=()'
+          }
+        ],
+      },
+      // Resource preloading for homepage
+      {
+        source: '/',
+        headers: [
+          {
+            key: 'Link',
+            value: '</og-homepage.jpg>; rel=preload; as=image, <https://api.producthunt.com>; rel=preconnect, <https://medium.com>; rel=preconnect'
+          }
+        ]
+      },
       // Cache static images for 1 year
       {
         source: '/images/:path*',
@@ -133,6 +184,11 @@ const nextConfig = {
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     
+    // Performance optimizations
+    loader: 'default',
+    domains: [], // Deprecated in favor of remotePatterns
+    unoptimized: false,
+    
     remotePatterns: [
       {
         protocol: 'https',
@@ -177,6 +233,16 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: 'www.fxempire.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.producthunt.com',
+        pathname: '/widgets/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.tradingsetup.pro',
+        pathname: '/**',
       },
       {
         protocol: 'https',
@@ -324,10 +390,35 @@ const nextConfig = {
       },
     ],
   },
-  webpack: (config, { isServer }) => {
-    config.cache = false;
+  webpack: (config, { isServer, dev }) => {
+    // Production optimizations
+    if (!dev) {
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          ...config.optimization.splitChunks,
+          cacheGroups: {
+            ...config.optimization.splitChunks.cacheGroups,
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+            },
+          },
+        },
+      };
+      
+      // Enable filesystem cache in production
+      config.cache = {
+        type: 'filesystem',
+        cacheDirectory: require('path').resolve('.next/cache/webpack')
+      };
+    } else {
+      // Disable cache in development
+      config.cache = false;
+    }
     
-    // Suppress Supabase realtime critical dependency warnings
+    // Resolve fallbacks for better compatibility
     config.resolve.fallback = {
       ...config.resolve.fallback,
       "crypto": false,
@@ -341,13 +432,6 @@ const nextConfig = {
     };
     
     // Filter out the critical dependency warning for Supabase realtime
-    const originalWarn = config.infrastructureLogging?.debug;
-    config.infrastructureLogging = {
-      ...config.infrastructureLogging,
-      level: 'error'
-    };
-    
-    // Suppress specific webpack warnings
     config.ignoreWarnings = [
       /Critical dependency: the request of a dependency is an expression/,
       /node_modules\/@supabase\/realtime-js/

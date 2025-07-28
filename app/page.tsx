@@ -1,18 +1,32 @@
 import { Metadata } from 'next';
-import { HeroSection } from '@/components/landing/HeroSection';
-import { BenefitsSection } from '@/components/landing/BenefitsSection';
-import { HowItWorks } from '@/components/landing/HowItWorks';
-import TestimonialsSection from '@/components/landing/TestimonialsSection';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import Image from 'next/image';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { HomepageStructuredData } from '@/components/seo/HomepageStructuredData';
 import { generateMetadata as generateSEOMetadata, generateBreadcrumbStructuredData } from '@/lib/seo';
 
+// Dynamic imports for performance optimization
+const HeroSection = dynamic(() => import('@/components/landing/HeroSection').then(mod => ({ default: mod.HeroSection })), {
+  loading: () => <div className="min-h-[600px] flex items-center justify-center"><div className="animate-pulse text-gray-500">Loading...</div></div>
+});
+
+const BenefitsSection = dynamic(() => import('@/components/landing/BenefitsSection').then(mod => ({ default: mod.BenefitsSection })), {
+  loading: () => <div className="min-h-[400px] flex items-center justify-center"><div className="animate-pulse text-gray-500">Loading...</div></div>
+});
+
+const HowItWorks = dynamic(() => import('@/components/landing/HowItWorks').then(mod => ({ default: mod.HowItWorks })), {
+  loading: () => <div className="min-h-[400px] flex items-center justify-center"><div className="animate-pulse text-gray-500">Loading...</div></div>
+});
+
+const TestimonialsSection = dynamic(() => import('@/components/landing/TestimonialsSection'), {
+  loading: () => <div className="min-h-[300px] flex items-center justify-center"><div className="animate-pulse text-gray-500">Loading...</div></div>
+});
+
 // Generate metadata for the homepage
 export const metadata: Metadata = generateSEOMetadata({
   title: 'TradeCraft Pro - AI Trading Strategy & Stock Analysis Tools',
-  description: 'Build winning trading strategies with AI-powered analysis, systematic trade planning, and momentum screening. Professional trading strategy development platform.',
+  description: 'Build winning trading strategies with AI analysis, systematic trade plans, and momentum screening. Your professional platform for data-driven trading decisions.',
   keywords: [
     'trading strategy',
     'AI trading strategy',
