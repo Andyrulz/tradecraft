@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseApi } from '@/lib/supabase-api';
 import { getStockData } from '@/lib/api';
 
 // Rate limiter for Twelve Data API (55 calls per minute)
@@ -183,7 +183,7 @@ export async function GET() {
     const allStocks = Array.from(allStocksMap.values());
     // Upsert all to momentum_screener_daily
     for (const s of allStocks) {
-      const { error } = await supabase.from('momentum_screener_daily').upsert({
+      const { error } = await supabaseApi.from('momentum_screener_daily').upsert({
         symbol: s.symbol,
         company_name: s.company_name,
         date: today,
@@ -204,7 +204,7 @@ export async function GET() {
     console.log(`🔍 Will delete records where: date < '${threeDaysAgo}' AND date != '${todayDate}'`);
     
     // Check what records exist before cleanup
-    const { data: beforeCleanup } = await supabase
+    const { data: beforeCleanup } = await supabaseApi
       .from('momentum_screener_daily')
       .select('date')
       .order('date');
@@ -215,7 +215,7 @@ export async function GET() {
     }, {}) || {};
     console.log('📊 Records BEFORE cleanup:', dateCountsBefore);
     
-    const { error: cleanupError } = await supabase.from('momentum_screener_daily')
+    const { error: cleanupError } = await supabaseApi.from('momentum_screener_daily')
       .delete()
       .lt('date', threeDaysAgo)
       .not('date', 'eq', todayDate);
@@ -227,7 +227,7 @@ export async function GET() {
     }
     
     // Check what records exist after cleanup
-    const { data: afterCleanup } = await supabase
+    const { data: afterCleanup } = await supabaseApi
       .from('momentum_screener_daily')
       .select('date')
       .order('date');
@@ -253,7 +253,7 @@ export async function POST() {
     console.log('🚀 Starting momentum screener refresh...');
 
     // 1. Get all symbols from today's universe
-    const { data: stocks, error } = await supabase
+    const { data: stocks, error } = await supabaseApi
       .from('momentum_screener_daily')
       .select('symbol, company_name')
       .eq('date', today);
@@ -342,7 +342,7 @@ export async function POST() {
     console.log(`🏆 Top 15 selected for database`);
 
     // 4. Clear old results and upsert new ones
-    await supabase.from('momentum_screener_results').delete().not('id', 'is', null);
+    await supabaseApi.from('momentum_screener_results').delete().not('id', 'is', null);
 
     let upserted = 0;
     let upsertErrors: any[] = [];
@@ -353,7 +353,7 @@ export async function POST() {
       
       console.log(`📝 Upserting ${result.symbol} - columns:`, Object.keys(resultForDb));
       
-      const { error: upsertError } = await supabase
+      const { error: upsertError } = await supabaseApi
         .from('momentum_screener_results')
         .upsert(resultForDb, { onConflict: 'date,symbol' });
       
@@ -372,7 +372,7 @@ export async function POST() {
     // 5. Get debug info for first result
     let debugRow = null;
     if (top15.length > 0) {
-      const { data: debugData } = await supabase
+      const { data: debugData } = await supabaseApi
         .from('momentum_screener_results')
         .select('*')
         .eq('date', today)

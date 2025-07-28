@@ -5,6 +5,7 @@ import MarketMoversPage from '@/components/market-movers/MarketMoversPage';
 // Alternative: Use Auto Ads only version (less revenue but more conservative)
 // import MarketMoversPageAutoAds from '@/components/market-movers/MarketMoversPageAutoAds';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo';
+import { StructuredData } from '@/components/seo/StructuredData';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Top Stock Market Movers - Real-Time Gainers & Losers | TradeCraft Pro',
@@ -37,6 +38,59 @@ export default function Page() {
       <Head>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7507424386197703" crossOrigin="anonymous"></script>
       </Head>
+      
+      {/* Page-specific Structured Data */}
+      <StructuredData data={{
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": "Stock Market Movers - TradeCraft Pro",
+        "url": "https://www.tradingsetup.pro/market-movers",
+        "description": "Real-time tracking of the biggest stock market gainers and losers with volume analysis and momentum indicators.",
+        "mainEntity": {
+          "@type": "Dataset",
+          "name": "Stock Market Movers Data",
+          "description": "Real-time data of top stock market gainers and losers",
+          "publisher": {
+            "@type": "Organization",
+            "name": "TradeCraft Pro",
+            "url": "https://www.tradingsetup.pro"
+          },
+          "distribution": {
+            "@type": "DataDownload",
+            "encodingFormat": "application/json",
+            "contentUrl": "https://www.tradingsetup.pro/api/market-movers"
+          },
+          "keywords": ["stock market", "gainers", "losers", "volume", "momentum"],
+          "temporalCoverage": "real-time",
+          "spatialCoverage": "United States"
+        }
+      }} />
+      
+      <StructuredData data={{
+        "@context": "https://schema.org",
+        "@type": "FinancialService",
+        "name": "Market Movers Tracker",
+        "description": "Real-time tracking service for stock market gainers and losers",
+        "url": "https://www.tradingsetup.pro/market-movers",
+        "provider": {
+          "@type": "Organization",
+          "name": "TradeCraft Pro",
+          "url": "https://www.tradingsetup.pro"
+        },
+        "serviceType": "Market Data Service",
+        "areaServed": "United States",
+        "audience": {
+          "@type": "Audience",
+          "audienceType": "Traders and Investors"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock"
+        }
+      }} />
+      
       <MarketMoversPage />
     </>
   );

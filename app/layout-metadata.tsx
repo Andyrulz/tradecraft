@@ -2,8 +2,8 @@ import { Metadata } from 'next';
 import { generateMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = generateMetadata({
-  title: 'TradeCraft Pro - Advanced Stock Market Analysis & Trading Tools',
-  description: 'Professional stock market analysis tools, real-time market news, stock screeners, and automated trade plan generation. Make informed trading decisions with TradeCraft Pro.',
+  title: 'TradeCraft Pro - AI Trading Strategy & Stock Analysis Tools',
+  description: 'Build winning trading strategies with AI-powered analysis, systematic trade planning, and momentum screening. Professional trading strategy development platform.',
   keywords: [
     'stock market analysis',
     'trading tools',

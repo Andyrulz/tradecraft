@@ -8,6 +8,8 @@ import { generateTradePlanSEO, extractSEODataFromTradePlan, generateFallbackSEO 
 import { TOP_100_STOCKS } from '@/lib/config/top-stocks';
 import { isValidStockSymbol } from '@/lib/config/top-stocks';
 import { onStockPageAccess } from '@/lib/cache/auto-refresh';
+import { HybridAdStrategy } from '@/components/ui/HybridAds';
+import { StructuredData } from '@/components/seo/StructuredData';
 
 // Generate static params for all cached stocks
 export async function generateStaticParams() {
@@ -139,13 +141,135 @@ export default async function TradePlanPage({ params }: { params: Promise<{ symb
   }
 
   return (
-    <main className="flex-1 pt-[68px] pb-12">
-      <div className="container mx-auto px-3 sm:px-4">
-        <TradePlanContent 
-          symbol={upperSymbol} 
-          initialCachedData={cachedTradePlan}
-        />
+    <HybridAdStrategy>
+      <StructuredData 
+        data={{
+          "@context": "https://schema.org",
+          "@type": "FinancialProduct",
+          "name": `${upperSymbol} Trading Plan`,
+          "description": `Professional AI-generated trading plan for ${upperSymbol} stock with entry zones, stop losses, price targets, and risk management strategies.`,
+          "url": `https://www.tradingsetup.pro/trade-plan/${upperSymbol}`,
+          "provider": {
+            "@type": "Organization",
+            "name": "TradeCraft Pro",
+            "url": "https://www.tradingsetup.pro"
+          },
+          "category": "Trading Analysis",
+          "featureList": [
+            "Entry zone recommendations",
+            "Stop loss calculations", 
+            "Price target analysis",
+            "Risk management strategy",
+            "Position sizing guidance",
+            "Technical indicator analysis"
+          ]
+        }}
+      />
+      
+      <StructuredData 
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": `${upperSymbol} Trade Plan - Professional Trading Strategy Analysis`,
+          "description": `Comprehensive trading plan for ${upperSymbol} including entry zones, stop losses, price targets, risk management, and technical analysis.`,
+          "url": `https://www.tradingsetup.pro/trade-plan/${upperSymbol}`,
+          "datePublished": new Date().toISOString(),
+          "dateModified": new Date().toISOString(),
+          "author": {
+            "@type": "Organization",
+            "name": "TradeCraft Pro",
+            "url": "https://www.tradingsetup.pro"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "TradeCraft Pro",
+            "url": "https://www.tradingsetup.pro",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://www.tradingsetup.pro/logo.png"
+            }
+          },
+          "about": {
+            "@type": "FinancialService",
+            "name": `${upperSymbol} Stock Trading Analysis`,
+            "serviceType": "Investment Analysis"
+          },
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": `https://www.tradingsetup.pro/trade-plan/${upperSymbol}`
+          },
+          "articleSection": "Trading Strategy",
+          "keywords": [
+            `${upperSymbol} trade plan`,
+            `${upperSymbol} trading strategy`,
+            `${upperSymbol} entry points`,
+            `${upperSymbol} stop loss`,
+            `${upperSymbol} price targets`,
+            `how to trade ${upperSymbol}`,
+            `${upperSymbol} risk management`,
+            `${upperSymbol} technical analysis`
+          ]
+        }}
+      />
+      
+      <StructuredData 
+        data={{
+          "@context": "https://schema.org",
+          "@type": "HowTo",
+          "name": `How to Trade ${upperSymbol} Stock - Step by Step Guide`,
+          "description": `Professional step-by-step trading guide for ${upperSymbol} stock with specific entry, exit, and risk management instructions.`,
+          "url": `https://www.tradingsetup.pro/trade-plan/${upperSymbol}`,
+          "image": `https://www.tradingsetup.pro/og-stock-tradeplan-${upperSymbol}.jpg`,
+          "totalTime": "PT5M",
+          "supply": [
+            {
+              "@type": "HowToSupply",
+              "name": "Trading Account"
+            },
+            {
+              "@type": "HowToSupply", 
+              "name": "Risk Capital"
+            }
+          ],
+          "tool": [
+            {
+              "@type": "HowToTool",
+              "name": "TradeCraft Trade Plan"
+            }
+          ],
+          "step": [
+            {
+              "@type": "HowToStep",
+              "name": "Review the Trade Plan",
+              "text": `Analyze the complete ${upperSymbol} trade plan including market conditions, entry zones, and risk parameters.`
+            },
+            {
+              "@type": "HowToStep", 
+              "name": "Calculate Position Size",
+              "text": "Determine appropriate position size based on your portfolio size and the recommended risk percentage."
+            },
+            {
+              "@type": "HowToStep",
+              "name": "Set Entry Orders",
+              "text": "Place buy orders within the recommended entry zone price range."
+            },
+            {
+              "@type": "HowToStep",
+              "name": "Set Stop Loss",
+              "text": "Immediately set stop loss order at the recommended stop loss price level."
+            },
+            {
+              "@type": "HowToStep",
+              "name": "Monitor Price Targets", 
+              "text": "Track price movement toward the three target levels and take partial profits as targets are reached."
+            }
+          ]
+        }}
+      />
+      
+      <div className="container mx-auto px-4 py-8 max-w-7xl">
+        <TradePlanContent symbol={upperSymbol} initialCachedData={cachedTradePlan} />
       </div>
-    </main>
+    </HybridAdStrategy>
   );
 }

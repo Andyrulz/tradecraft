@@ -226,7 +226,7 @@ export function TradePlanContent({ symbol, initialCachedData }: TradePlanContent
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
+      <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-4 px-4 sm:px-6 lg:px-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
         <h1 className="text-2xl font-bold">Generating {symbol} Trade Plan...</h1>
         <p className="text-muted-foreground text-center max-w-md">
@@ -256,7 +256,7 @@ export function TradePlanContent({ symbol, initialCachedData }: TradePlanContent
     if (isQuotaError && quotaData) {
       // Show quota exceeded / upgrade prompt
       return (
-        <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6">
+        <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-6 px-4 sm:px-6 lg:px-8">
           <Card className="max-w-lg">
             <CardHeader>
               <CardTitle className="text-center text-blue-900">Daily Quota Reached</CardTitle>
@@ -335,7 +335,7 @@ export function TradePlanContent({ symbol, initialCachedData }: TradePlanContent
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 px-4 sm:px-6 lg:px-8">
       {/* Data source indicator */}
       {dataSource === 'cached' && (
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-center">

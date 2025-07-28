@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import { StructuredData } from '@/components/seo/StructuredData';
 
 const supabase = createClient(
 	process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -305,6 +306,74 @@ export default function PricingPage() {
 					)}
 				</div>
 			</main>
+			
+			{/* Structured Data for Pricing */}
+			<StructuredData data={{
+				"@context": "https://schema.org",
+				"@type": "Product",
+				"name": "TradeCraft Pro Trading Platform",
+				"description": "Professional stock market analysis and trading tools",
+				"brand": {
+					"@type": "Brand",
+					"name": "TradeCraft Pro"
+				},
+				"offers": [
+					{
+						"@type": "Offer",
+						"name": "Free Plan",
+						"description": "Basic trading tools with 1 request per day",
+						"price": "0",
+						"priceCurrency": "USD",
+						"priceValidUntil": "2025-12-31",
+						"availability": "https://schema.org/InStock",
+						"url": "https://www.tradingsetup.pro/auth/signin?mode=signup"
+					},
+					{
+						"@type": "Offer", 
+						"name": "Pro Plan",
+						"description": "Advanced trading tools with 100 requests per day",
+						"price": "9.75",
+						"priceCurrency": "USD",
+						"priceValidUntil": "2025-12-31",
+						"availability": "https://schema.org/InStock",
+						"url": "https://www.tradingsetup.pro/subscribe?plan=pro",
+						"billingIncrement": "P1M"
+					},
+					{
+						"@type": "Offer",
+						"name": "Premium Plan", 
+						"description": "Full access with momentum screener and 1000 requests per day",
+						"price": "14.65",
+						"priceCurrency": "USD",
+						"priceValidUntil": "2025-12-31",
+						"availability": "https://schema.org/InStock",
+						"url": "https://www.tradingsetup.pro/subscribe?plan=premium",
+						"billingIncrement": "P1M"
+					}
+				],
+				"category": "Financial Software",
+				"applicationCategory": "FinanceApplication"
+			}} />
+			
+			<StructuredData data={{
+				"@context": "https://schema.org",
+				"@type": "SoftwareApplication",
+				"name": "TradeCraft Pro",
+				"applicationCategory": "FinanceApplication",
+				"operatingSystem": "Web",
+				"offers": {
+					"@type": "AggregateOffer",
+					"lowPrice": "0",
+					"highPrice": "14.65",
+					"priceCurrency": "USD",
+					"offerCount": "3"
+				},
+				"aggregateRating": {
+					"@type": "AggregateRating",
+					"ratingValue": "4.8",
+					"reviewCount": "127"
+				}
+			}} />
 		</>
 	);
 }

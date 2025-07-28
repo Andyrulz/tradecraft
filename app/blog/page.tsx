@@ -5,6 +5,7 @@ import { generateMetadata as generateSEOMetadata } from '@/lib/seo';
 import { HybridAdStrategy } from '@/components/ui/HybridAds';
 import { BannerWorkingAd, LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
 import MobileLargeAd from '@/components/ui/MobileLargeAd';
+import { StructuredData } from '@/components/seo/StructuredData';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Trading Education Blog - Stock Market Analysis & Trading Strategies | TradeCraft Pro',
@@ -153,6 +154,64 @@ export default function BlogIndexPage() {
 
   return (
     <HybridAdStrategy>
+      <StructuredData 
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Blog",
+          "name": "TradeCraft Trading Education Blog",
+          "description": "Expert guides on trading strategies, stock analysis, technical analysis, and market insights to improve your trading results.",
+          "url": "https://www.tradingsetup.pro/blog",
+          "author": {
+            "@type": "Person",
+            "name": "Andrew",
+            "url": "https://www.tradingsetup.pro/about"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "TradeCraft Pro",
+            "url": "https://www.tradingsetup.pro",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://www.tradingsetup.pro/logo.png"
+            }
+          },
+          "inLanguage": "en-US",
+          "about": [
+            "Trading Strategies",
+            "Stock Market Analysis",
+            "Technical Analysis",
+            "Risk Management",
+            "Trade Planning",
+            "Financial Education"
+          ]
+        }}
+      />
+      
+      <StructuredData 
+        data={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Trading Education Blog Posts",
+          "description": "Collection of expert trading articles covering strategies, analysis techniques, and market insights",
+          "url": "https://www.tradingsetup.pro/blog",
+          "hasPart": blogPosts.map(post => ({
+            "@type": "BlogPosting",
+            "headline": post.title,
+            "description": post.description,
+            "url": `https://www.tradingsetup.pro${post.href}`,
+            "image": post.image ? `https://www.tradingsetup.pro${post.image}` : undefined,
+            "author": {
+              "@type": "Person", 
+              "name": "Andrew"
+            },
+            "publisher": {
+              "@type": "Organization",
+              "name": "TradeCraft Pro"
+            }
+          }))
+        }}
+      />
+      
       <main className="max-w-6xl mx-auto px-4 py-8 bg-background">
         <div className="mb-10 text-center">
           <span className="inline-block bg-primary/10 text-primary font-semibold text-xs px-3 py-1 rounded-full uppercase tracking-wider mb-3">Blog</span>

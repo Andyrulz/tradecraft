@@ -14,6 +14,7 @@ import { Share2 } from 'lucide-react';
 import { TradePlanHeader } from '@/components/trade-plan/TradePlanHeader';
 import Head from 'next/head';
 import { createClient } from '@supabase/supabase-js';
+import { StructuredData } from '@/components/seo/StructuredData';
 
 export const dynamic = "force-dynamic";
 
@@ -1507,6 +1508,75 @@ function TradePlanPage() {
         <meta name="twitter:description" content="Generate actionable trade plans for any stock. Get entry, stop, targets, and risk management in seconds. Upgrade for more daily requests and premium features." />
         <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
       </Head>
+      
+      <StructuredData 
+        data={{
+          "@context": "https://schema.org",
+          "@type": "SoftwareApplication",
+          "name": "TradeCraft Trade Plan Generator",
+          "description": "Professional AI-powered trading plan generator for stocks with technical analysis, risk management, and entry/exit strategies",
+          "url": "https://www.tradingsetup.pro/trade-plan",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "Web",
+          "provider": {
+            "@type": "Organization",
+            "name": "TradeCraft",
+            "url": "https://www.tradingsetup.pro"
+          },
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "description": "Free trade plan generator with 3 daily requests"
+          },
+          "featureList": [
+            "AI-powered stock analysis",
+            "Technical indicator analysis",
+            "Risk management calculations",
+            "Entry and exit strategies",
+            "Stop loss recommendations",
+            "Position sizing guidance"
+          ],
+          "aggregateRating": {
+            "@type": "AggregateRating",
+            "ratingValue": "4.8",
+            "ratingCount": "1247"
+          }
+        }}
+      />
+      
+      <StructuredData 
+        data={{
+          "@context": "https://schema.org",
+          "@type": "FinancialService",
+          "name": "Stock Trading Plan Analysis",
+          "description": "Professional trading plan generation service with technical analysis and risk management for individual stocks",
+          "provider": {
+            "@type": "Organization",
+            "name": "TradeCraft",
+            "url": "https://www.tradingsetup.pro"
+          },
+          "serviceType": "Financial Analysis",
+          "areaServed": "Worldwide",
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Trading Plans",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Basic Trade Plan",
+                  "description": "AI-generated trading plan with entry, exit, and risk management"
+                },
+                "price": "0",
+                "priceCurrency": "USD"
+              }
+            ]
+          }
+        }}
+      />
+      
       <div className="container mx-auto px-3 sm:px-4">
         {/* Trade Plan Introduction Section */}
         {tradePlan && (

@@ -13,6 +13,7 @@ import { createClient } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 import Head from 'next/head';
 import { useSession, signIn } from 'next-auth/react';
+import { StructuredData } from '@/components/seo/StructuredData';
 
 function ScreenerRow({ stock }: { stock: any }) {
   return (
@@ -235,6 +236,74 @@ export default function ScreenerPage() {
             </div>
           </DialogContent>
         </Dialog>
+        
+        {/* Page-specific Structured Data */}
+        <StructuredData data={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "name": "Stock Screener - TradeCraft Pro",
+          "url": "https://www.tradingsetup.pro/screener",
+          "description": "Advanced stock screening tool to find momentum stocks, breakout setups, and high-potential trading opportunities with real-time market data.",
+          "applicationCategory": "FinanceApplication",
+          "operatingSystem": "Web",
+          "softwareVersion": "1.0",
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD",
+            "availability": "https://schema.org/InStock",
+            "description": "Free stock screener with premium features available"
+          },
+          "featureList": [
+            "Momentum Stock Screening",
+            "Breakout Detection",
+            "Volume Analysis",
+            "Technical Indicators",
+            "Real-time Market Data",
+            "Custom Filters"
+          ],
+          "provider": {
+            "@type": "Organization",
+            "name": "TradeCraft Pro",
+            "url": "https://www.tradingsetup.pro"
+          }
+        }} />
+        
+        <StructuredData data={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          "name": "Stock Market Screener",
+          "description": "Professional stock screening service for finding momentum stocks and trading opportunities",
+          "provider": {
+            "@type": "Organization",
+            "name": "TradeCraft Pro",
+            "url": "https://www.tradingsetup.pro"
+          },
+          "serviceType": "Financial Data Service",
+          "areaServed": "United States",
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Screener Features",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Free Screener",
+                  "description": "Basic stock screening with limited access"
+                }
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Premium Screener",
+                  "description": "Full access to momentum screener with top 10 daily picks"
+                }
+              }
+            ]
+          }
+        }} />
       </div>
     </main>
   );

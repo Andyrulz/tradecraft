@@ -11,8 +11,8 @@ import { generateMetadata as generateSEOMetadata, generateBreadcrumbStructuredDa
 
 // Generate metadata for the homepage
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'TradeCraft Pro - Advanced Trading Strategy & AI Stock Analysis Platform',
-  description: 'Build winning trading strategies with AI-powered analysis, systematic trade planning, momentum screening, and professional market analysis tools. Proven trading strategy development platform.',
+  title: 'TradeCraft Pro - AI Trading Strategy & Stock Analysis Tools',
+  description: 'Build winning trading strategies with AI-powered analysis, systematic trade planning, and momentum screening. Professional trading strategy development platform.',
   keywords: [
     'trading strategy',
     'AI trading strategy',

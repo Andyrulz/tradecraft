@@ -14,8 +14,8 @@ export interface SEOProps {
   noIndex?: boolean;
 }
 
-const DEFAULT_TITLE = 'TradeCraft Pro - Advanced Stock Market Analysis & Trading Tools';
-const DEFAULT_DESCRIPTION = 'Professional stock market analysis tools, real-time market news, stock screeners, and automated trade plan generation. Make informed trading decisions with TradeCraft Pro.';
+const DEFAULT_TITLE = 'TradeCraft Pro - AI Trading Strategy & Stock Analysis Tools';
+const DEFAULT_DESCRIPTION = 'Build winning trading strategies with AI-powered analysis, systematic trade planning, and momentum screening. Professional trading strategy development platform.';
 const SITE_URL = 'https://www.tradingsetup.pro';
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 

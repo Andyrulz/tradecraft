@@ -89,6 +89,90 @@ export default async function StockTradePlanPage({ params }: StockTradePlanPageP
       {/* SEO Structured Data */}
       <StructuredData data={breadcrumbData} />
       
+      <StructuredData 
+        data={{
+          "@context": "https://schema.org",
+          "@type": "FinancialProduct",
+          "name": `${symbolUpper} Stock Trading Plan`,
+          "description": `AI-enhanced trading plan for ${stockInfo?.symbol || symbolUpper} with professional entry zones, stop losses, price targets, and risk management.`,
+          "url": `https://www.tradingsetup.pro/stock/${symbolUpper}/trade-plan`,
+          "provider": {
+            "@type": "Organization",
+            "name": "TradeCraft Pro",
+            "url": "https://www.tradingsetup.pro"
+          },
+          "category": "Stock Trading Analysis",
+          "featureList": [
+            "AI-enhanced entry zones",
+            "Dynamic stop loss calculation",
+            "Multi-target price analysis", 
+            "Professional risk management",
+            "Position sizing recommendations",
+            "Technical indicator analysis"
+          ]
+        }}
+      />
+      
+      <StructuredData 
+        data={{
+          "@context": "https://schema.org",
+          "@type": "InvestmentOrDeposit",
+          "name": `${symbolUpper} Stock Investment Analysis`,
+          "description": `Professional investment analysis for ${symbolUpper} stock including entry strategies, risk assessment, and return projections.`,
+          "url": `https://www.tradingsetup.pro/stock/${symbolUpper}/trade-plan`,
+          "provider": {
+            "@type": "Organization",
+            "name": "TradeCraft Pro"
+          },
+          "about": {
+            "@type": "Corporation",
+            "name": stockInfo?.symbol || symbolUpper,
+            "tickerSymbol": symbolUpper
+          },
+          "riskRating": "Medium",
+          "investmentType": "Stock"
+        }}
+      />
+      
+      <StructuredData 
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Article",
+          "headline": `${symbolUpper} Trade Plan - AI-Enhanced Trading Strategy`,
+          "description": `Professional ${symbolUpper} trading plan with AI-enhanced analysis, entry zones, stop losses, and risk management strategies.`,
+          "url": `https://www.tradingsetup.pro/stock/${symbolUpper}/trade-plan`,
+          "datePublished": new Date().toISOString(),
+          "dateModified": new Date().toISOString(),
+          "author": {
+            "@type": "Organization",
+            "name": "TradeCraft Pro"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "TradeCraft Pro",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://www.tradingsetup.pro/logo.png"
+            }
+          },
+          "about": {
+            "@type": "Corporation",
+            "name": stockInfo?.symbol || symbolUpper,
+            "tickerSymbol": symbolUpper
+          },
+          "articleSection": "Stock Analysis",
+          "keywords": [
+            `${symbolUpper} trading plan`,
+            `${symbolUpper} stock analysis`,
+            `${symbolUpper} entry points`,
+            `${symbolUpper} investment strategy`,
+            `${symbolUpper} risk management`,
+            `how to trade ${symbolUpper}`,
+            `${symbolUpper} technical analysis`
+          ]
+        }}
+      />
+      
       {/* Main Content */}
       <StockTradePlanContent stock={stock} />
     </>

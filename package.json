@@ -21,7 +21,8 @@
     "auto-refresh": "dotenv -e .env.local -- tsx scripts/auto-refresh.ts",
     "seo:setup": "tsx scripts/seo-helper.ts submit",
     "seo:cache": "tsx scripts/seo-helper.ts cache",
-    "seo:preview": "tsx scripts/seo-helper.ts sitemap"
+    "seo:preview": "tsx scripts/seo-helper.ts sitemap",
+    "validate:cache": "node scripts/validate-cache-headers.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",

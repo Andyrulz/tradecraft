@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { StructuredData } from '@/components/seo/StructuredData';
 import { 
   TrendingUp, 
   Brain, 
@@ -53,6 +54,55 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-white">
+      <StructuredData 
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": "Andrew",
+          "jobTitle": "Trading Strategy Developer & Product Technologist",
+          "description": "Trading strategy expert with 10+ years of systematic market experience. Product technologist at Microsoft and creator of TradeCraft Pro trading strategy platform.",
+          "url": "https://www.tradingsetup.pro/about",
+          "image": "https://www.tradingsetup.pro/avatar.png",
+          "worksFor": {
+            "@type": "Organization",
+            "name": "Microsoft"
+          },
+          "founder": {
+            "@type": "Organization",
+            "name": "TradeCraft Pro",
+            "url": "https://www.tradingsetup.pro"
+          },
+          "knowsAbout": [
+            "Trading Strategy Development",
+            "Systematic Trading",
+            "Technical Analysis",
+            "Risk Management",
+            "Stock Market Analysis",
+            "Financial Technology",
+            "AI Trading Systems"
+          ],
+          "sameAs": [
+            "https://www.linkedin.com/company/trade-craft-pro",
+            "https://medium.com/@andrew.labyrinthventures"
+          ]
+        }}
+      />
+      
+      <StructuredData 
+        data={{
+          "@context": "https://schema.org",
+          "@type": "AboutPage",
+          "name": "About Andrew - Trading Strategy Expert",
+          "description": "Learn about Andrew, Microsoft technologist with 10+ years developing winning trading strategies and creator of TradeCraft Pro platform.",
+          "url": "https://www.tradingsetup.pro/about",
+          "mainEntity": {
+            "@type": "Person",
+            "name": "Andrew",
+            "jobTitle": "Trading Strategy Developer & Product Technologist"
+          }
+        }}
+      />
+      
       <div className="max-w-3xl mx-auto px-4 py-16">
         
         {/* Hero Section */}
