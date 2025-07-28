@@ -39,7 +39,25 @@ export default function Page() {
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7507424386197703" crossOrigin="anonymous"></script>
       </Head>
       
-      {/* Page-specific Structured Data */}
+      <StructuredData data={{
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.tradingsetup.pro"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Market Movers",
+            "item": "https://www.tradingsetup.pro/market-movers"
+          }
+        ]
+      }} />
+
       <StructuredData data={{
         "@context": "https://schema.org",
         "@type": "WebPage",

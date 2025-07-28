@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { ScreenerStock, ScreenerFilters as FilterType } from '@/lib/types';
 import { getMockScreenerStocks } from '@/lib/mock-data';
 import DiscoverScreener from './DiscoverScreener';
+import { StructuredData } from '@/components/seo/StructuredData';
 import './marquee.css';
 
 export function HeroSection() {
@@ -53,6 +54,37 @@ export function HeroSection() {
 
   return (
     <>
+      {/* Hero Section Structured Data */}
+      <StructuredData data={{
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "TradeCraft Pro - AI Stock Analysis & Trade Plans",
+        "url": "https://www.tradingsetup.pro",
+        "description": "AI-powered trade plan generator and momentum stock screener for professional traders and investors",
+        "applicationCategory": "FinanceApplication",
+        "operatingSystem": "Web",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "description": "Free trade plan generation with premium features available"
+        },
+        "featureList": [
+          "AI-Powered Trade Plan Generation",
+          "Momentum Stock Screening",
+          "Real-time Market Analysis",
+          "Risk Management Tools",
+          "Entry and Exit Strategies",
+          "Professional Trading Insights"
+        ],
+        "provider": {
+          "@type": "Organization",
+          "name": "TradeCraft Pro",
+          "url": "https://www.tradingsetup.pro"
+        }
+      }} />
+
       {/* Skip Links for Accessibility */}
       <a 
         href="#main-content" 

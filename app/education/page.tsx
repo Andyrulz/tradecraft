@@ -3,6 +3,7 @@ import Head from "next/head";
 import { HybridAdStrategy } from '@/components/ui/HybridAds';
 import { BannerWorkingAd, LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
 import MobileLargeAd from '@/components/ui/MobileLargeAd';
+import { StructuredData } from '@/components/seo/StructuredData';
 import {
   Accordion,
   AccordionItem,
@@ -132,12 +133,79 @@ export default function EducationPage() {
   return (
     <HybridAdStrategy>
       <Head>
+        <title>Trading Education - Learn Technical Analysis & Risk Management | TradeCraft Pro</title>
+        <meta name="description" content="Comprehensive trading education module covering technical analysis, risk management, trading psychology, and proven strategies. Perfect for beginner to advanced traders." />
+        <meta name="keywords" content="trading education, technical analysis, risk management, trading psychology, swing trading, chart patterns, position sizing" />
+        <meta property="og:title" content="Trading Education - Learn Technical Analysis & Risk Management | TradeCraft Pro" />
+        <meta property="og:description" content="Master trading with our comprehensive education module covering strategy, risk management, and psychology." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.tradingsetup.pro/education" />
+        <meta property="og:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Trading Education - Learn Technical Analysis & Risk Management" />
+        <meta name="twitter:description" content="Comprehensive trading education covering strategy, risk management, and psychology for all skill levels." />
+        <link rel="canonical" href="https://www.tradingsetup.pro/education" />
         <script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7507424386197703"
           crossOrigin="anonymous"
         ></script>
       </Head>
+      
+      {/* Structured Data */}
+      <StructuredData data={{
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://www.tradingsetup.pro"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Education",
+            "item": "https://www.tradingsetup.pro/education"
+          }
+        ]
+      }} />
+      
+      <StructuredData data={{
+        "@context": "https://schema.org",
+        "@type": "Course",
+        "name": "TradeCraft Pro Trading Education Module",
+        "description": "Comprehensive trading education covering technical analysis, risk management, trading psychology, and proven strategies",
+        "provider": {
+          "@type": "Organization",
+          "name": "TradeCraft Pro",
+          "url": "https://www.tradingsetup.pro"
+        },
+        "educationalLevel": "Beginner to Advanced",
+        "about": [
+          "Technical Analysis",
+          "Risk Management", 
+          "Trading Psychology",
+          "Position Sizing",
+          "Chart Patterns",
+          "Market Cycles"
+        ],
+        "teaches": [
+          "Risk and reward calculation",
+          "Position sizing strategies",
+          "Technical chart analysis",
+          "Market stage identification",
+          "Trading psychology mastery",
+          "Daily trading routines"
+        ],
+        "coursePrerequisites": "Basic understanding of financial markets",
+        "educationalUse": "Professional Development",
+        "inLanguage": "en-US",
+        "isAccessibleForFree": false,
+        "availableLanguage": "English"
+      }} />
+      
       <div className="max-w-2xl mx-auto py-10 px-4 md:px-0 relative">
         
         {/* Top banner ad */}
@@ -239,10 +307,74 @@ export default function EducationPage() {
             latest updates!
           </span>
         </div>
+        {/* Newsletter Signup Section */}
+        <div className="mt-16 bg-gradient-to-r from-blue-50 to-sky-50 rounded-2xl p-8 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Get Trading Education Updates
+          </h2>
+          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+            Be the first to know when our comprehensive trading education module launches. Join 10,000+ traders getting market insights.
+          </p>
+          <div className="max-w-md mx-auto">
+            <div className="flex gap-3">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+                Notify Me
+              </button>
+            </div>
+            <p className="text-sm text-gray-500 mt-2">Free. Unsubscribe anytime.</p>
+          </div>
+        </div>
+
+        {/* Related Resources Section */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold text-center mb-8">Start Learning Now</h2>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-lg p-6 shadow-md border">
+              <h3 className="font-bold text-lg mb-2">
+                <a href="/blog/trade-plan-generator" className="text-blue-600 hover:text-blue-800">
+                  Trade Plan Generator
+                </a>
+              </h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Create professional trade plans with entry, exit, and risk management strategies.
+              </p>
+              <a 
+                href="/blog/trade-plan-generator" 
+                className="inline-block px-4 py-2 bg-blue-600 text-white text-sm font-semibold rounded hover:bg-blue-700 transition-colors"
+              >
+                Try Now
+              </a>
+            </div>
+            
+            <div className="bg-white rounded-lg p-6 shadow-md border">
+              <h3 className="font-bold text-lg mb-2">
+                <a href="/screener" className="text-green-600 hover:text-green-800">
+                  Stock Screener
+                </a>
+              </h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Find momentum stocks and breakout opportunities with our advanced screening tools.
+              </p>
+              <a 
+                href="/screener" 
+                className="inline-block px-4 py-2 bg-green-600 text-white text-sm font-semibold rounded hover:bg-green-700 transition-colors"
+              >
+                Start Screening
+              </a>
+            </div>
+          </div>
+        </div>
+
         {/* Soft background accent */}
         <div className="pointer-events-none fixed inset-0 z-[-1] opacity-60">
           <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50 to-yellow-50" />
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[60vw] h-[60vw] rounded-full bg-blue-100 blur-3xl" />        </div>
+          <div className="absolute left-1/2 top-0 -translate-x-1/2 w-[60vw] h-[60vw] rounded-full bg-blue-100 blur-3xl" />
+        </div>
       </div>
     </HybridAdStrategy>
   );

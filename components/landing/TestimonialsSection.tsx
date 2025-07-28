@@ -2,9 +2,69 @@
 
 import React, { useEffect, useRef } from 'react';
 import { Star, Quote } from 'lucide-react';
+import { StructuredData } from '@/components/seo/StructuredData';
 
 const TestimonialsSection = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  // Review schema data for SEO
+  const reviewsSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "itemListElement": [
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "5",
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Sarah K."
+        },
+        "reviewBody": "Generated a trade plan for NVDA that netted me 23% in 3 weeks. The AI insights on risk management saved me from a major loss when the market turned.",
+        "itemReviewed": {
+          "@type": "SoftwareApplication",
+          "name": "TradeCraft Pro"
+        }
+      },
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "5",
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Michael R."
+        },
+        "reviewBody": "The momentum screener flagged TSLA before its 18% breakout. Found 3 winners last month that I would have completely missed otherwise.",
+        "itemReviewed": {
+          "@type": "SoftwareApplication",
+          "name": "TradeCraft Pro"
+        }
+      },
+      {
+        "@type": "Review",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "5",
+          "bestRating": "5"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "David L."
+        },
+        "reviewBody": "Market movers feature helped me catch AAPL's reversal at $185. The real-time alerts and data-driven insights have improved my win rate by 40%.",
+        "itemReviewed": {
+          "@type": "SoftwareApplication",
+          "name": "TradeCraft Pro"
+        }
+      }
+    ]
+  };
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
@@ -93,6 +153,7 @@ const TestimonialsSection = () => {
   }, []);
   return (
     <section className="bg-white py-24 px-4 text-center">
+      <StructuredData data={reviewsSchema} />
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-20">
           <div className="inline-block text-slate-600 font-semibold text-sm tracking-wide uppercase mb-4">

@@ -3,6 +3,7 @@ import Head from "next/head";
 import { HybridAdStrategy } from '@/components/ui/HybridAds';
 import { BannerWorkingAd, LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
 import MobileLargeAd from '@/components/ui/MobileLargeAd';
+import { StructuredData } from '@/components/seo/StructuredData';
 
 const faqs = [
 	{
@@ -83,82 +84,133 @@ const faqs = [
 ];
 
 const FAQPage = () => {
-	// FAQPage JSON-LD structured data
-	const faqSchema = {
-		"@context": "https://schema.org",
-		"@type": "FAQPage",
-		mainEntity: faqs.map((faq) => ({
-			"@type": "Question",
-			name: faq.question,
-			acceptedAnswer: {
-				"@type": "Answer",
-				text: faq.answer,
-			},
-		})),
-	};
+  // BreadcrumbList JSON-LD structured data
+  const breadcrumbSchema = {
+	"@context": "https://schema.org",
+	"@type": "BreadcrumbList",
+	"itemListElement": [
+	  {
+		"@type": "ListItem",
+		"position": 1,
+		"name": "Home",
+		"item": "https://www.tradingsetup.pro"
+	  },
+	  {
+		"@type": "ListItem",
+		"position": 2,
+		"name": "FAQ",
+		"item": "https://www.tradingsetup.pro/faq"
+	  }
+	]
+  };
+  // FAQPage JSON-LD structured data
+  const faqSchema = {
+	"@context": "https://schema.org",
+	"@type": "FAQPage",
+	mainEntity: faqs.map((faq) => ({
+	  "@type": "Question",
+	  name: faq.question,
+	  acceptedAnswer: {
+		"@type": "Answer",
+		text: faq.answer,
+	  },
+	})),
+  };
 
-	return (
-		<HybridAdStrategy>
-			<div className="max-w-2xl mx-auto py-12 px-4">
-				<Head>
-					<title>
-						TradeCraft FAQ | Trading Strategy Development, AI Trade Plans & Momentum Screening
-					</title>
-					<meta
-						name="description"
-						content="Comprehensive FAQ about TradeCraft's AI-powered trading strategy development, systematic trade planning, momentum stock screening, and professional trading tools. Learn how to build winning trading strategies."
-					/>
-					<script
-						type="application/ld+json"
-						dangerouslySetInnerHTML={{
-							__html: JSON.stringify(faqSchema),
-						}}
-					/>
-					<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7507424386197703" crossOrigin="anonymous"></script>
-				</Head>
-				
-				{/* Top banner ad */}
-				<BannerWorkingAd className="flex justify-center mb-8" />
-				
-				<h1 className="text-3xl font-bold mb-8">
-					Frequently Asked Questions
-				</h1>
-				
-				{/* Split FAQs for strategic ad placement */}
-				<div className="space-y-6">
-					{faqs.slice(0, 3).map((faq, idx) => (
-						<div key={idx} className="border-b pb-4">
-							<h2 className="text-xl font-semibold mb-2">
-								{faq.question}
-							</h2>
-							<p className="text-gray-700">{faq.answer}</p>
-						</div>
-					))}
-				</div>
-				
-				{/* Strategic ad placement between content sections */}
-				<div className="my-10">
-					<div className="md:hidden">
-						<MobileLargeAd />
-					</div>
-					<div className="hidden md:block">
-						<LargeWorkingAd />
-					</div>
-				</div>
-				
-				<div className="space-y-6">
-					{faqs.slice(3).map((faq, idx) => (
-						<div key={idx + 3} className="border-b pb-4">
-							<h2 className="text-xl font-semibold mb-2">
-								{faq.question}
-							</h2>
-							<p className="text-gray-700">{faq.answer}</p>
-						</div>
-					))}
-				</div>
-			</div>
-		</HybridAdStrategy>
-	);
+ return (
+   <HybridAdStrategy>
+	 <div className="max-w-2xl mx-auto py-12 px-4">
+	   <Head>
+		 <title>
+		   TradeCraft FAQ | Trading Strategy Development, AI Trade Plans & Momentum Screening
+		 </title>
+		 <meta
+		   name="description"
+		   content="Comprehensive FAQ about TradeCraft's AI-powered trading strategy development, systematic trade planning, momentum stock screening, and professional trading tools. Learn how to build winning trading strategies."
+		 />
+		 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7507424386197703" crossOrigin="anonymous"></script>
+	   </Head>
+	   <StructuredData data={breadcrumbSchema} />
+	   <StructuredData data={faqSchema} />
+	   {/* Top banner ad */}
+	   <BannerWorkingAd className="flex justify-center mb-8" />
+	   <h1 className="text-3xl font-bold mb-8">
+		 Frequently Asked Questions
+	   </h1>
+	   {/* Split FAQs for strategic ad placement */}
+	   <div className="space-y-6">
+		 {faqs.slice(0, 3).map((faq, idx) => (
+		   <div key={idx} className="border-b pb-4">
+			 <h2 className="text-xl font-semibold mb-2">
+			   {faq.question}
+			 </h2>
+			 <p className="text-gray-700">{faq.answer}</p>
+		   </div>
+		 ))}
+	   </div>
+	   {/* Strategic ad placement between content sections */}
+	   <div className="my-10">
+		 <div className="md:hidden">
+		   <MobileLargeAd />
+		 </div>
+		 <div className="hidden md:block">
+		   <LargeWorkingAd />
+		 </div>
+	   </div>
+	   <div className="space-y-6">
+		 {faqs.slice(3).map((faq, idx) => (
+		   <div key={idx + 3} className="border-b pb-4">
+			 <h2 className="text-xl font-semibold mb-2">
+			   {faq.question}
+			 </h2>
+			 <p className="text-gray-700">{faq.answer}</p>
+		   </div>
+		 ))}
+	   </div>
+	   
+	   {/* CTA Section for conversion optimization */}
+	   <div className="mt-12 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+		 <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Start Building Winning Trading Strategies?</h3>
+		 <p className="text-gray-700 mb-6">
+		   Get your first AI-powered trade plan free. No credit card required. Start making data-driven trading decisions today.
+		 </p>
+		 <div className="flex flex-col sm:flex-row gap-4">
+		   <a 
+			 href="/trade-plan" 
+			 className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-center"
+		   >
+			 Generate Free Trade Plan
+		   </a>
+		   <a 
+			 href="/pricing" 
+			 className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold border border-blue-600 hover:bg-blue-50 transition-colors text-center"
+		   >
+			 View Premium Features
+		   </a>
+		 </div>
+	   </div>
+	   
+	   {/* Related Links for internal linking */}
+	   <div className="mt-8 p-6 bg-gray-50 rounded-lg">
+		 <h3 className="text-lg font-semibold mb-4">Learn More About Trading Strategy Development</h3>
+		 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+		   <a href="/blog/trade-plan-generator" className="text-blue-600 hover:text-blue-800 underline">
+			 How to Build Systematic Trading Strategies with AI
+		   </a>
+		   <a href="/blog/momentum-stock-screener" className="text-blue-600 hover:text-blue-800 underline">
+			 Finding High-Momentum Stocks: Advanced Screening Techniques
+		   </a>
+		   <a href="/education" className="text-blue-600 hover:text-blue-800 underline">
+			 Trading Education Resources
+		   </a>
+		   <a href="/screener" className="text-blue-600 hover:text-blue-800 underline">
+			 Try Our Momentum Stock Screener
+		   </a>
+		 </div>
+	   </div>
+	 </div>
+   </HybridAdStrategy>
+ );
 };
 
 export default FAQPage;

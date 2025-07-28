@@ -157,6 +157,27 @@ export default function BlogIndexPage() {
       <StructuredData 
         data={{
           "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.tradingsetup.pro"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Blog",
+              "item": "https://www.tradingsetup.pro/blog"
+            }
+          ]
+        }}
+      />
+
+      <StructuredData 
+        data={{
+          "@context": "https://schema.org",
           "@type": "Blog",
           "name": "TradeCraft Trading Education Blog",
           "description": "Expert guides on trading strategies, stock analysis, technical analysis, and market insights to improve your trading results.",
@@ -272,6 +293,74 @@ export default function BlogIndexPage() {
             ))}
           </div>
         )}
+
+        {/* Bottom CTA and Newsletter Section */}
+        <div className="mt-16 bg-gradient-to-r from-blue-50 to-sky-50 rounded-2xl p-8 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Get Expert Trading Insights
+          </h2>
+          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+            Join 10,000+ traders who get our weekly market analysis, trade setups, and educational content delivered to their inbox.
+          </p>
+          <div className="max-w-md mx-auto">
+            <div className="flex gap-3">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+                Subscribe
+              </button>
+            </div>
+            <p className="text-sm text-gray-500 mt-2">Free. Unsubscribe anytime.</p>
+          </div>
+        </div>
+
+        {/* Related Tools Section */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold text-center mb-8">Start Trading with TradeCraft</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-lg p-6 shadow-md border text-center">
+              <h3 className="text-xl font-bold mb-2">Stock Screener</h3>
+              <p className="text-gray-600 mb-4">
+                Find momentum stocks and breakout opportunities before they move.
+              </p>
+              <a 
+                href="/screener" 
+                className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Try Screener
+              </a>
+            </div>
+            
+            <div className="bg-white rounded-lg p-6 shadow-md border text-center">
+              <h3 className="text-xl font-bold mb-2">Trade Plan Generator</h3>
+              <p className="text-gray-600 mb-4">
+                Create professional trade plans with entry, exit, and risk management.
+              </p>
+              <a 
+                href="/blog/trade-plan-generator" 
+                className="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Generate Plan
+              </a>
+            </div>
+            
+            <div className="bg-white rounded-lg p-6 shadow-md border text-center">
+              <h3 className="text-xl font-bold mb-2">Market Movers</h3>
+              <p className="text-gray-600 mb-4">
+                Track daily gainers and losers to spot market trends.
+              </p>
+              <a 
+                href="/market-movers" 
+                className="inline-block px-6 py-3 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors"
+              >
+                View Movers
+              </a>
+            </div>
+          </div>
+        </div>
 
         {/* Bottom ad */}
         <div className="mt-12">

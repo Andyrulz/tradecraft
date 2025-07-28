@@ -161,19 +161,40 @@ export default function ScreenerPage() {
   return (
     <main className="flex-1 pt-[68px] pb-12">
       <Head>
-        <title>TradeCraft Stock Screener</title>
-        <meta name="description" content="Find high-momentum stocks using technical signals, volume, and price action. Filter by sector, market cap, and more. Upgrade for unlimited access." />
-        <meta property="og:title" content="TradeCraft Stock Screener" />
-        <meta property="og:description" content="Find high-momentum stocks using technical signals, volume, and price action. Filter by sector, market cap, and more. Upgrade for unlimited access." />
+        <title>TradeCraft Stock Screener - Find Top Momentum Stocks Daily</title>
+        <meta name="description" content="Discover the top 10 momentum stocks daily with TradeCraft's advanced screener. Find breakout setups, volume spikes, and high-potential trading opportunities. Premium access available." />
+        <meta name="keywords" content="stock screener, momentum stocks, breakout stocks, trading setups, technical analysis, volume analysis, market screener" />
+        <meta property="og:title" content="TradeCraft Stock Screener - Find Top Momentum Stocks Daily" />
+        <meta property="og:description" content="Discover the top 10 momentum stocks daily with TradeCraft's advanced screener. Find breakout setups, volume spikes, and high-potential trading opportunities." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.tradingsetup.pro/screener" />
         <meta property="og:image" content="https://www.tradingsetup.pro/bull-bear.png" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="TradeCraft Stock Screener" />
-        <meta name="twitter:description" content="Find high-momentum stocks using technical signals, volume, and price action. Filter by sector, market cap, and more. Upgrade for unlimited access." />
+        <meta name="twitter:title" content="TradeCraft Stock Screener - Find Top Momentum Stocks Daily" />
+        <meta name="twitter:description" content="Discover the top 10 momentum stocks daily with TradeCraft's advanced screener. Find breakout setups and high-potential trading opportunities." />
         <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+        <link rel="canonical" href="https://www.tradingsetup.pro/screener" />
       </Head>
       <div className="container mx-auto px-4">
+        <StructuredData data={{
+          "@context": "https://schema.org",
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {
+              "@type": "ListItem",
+              "position": 1,
+              "name": "Home",
+              "item": "https://www.tradingsetup.pro"
+            },
+            {
+              "@type": "ListItem",
+              "position": 2,
+              "name": "Stock Screener",
+              "item": "https://www.tradingsetup.pro/screener"
+            }
+          ]
+        }} />
+
         <div className="max-w-3xl mx-auto text-center mb-8">
           <h1 className="text-3xl font-bold tracking-tight mb-3">
             Top 10 Momentum Stocks Today
@@ -197,6 +218,66 @@ export default function ScreenerPage() {
             ))}
           </div>
         )}
+
+        {/* Newsletter Signup Section */}
+        <div className="mt-16 bg-gradient-to-r from-blue-50 to-sky-50 rounded-2xl p-8 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Get Daily Market Alerts
+          </h2>
+          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+            Join 10,000+ traders who get our daily pre-market alerts with top momentum picks, breakout setups, and market insights delivered to their inbox.
+          </p>
+          <div className="max-w-md mx-auto">
+            <div className="flex gap-3">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+                Subscribe
+              </button>
+            </div>
+            <p className="text-sm text-gray-500 mt-2">Free. Unsubscribe anytime.</p>
+          </div>
+        </div>
+
+        {/* Related Resources Section */}
+        <div className="mt-16">
+          <h2 className="text-2xl font-bold text-center mb-8">Learn More About Stock Screening</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-white rounded-lg p-6 shadow-md border">
+              <h3 className="font-bold text-lg mb-2">
+                <Link href="/blog/momentum-trading-guide" className="text-blue-600 hover:text-blue-800">
+                  Momentum Trading Strategy Guide
+                </Link>
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Learn how to identify and trade momentum stocks using volume, price action, and technical indicators.
+              </p>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-md border">
+              <h3 className="font-bold text-lg mb-2">
+                <Link href="/blog/breakout-patterns" className="text-blue-600 hover:text-blue-800">
+                  Breakout Pattern Recognition
+                </Link>
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Master the art of spotting breakout patterns before they happen with our comprehensive guide.
+              </p>
+            </div>
+            <div className="bg-white rounded-lg p-6 shadow-md border">
+              <h3 className="font-bold text-lg mb-2">
+                <Link href="/education/risk-management" className="text-blue-600 hover:text-blue-800">
+                  Risk Management for Traders
+                </Link>
+              </h3>
+              <p className="text-gray-600 text-sm">
+                Protect your capital and maximize profits with proven risk management techniques.
+              </p>
+            </div>
+          </div>
+        </div>
         {/* Show ads for free and not signed in users, hide for paid */}
         {/* No ads in paid screener feature */}
         {/* Upgrade modal for non-premium users */}

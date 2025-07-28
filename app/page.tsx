@@ -222,6 +222,50 @@ export default function Home() {
 			</section>
 			{/* Section Separator */}
 			<div className="border-b border-gray-100"></div>
+			
+			{/* Newsletter CTA Section */}
+			<section className="bg-gradient-to-r from-blue-50 to-sky-50 py-16">
+				<div className="container mx-auto px-4 max-w-4xl text-center">
+					<h2 className="text-3xl font-bold text-gray-900 mb-4">
+						Get Trading Insights Delivered to Your Inbox
+					</h2>
+					<p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+						Join 10,000+ traders who receive our weekly market analysis, trade setups, educational content, and exclusive insights.
+					</p>
+					<div className="max-w-md mx-auto">
+						<div className="flex gap-3">
+							<input
+								type="email"
+								placeholder="Enter your email"
+								className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
+							/>
+							<button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+								Subscribe
+							</button>
+						</div>
+						<p className="text-sm text-gray-500 mt-2">Free. Unsubscribe anytime.</p>
+					</div>
+					
+					{/* Social Proof */}
+					<div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+						<div className="flex items-center gap-2">
+							<div className="w-2 h-2 bg-green-500 rounded-full"></div>
+							<span>10,000+ subscribers</span>
+						</div>
+						<div className="flex items-center gap-2">
+							<div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+							<span>Weekly market insights</span>
+						</div>
+						<div className="flex items-center gap-2">
+							<div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+							<span>No spam, ever</span>
+						</div>
+					</div>
+				</div>
+			</section>
+			
+			{/* Section Separator */}
+			<div className="border-b border-gray-100"></div>
 			<TestimonialsSection />
 		</main>
 	);

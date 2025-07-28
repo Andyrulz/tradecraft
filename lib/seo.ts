@@ -311,3 +311,75 @@ export function generateFinancialServiceStructuredData() {
     }
   };
 }
+
+// Function to generate HowTo schema for step-by-step guides
+export function generateHowToStructuredData({
+  title,
+  description,
+  url,
+  steps,
+  totalTime,
+  estimatedCost
+}: {
+  title: string;
+  description: string;
+  url: string;
+  steps: Array<{
+    name: string;
+    text: string;
+    image?: string;
+  }>;
+  totalTime?: string;
+  estimatedCost?: {
+    currency: string;
+    value: string;
+  };
+}) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": title,
+    "description": description,
+    "url": url,
+    "totalTime": totalTime,
+    "estimatedCost": estimatedCost,
+    "supply": [
+      {
+        "@type": "HowToSupply",
+        "name": "TradeCraft Pro Account"
+      }
+    ],
+    "tool": [
+      {
+        "@type": "HowToTool",
+        "name": "TradeCraft Pro Platform"
+      }
+    ],
+    "step": steps.map((step, index) => ({
+      "@type": "HowToStep",
+      "position": index + 1,
+      "name": step.name,
+      "text": step.text,
+      "image": step.image
+    }))
+  };
+}
+
+// Function to generate FAQ schema for any page
+export function generateFAQStructuredData(faqs: Array<{
+  question: string;
+  answer: string;
+}>) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqs.map((faq) => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer,
+      },
+    })),
+  };
+}

@@ -3,13 +3,80 @@ import Image from 'next/image';
 import { HybridAdStrategy } from '@/components/ui/HybridAds';
 import { BannerWorkingAd, LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
 import MobileLargeAd from '@/components/ui/MobileLargeAd';
+import { StructuredData } from '@/components/seo/StructuredData';
 
 export default function TradePlanGeneratorBlog() {
+  // Article schema for SEO
+  const articleSchema = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Trade Plan Generator: Instantly Create a Winning Trading Plan for Any Stock",
+    "description": "Discover how TradeCraft's Trade Plan Generator gives you a complete, actionable trading plan—entry, targets, stop loss, and risk management—tailored to your stock and your style.",
+    "url": "https://www.tradingsetup.pro/blog/trade-plan-generator",
+    "datePublished": "2025-07-08",
+    "dateModified": "2025-07-28",
+    "author": {
+      "@type": "Organization", 
+      "name": "TradeCraft Pro",
+      "url": "https://www.tradingsetup.pro"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "TradeCraft Pro",
+      "url": "https://www.tradingsetup.pro",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://www.tradingsetup.pro/logo.png"
+      }
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "https://www.tradingsetup.pro/blog/trade-plan-generator"
+    },
+    "image": {
+      "@type": "ImageObject",
+      "url": "https://www.tradingsetup.pro/blog/example/trade-plan-generator.png",
+      "width": 700,
+      "height": 380
+    },
+    "keywords": "trade plan generator, trading strategy, AI trading, systematic trading, stock analysis",
+    "articleSection": "Trading Education",
+    "inLanguage": "en-US"
+  };
+
+  // Breadcrumb schema
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.tradingsetup.pro"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog",
+        "item": "https://www.tradingsetup.pro/blog"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Trade Plan Generator",
+        "item": "https://www.tradingsetup.pro/blog/trade-plan-generator"
+      }
+    ]
+  };
+
   return (
     <HybridAdStrategy>
       <Head>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7507424386197703" crossOrigin="anonymous"></script>
       </Head>
+      <StructuredData data={articleSchema} />
+      <StructuredData data={breadcrumbSchema} />
       <main className="max-w-3xl mx-auto px-4 mt-28 mb-16">
         {/* Top banner ad */}
         <BannerWorkingAd className="flex justify-center mb-8" />
@@ -114,7 +181,7 @@ export default function TradePlanGeneratorBlog() {
             </ul>
           </section>
 
-          <section className="mb-8">
+                    <section className="mb-8">
             <h2 className="text-2xl font-bold mb-3 text-primary">Frequently Asked Questions</h2>
             <div className="space-y-4">
               <details className="bg-gray-50 rounded-lg p-4 border">
@@ -127,12 +194,53 @@ export default function TradePlanGeneratorBlog() {
               </details>
               <details className="bg-gray-50 rounded-lg p-4 border">
                 <summary className="font-semibold cursor-pointer">How are stop loss and targets calculated?</summary>
-                <p className="mt-2 text-base">They’re based on volatility, support/resistance, and recent price action—never arbitrary numbers.</p>
+                <p className="mt-2 text-base">They&apos;re based on volatility, support/resistance, and recent price action—never arbitrary numbers.</p>
               </details>
               <details className="bg-gray-50 rounded-lg p-4 border">
                 <summary className="font-semibold cursor-pointer">Is this just for US stocks?</summary>
-                <p className="mt-2 text-base">Currently, yes. We’re working to add more markets soon.</p>
+                <p className="mt-2 text-base">Currently, yes. We&apos;re working to add more markets soon.</p>
               </details>
+            </div>
+          </section>
+
+          {/* CTA Section for conversion optimization */}
+          <section className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+            <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Generate Your First Trade Plan?</h3>
+            <p className="text-gray-700 mb-6">
+              Stop guessing and start trading with confidence. Get your personalized, AI-powered trade plan in seconds.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <a 
+                href="/trade-plan" 
+                className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors text-center"
+              >
+                Generate Free Trade Plan
+              </a>
+              <a 
+                href="/trade-plan/demo" 
+                className="bg-white text-blue-600 px-6 py-3 rounded-lg font-semibold border border-blue-600 hover:bg-blue-50 transition-colors text-center"
+              >
+                View Live Demo (TSLA)
+              </a>
+            </div>
+          </section>
+
+          {/* Related Articles for internal linking */}
+          <section className="mb-8 p-6 bg-gray-50 rounded-lg">
+            <h3 className="text-lg font-semibold mb-4">Continue Learning</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <a href="/blog/momentum-stock-screener" className="text-blue-600 hover:text-blue-800 underline">
+                Finding High-Momentum Stocks: Advanced Screening Techniques
+              </a>
+              <a href="/blog/risk-management-in-stock-trading" className="text-blue-600 hover:text-blue-800 underline">
+                Risk Management in Stock Trading
+              </a>
+              <a href="/blog/technical-analysis-guide-for-stock-trading" className="text-blue-600 hover:text-blue-800 underline">
+                Technical Analysis Guide for Stock Trading
+              </a>
+              <a href="/screener" className="text-blue-600 hover:text-blue-800 underline">
+                Try Our Momentum Stock Screener
+              </a>
             </div>
           </section>
 

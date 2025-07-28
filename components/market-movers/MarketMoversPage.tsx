@@ -290,6 +290,111 @@ export default function MarketMoversPage() {
           />
 
         </div>
+
+        {/* Newsletter Signup Section */}
+        <section className="mt-16 bg-gradient-to-r from-blue-50 to-sky-50 rounded-2xl p-8 text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Get Daily Market Alerts
+          </h2>
+          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+            Join 10,000+ traders who get our daily pre-market alerts with top gainers, market trends, and momentum plays delivered to their inbox.
+          </p>
+          <div className="max-w-md mx-auto">
+            <div className="flex gap-3">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+              <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+                Subscribe
+              </button>
+            </div>
+            <p className="text-sm text-gray-500 mt-2">Free. Unsubscribe anytime.</p>
+          </div>
+        </section>
+
+        {/* Educational Content Section */}
+        <section className="mt-16">
+          <h2 className="text-2xl font-bold text-center mb-8">Learn About Market Movements</h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="bg-white rounded-lg p-6 shadow-md border">
+              <h3 className="font-bold text-lg mb-2 text-green-600">Understanding Market Gainers</h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Learn how to identify sustainable momentum vs. temporary spikes in stock prices.
+              </p>
+              <ul className="text-sm text-gray-700 space-y-1">
+                <li>• Volume confirmation signals</li>
+                <li>• Earnings impact analysis</li>
+                <li>• Sector rotation patterns</li>
+              </ul>
+            </div>
+            
+            <div className="bg-white rounded-lg p-6 shadow-md border">
+              <h3 className="font-bold text-lg mb-2 text-red-600">Analyzing Market Losers</h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Discover how to spot oversold conditions and potential reversal opportunities.
+              </p>
+              <ul className="text-sm text-gray-700 space-y-1">
+                <li>• Support level identification</li>
+                <li>• Oversold bounce potential</li>
+                <li>• Risk management strategies</li>
+              </ul>
+            </div>
+            
+            <div className="bg-white rounded-lg p-6 shadow-md border">
+              <h3 className="font-bold text-lg mb-2 text-blue-600">Market Timing Strategies</h3>
+              <p className="text-gray-600 text-sm mb-4">
+                Master the art of timing your entries and exits based on market mover data.
+              </p>
+              <ul className="text-sm text-gray-700 space-y-1">
+                <li>• Pre-market analysis</li>
+                <li>• Intraday momentum shifts</li>
+                <li>• End-of-day positioning</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        {/* Related Tools CTA Section */}
+        <section className="mt-16 bg-gray-50 rounded-2xl p-8">
+          <div className="text-center mb-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Enhance Your Trading with Premium Tools
+            </h2>
+            <p className="text-gray-600 max-w-3xl mx-auto">
+              Take your trading to the next level with our comprehensive suite of professional tools and analysis.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-lg p-6 shadow-sm border text-center">
+              <h3 className="text-xl font-bold mb-2">Stock Screener</h3>
+              <p className="text-gray-600 mb-4">
+                Find momentum stocks before they make the big moves with our advanced screening technology.
+              </p>
+              <a 
+                href="/screener" 
+                className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Try Stock Screener
+              </a>
+            </div>
+            
+            <div className="bg-white rounded-lg p-6 shadow-sm border text-center">
+              <h3 className="text-xl font-bold mb-2">Trade Plan Generator</h3>
+              <p className="text-gray-600 mb-4">
+                Create professional trade plans with entry, exit, and risk management strategies.
+              </p>
+              <a 
+                href="/blog/trade-plan-generator" 
+                className="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors"
+              >
+                Generate Trade Plan
+              </a>
+            </div>
+          </div>
+        </section>
       </div>
     </HybridAdStrategy>
   );

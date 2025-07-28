@@ -4,11 +4,51 @@ import { useState } from 'react';
 import Head from 'next/head';
 import { HybridAdStrategy } from '@/components/ui/HybridAds';
 import { BannerWorkingAd } from '@/components/ui/WorkingAdUnit';
+import { StructuredData } from '@/components/seo/StructuredData';
 
 export default function ContactPage() {
   const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [emailError, setEmailError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // ContactPage schema for SEO
+  const contactSchema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact TradeCraft Pro",
+    "description": "Get in touch with TradeCraft Pro support team for questions about AI trading strategies, technical support, or subscription assistance.",
+    "url": "https://www.tradingsetup.pro/contact",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "TradeCraft Pro",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "customer service",
+        "email": "support@tradingsetup.pro",
+        "availableLanguage": "English"
+      }
+    }
+  };
+
+  // Breadcrumb schema
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.tradingsetup.pro"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Contact",
+        "item": "https://www.tradingsetup.pro/contact"
+      }
+    ]
+  };
 
   // Email validation function
   function validateEmail(email: string): boolean {
@@ -68,26 +108,28 @@ export default function ContactPage() {
   return (
     <HybridAdStrategy>
       <Head>
-        <title>Contact TradeCraft</title>
-        <meta name="description" content="Contact the TradeCraft team for support, feedback, or partnership inquiries. We're here to help you trade smarter." />
-        <meta property="og:title" content="Contact TradeCraft" />
-        <meta property="og:description" content="Contact the TradeCraft team for support, feedback, or partnership inquiries. We're here to help you trade smarter." />
+        <title>Contact TradeCraft Pro - Support & Questions | AI Trading Platform</title>
+        <meta name="description" content="Contact TradeCraft Pro support team for questions about AI trading strategies, technical support, subscription assistance, or partnership inquiries. We're here to help you trade smarter." />
+        <meta property="og:title" content="Contact TradeCraft Pro - Support & Questions" />
+        <meta property="og:description" content="Contact TradeCraft Pro support team for questions about AI trading strategies, technical support, subscription assistance, or partnership inquiries." />
         <meta property="og:type" content="website" />
         <meta property="og:url" content="https://www.tradingsetup.pro/contact" />
-        <meta property="og:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+        <meta property="og:image" content="https://www.tradingsetup.pro/og-contact.jpg" />
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Contact TradeCraft" />
-        <meta name="twitter:description" content="Contact the TradeCraft team for support, feedback, or partnership inquiries. We're here to help you trade smarter." />
-        <meta name="twitter:image" content="https://www.tradingsetup.pro/bull-bear.png" />
+        <meta name="twitter:title" content="Contact TradeCraft Pro - Support & Questions" />
+        <meta name="twitter:description" content="Contact TradeCraft Pro support team for questions about AI trading strategies, technical support, subscription assistance, or partnership inquiries." />
+        <meta name="twitter:image" content="https://www.tradingsetup.pro/og-contact.jpg" />
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7507424386197703" crossOrigin="anonymous"></script>
       </Head>
+      <StructuredData data={contactSchema} />
+      <StructuredData data={breadcrumbSchema} />
       <div className="min-h-screen bg-gray-50 py-12 px-4">
         {/* Minimal top banner ad */}
         <BannerWorkingAd className="flex justify-center mb-8" />
         
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">Contact TradeCraft</h1>
+            <h1 className="text-3xl font-bold text-gray-800 mb-4">Contact TradeCraft Pro</h1>
             <p className="text-gray-600 max-w-2xl mx-auto">Have a question about our trading tools, need technical support, or want to share feedback? We&apos;re here to help you succeed in your trading journey.</p>
           </div>
           

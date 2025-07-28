@@ -76,6 +76,72 @@ export default function PricingPage() {
 	const [loading, setLoading] = useState(true);
 	const [subscriptionId, setSubscriptionId] = useState<string | null>(null);
 
+	// Product schema for SEO
+	const productSchema = {
+		"@context": "https://schema.org",
+		"@type": "Product",
+		"name": "TradeCraft Pro Trading Platform",
+		"description": "AI-powered trading strategy platform with momentum screener, trade plan generator, and market analysis tools",
+		"brand": {
+			"@type": "Brand",
+			"name": "TradeCraft Pro"
+		},
+		"offers": [
+			{
+				"@type": "Offer",
+				"name": "Free Plan",
+				"price": "0",
+				"priceCurrency": "USD",
+				"availability": "https://schema.org/InStock",
+				"description": "Basic trading tools with 1 request per day"
+			},
+			{
+				"@type": "Offer", 
+				"name": "Pro Plan",
+				"price": "9.75",
+				"priceCurrency": "USD",
+				"priceSpecification": {
+					"@type": "RecurringPaymentFrequency",
+					"frequency": "monthly"
+				},
+				"availability": "https://schema.org/InStock",
+				"description": "Advanced features with 100 requests per day"
+			},
+			{
+				"@type": "Offer",
+				"name": "Premium Plan", 
+				"price": "14.65",
+				"priceCurrency": "USD",
+				"priceSpecification": {
+					"@type": "RecurringPaymentFrequency",
+					"frequency": "monthly"
+				},
+				"availability": "https://schema.org/InStock",
+				"description": "Unlimited access with momentum screener and premium support"
+			}
+		]
+	};
+
+	// Breadcrumb schema
+	const breadcrumbSchema = {
+		"@context": "https://schema.org",
+		"@type": "BreadcrumbList",
+		"itemListElement": [
+			{
+				"@type": "ListItem",
+				"position": 1,
+				"name": "Home",
+				"item": "https://www.tradingsetup.pro"
+			},
+			{
+				"@type": "ListItem",
+				"position": 2,
+				"name": "Pricing",
+				"item": "https://www.tradingsetup.pro/pricing"
+			}
+		]
+	};
+
 	useEffect(() => {
 		async function fetchPlan() {
 			if (!session?.user?.email) return setLoading(false);
@@ -100,18 +166,20 @@ export default function PricingPage() {
 	return (
 		<>
 			<Head>
-				<title>Pricing - Your Service</title>
-				<meta name="description" content="Choose the pricing plan that fits your needs." />
-				<meta property="og:title" content="Pricing - Your Service" />
-				<meta property="og:description" content="Choose the pricing plan that fits your needs." />
+				<title>TradeCraft Pro Pricing - AI Trading Platform Plans | Trade Plan Generator</title>
+				<meta name="description" content="Choose the perfect TradeCraft Pro plan for your trading needs. Free plan with 1 trade per day, Pro plan with 100 trades, or Premium with unlimited access and momentum screener." />
+				<meta property="og:title" content="TradeCraft Pro Pricing - AI Trading Platform Plans" />
+				<meta property="og:description" content="Choose the perfect TradeCraft Pro plan for your trading needs. Free plan with 1 trade per day, Pro plan with 100 trades, or Premium with unlimited access and momentum screener." />
 				<meta property="og:type" content="website" />
-				<meta property="og:url" content="https://yourwebsite.com/pricing" />
-				<meta property="og:image" content="https://yourwebsite.com/og-image.jpg" />
+				<meta property="og:url" content="https://www.tradingsetup.pro/pricing" />
+				<meta property="og:image" content="https://www.tradingsetup.pro/og-pricing.jpg" />
 				<meta name="twitter:card" content="summary_large_image" />
-				<meta name="twitter:title" content="Pricing - Your Service" />
-				<meta name="twitter:description" content="Choose the pricing plan that fits your needs." />
-				<meta name="twitter:image" content="https://yourwebsite.com/twitter-image.jpg" />
+				<meta name="twitter:title" content="TradeCraft Pro Pricing - AI Trading Platform Plans" />
+				<meta name="twitter:description" content="Choose the perfect TradeCraft Pro plan for your trading needs. Free plan with 1 trade per day, Pro plan with 100 trades, or Premium with unlimited access and momentum screener." />
+				<meta name="twitter:image" content="https://www.tradingsetup.pro/og-pricing.jpg" />
 			</Head>
+			<StructuredData data={productSchema} />
+			<StructuredData data={breadcrumbSchema} />
 			<main className="min-h-screen bg-background pt-6 pb-16">
 				<div className="container mx-auto px-4 max-w-5xl">
 					<h1 className="text-4xl md:text-5xl font-extrabold text-center mb-2 text-primary">
