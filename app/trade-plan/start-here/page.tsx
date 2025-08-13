@@ -10,7 +10,7 @@ export default function TradePlanStartHere() {
         <meta name="description" content="Enter a stock symbol and select a time frame to generate a detailed trade plan with entry, targets, and risk management." />
       </Head>
       <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center">Generate a Trade Plan</h1>
-      
+
       {/* Free Daily Plan Callout */}
       <div className="mb-6 bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-4 text-center">
         <div className="flex items-center justify-center gap-2 mb-2">

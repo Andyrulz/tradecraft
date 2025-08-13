@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { StructuredData } from '@/components/seo/StructuredData';
 import { HomepageStructuredData } from '@/components/seo/HomepageStructuredData';
 import { generateMetadata as generateSEOMetadata, generateBreadcrumbStructuredData } from '@/lib/seo';
+import NewsletterForm from '@/components/ui/NewsletterForm';
 
 // Dynamic imports for performance optimization
 const HeroSection = dynamic(() => import('@/components/landing/HeroSection').then(mod => ({ default: mod.HeroSection })), {
@@ -25,8 +26,8 @@ const TestimonialsSection = dynamic(() => import('@/components/landing/Testimoni
 
 // Generate metadata for the homepage
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'TradeCraft Pro - AI Trading Strategy & Stock Analysis Tools',
-  description: 'Build winning trading strategies with AI analysis, systematic trade plans, and momentum screening. Your professional platform for data-driven trading decisions.',
+  title: 'Free AI Stock Analysis Tool - TradeCraft Pro | Generate Trade Plans',
+  description: 'Analyze any stock with AI-powered trade plans. Get entry points, stop losses, and profit targets. Free tool used by 10,000+ traders. Start your analysis now.',
   keywords: [
     'trading strategy',
     'AI trading strategy',
@@ -48,34 +49,41 @@ export const metadata: Metadata = generateSEOMetadata({
 });
 
 const blogPosts = [
-	{
-		slug: 'trade-plan-generator',
-		title: 'How to Build Systematic Trading Strategies with AI-Enhanced Analysis',
-		summary:
-			'Complete guide to developing systematic trading strategies using AI insights, risk management, and professional analysis for consistent market success.',
-		date: '2025-07-08',
-	},
-	{
-		slug: 'momentum-stock-screener',
-		title: 'Finding High-Momentum Stocks: Advanced Screening Techniques',
-		summary:
-			'Master the art of momentum stock screening with 20+ technical indicators, sector filters, and real-time market data.',
-		date: '2025-07-05',
-	},
-	{
-		slug: 'market-movers-analysis',
-		title: 'Market Movers Analysis: How to Profit from Daily Gainers and Losers',
-		summary:
-			'Learn to identify and capitalize on market-moving stocks with real-time alerts and detailed breakout analysis.',
-		date: '2025-07-01',
-	},
-	{
-		slug: 'ai-risk-management',
-		title: 'AI-Powered Risk Management: Protecting Capital in Volatile Markets',
-		summary:
-			'Discover how AI-enhanced risk management can improve your trading performance with dynamic stop-losses and position sizing.',
-		date: '2025-06-28',
-	},
+{
+slug: 'how-to-achieve-consistently-super-performance-in-stock-market',
+title: 'How to Achieve Consistently Super Performance in the Stock Market',
+summary:
+'Master the proven strategies and discipline required for consistent super performance. Learn risk management, market timing, and trading psychology from a 10-year veteran.',
+date: '2025-01-13',
+},
+{
+slug: 'trade-plan-generator',
+title: 'How to Build Systematic Trading Strategies with AI-Enhanced Analysis',
+summary:
+'Complete guide to developing systematic trading strategies using AI insights, risk management, and professional analysis for consistent market success.',
+date: '2025-07-08',
+},
+{
+slug: 'momentum-stock-screener',
+title: 'Finding High-Momentum Stocks: Advanced Screening Techniques',
+summary:
+'Master the art of momentum stock screening with 20+ technical indicators, sector filters, and real-time market data.',
+date: '2025-07-05',
+},
+{
+slug: 'market-movers-analysis',
+title: 'Market Movers Analysis: How to Profit from Daily Gainers and Losers',
+summary:
+'Learn to identify and capitalize on market-moving stocks with real-time alerts and detailed breakout analysis.',
+date: '2025-07-01',
+},
+{
+slug: 'ai-risk-management',
+title: 'AI-Powered Risk Management: Protecting Capital in Volatile Markets',
+summary:
+'Discover how AI-enhanced risk management can improve your trading performance with dynamic stop-losses and position sizing.',
+date: '2025-06-28',
+},
 ];
 
 function TrustBadges() {
@@ -223,46 +231,34 @@ export default function Home() {
 			{/* Section Separator */}
 			<div className="border-b border-gray-100"></div>
 			
-			{/* Newsletter CTA Section */}
-			<section className="bg-gradient-to-r from-blue-50 to-sky-50 py-16">
-				<div className="container mx-auto px-4 max-w-4xl text-center">
-					<h2 className="text-3xl font-bold text-gray-900 mb-4">
-						Get Trading Insights Delivered to Your Inbox
-					</h2>
-					<p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-						Join 10,000+ traders who receive our weekly market analysis, trade setups, educational content, and exclusive insights.
-					</p>
-					<div className="max-w-md mx-auto">
-						<div className="flex gap-3">
-							<input
-								type="email"
-								placeholder="Enter your email"
-								className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-base"
-							/>
-							<button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-								Subscribe
-							</button>
-						</div>
-						<p className="text-sm text-gray-500 mt-2">Free. Unsubscribe anytime.</p>
-					</div>
-					
-					{/* Social Proof */}
-					<div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-gray-600">
-						<div className="flex items-center gap-2">
-							<div className="w-2 h-2 bg-green-500 rounded-full"></div>
-							<span>10,000+ subscribers</span>
-						</div>
-						<div className="flex items-center gap-2">
-							<div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-							<span>Weekly market insights</span>
-						</div>
-						<div className="flex items-center gap-2">
-							<div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-							<span>No spam, ever</span>
-						</div>
-					</div>
-				</div>
-			</section>
+{/* Newsletter CTA Section */}
+<section className="bg-gradient-to-r from-blue-50 to-sky-50 py-16">
+<div className="container mx-auto px-4 max-w-4xl text-center">
+<h2 className="text-3xl font-bold text-gray-900 mb-4">
+Get Trading Insights Delivered to Your Inbox
+</h2>
+<p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+Join 10,000+ traders who receive our weekly market analysis, trade setups, educational content, and exclusive insights.
+</p>
+<NewsletterForm source="Homepage" />
+
+{/* Social Proof */}
+<div className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-gray-600">
+<div className="flex items-center gap-2">
+<div className="w-2 h-2 bg-green-500 rounded-full"></div>
+<span>10,000+ subscribers</span>
+</div>
+<div className="flex items-center gap-2">
+<div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+<span>Weekly market insights</span>
+</div>
+<div className="flex items-center gap-2">
+<div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+<span>No spam, ever</span>
+</div>
+</div>
+</div>
+</section>
 			
 			{/* Section Separator */}
 			<div className="border-b border-gray-100"></div>

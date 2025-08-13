@@ -6,6 +6,7 @@ import { HybridAdStrategy } from '@/components/ui/HybridAds';
 import { BannerWorkingAd, LargeWorkingAd } from '@/components/ui/WorkingAdUnit';
 import MobileLargeAd from '@/components/ui/MobileLargeAd';
 import { StructuredData } from '@/components/seo/StructuredData';
+import NewsletterForm from '@/components/ui/NewsletterForm';
 
 export const metadata: Metadata = generateSEOMetadata({
   title: 'Trading Education Blog - Stock Market Analysis & Trading Strategies | TradeCraft Pro',
@@ -33,6 +34,24 @@ export const metadata: Metadata = generateSEOMetadata({
 });
 
 const blogPosts = [
+  {
+    href: '/blog/how-to-achieve-consistently-super-performance-in-stock-market',
+    title: 'How to Achieve Consistently Super Performance in the Stock Market',
+    description: 'Master the proven strategies and discipline required for consistent super performance. Learn risk management, market timing, and trading psychology.',
+    image: '/blog/super-performance-stock-market.jpg',
+  },
+  {
+    href: '/blog/how-to-analyze-stocks-for-beginners',
+    title: 'How to Analyze Stocks for Beginners: Complete 2025 Guide',
+    description: 'Learn how to analyze stocks like a pro with this complete beginner\'s guide. Free stock analysis tools, step-by-step process, and real examples.',
+    image: '/blog/stock-analysis-guide.jpg',
+  },
+  {
+    href: '/blog/best-swing-trading-stocks-2025',
+    title: 'Best Swing Trading Stocks for 2025: Top Picks with Analysis',
+    description: 'Discover the best swing trading stocks for 2025 with detailed technical analysis, entry strategies, and risk management. Free screening tools included.',
+    image: '/blog/swing-trading-stocks-2025.jpg',
+  },
   {
     href: '/blog/stan-weinstein-market-sentiment-june-2025',
     title: "Stan Weinstein's Market Sentiment – June Update",
@@ -302,19 +321,7 @@ export default function BlogIndexPage() {
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
             Join 10,000+ traders who get our weekly market analysis, trade setups, and educational content delivered to their inbox.
           </p>
-          <div className="max-w-md mx-auto">
-            <div className="flex gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-              <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors">
-                Subscribe
-              </button>
-            </div>
-            <p className="text-sm text-gray-500 mt-2">Free. Unsubscribe anytime.</p>
-          </div>
+          <NewsletterForm source="Blog" />
         </div>
 
         {/* Related Tools Section */}

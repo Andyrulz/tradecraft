@@ -34,20 +34,20 @@ async function makeRequest(url, options = {}) {
         }
       });
     });
-    
+
     req.on('error', reject);
-    
+
     if (options.body) {
       req.write(options.body);
     }
-    
+
     req.end();
   });
 }
 
 async function testRateLimit(planType, userEmail) {
   console.log(`\n🧪 Testing ${planType} plan rate limiting...`);
-  
+
   try {
     // First, let's check the user's current plan status
     const debugResponse = await makeRequest(`${BASE_URL}/api/debug/user-plan`, {
@@ -57,9 +57,9 @@ async function testRateLimit(planType, userEmail) {
         // Note: In a real test, you'd need to include authentication cookies/headers
       }
     });
-    
+
     console.log(`📊 Debug response for ${planType}:`, debugResponse.data);
-    
+
     // Test a trade plan generation
     const tradePlanResponse = await makeRequest(`${BASE_URL}/api/trade-plan`, {
       method: 'POST',
@@ -71,7 +71,7 @@ async function testRateLimit(planType, userEmail) {
         horizon: 'swing'
       })
     });
-    
+
     console.log(`📈 Trade plan response for ${planType}:`, {
       status: tradePlanResponse.status,
       hasData: !!tradePlanResponse.data.tradePlan,
@@ -82,7 +82,7 @@ async function testRateLimit(planType, userEmail) {
         requestCount: tradePlanResponse.data.request_count
       }
     });
-    
+
   } catch (error) {
     console.error(`❌ Error testing ${planType}:`, error.message);
   }
@@ -91,15 +91,15 @@ async function testRateLimit(planType, userEmail) {
 async function runTests() {
   console.log('🚀 Starting rate limit tests...');
   console.log('⚠️  Note: This test requires manual authentication setup');
-  
+
   // Test each plan type
   for (const [planType, config] of Object.entries(TEST_USERS)) {
     await testRateLimit(planType, config.email);
-    
+
     // Wait between tests
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
-  
+
   console.log('\n✅ Tests completed!');
   console.log('\n📝 Manual verification steps:');
   console.log('1. Log in as a premium user');

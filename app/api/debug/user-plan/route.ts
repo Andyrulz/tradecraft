@@ -26,10 +26,10 @@ export async function GET() {
       .single();
 
     if (!user) {
-      return NextResponse.json({ 
+      return NextResponse.json({
         error: 'User not found',
         email,
-        userError: userError?.message 
+        userError: userError?.message
       }, { status: 404 });
     }
 
@@ -63,7 +63,7 @@ export async function GET() {
 
   } catch (error) {
     console.error('Debug endpoint error:', error);
-    return NextResponse.json({ 
+    return NextResponse.json({
       error: 'Internal server error',
       details: error instanceof Error ? error.message : 'Unknown error'
     }, { status: 500 });

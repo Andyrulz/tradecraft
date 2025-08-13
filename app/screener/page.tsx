@@ -161,9 +161,9 @@ export default function ScreenerPage() {
   return (
     <main className="flex-1 pt-[68px] pb-12">
       <Head>
-        <title>TradeCraft Stock Screener - Find Top Momentum Stocks Daily</title>
-        <meta name="description" content="Discover the top 10 momentum stocks daily with TradeCraft's advanced screener. Find breakout setups, volume spikes, and high-potential trading opportunities. Premium access available." />
-        <meta name="keywords" content="stock screener, momentum stocks, breakout stocks, trading setups, technical analysis, volume analysis, market screener" />
+        <title>Free Stock Screener - Find Best Momentum Stocks | TradeCraft Pro</title>
+        <meta name="description" content="Free stock screener finds top momentum stocks with breakout patterns. Screen 4000+ stocks daily for volume spikes, technical setups, and profitable trades." />
+        <meta name="keywords" content="free stock screener, momentum stock screener, stock scanner, breakout stocks, volume scanner, day trading stocks, swing trading stocks, stock analysis tool" />
         <meta property="og:title" content="TradeCraft Stock Screener - Find Top Momentum Stocks Daily" />
         <meta property="og:description" content="Discover the top 10 momentum stocks daily with TradeCraft's advanced screener. Find breakout setups, volume spikes, and high-potential trading opportunities." />
         <meta property="og:type" content="website" />
@@ -197,10 +197,10 @@ export default function ScreenerPage() {
 
         <div className="max-w-3xl mx-auto text-center mb-8">
           <h1 className="text-3xl font-bold tracking-tight mb-3">
-            Top 10 Momentum Stocks Today
+            Free Stock Screener - Find Best Momentum Stocks Daily
           </h1>
           <p className="text-lg text-muted-foreground">
-            Discover the best actionable setups, bases, and breakouts—refreshed daily.
+            Screen 4000+ stocks for breakout patterns, volume spikes, and profitable trading setups. Updated daily with fresh opportunities.
           </p>
         </div>
         {loading && (

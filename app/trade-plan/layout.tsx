@@ -2,24 +2,24 @@ import { Metadata } from 'next';
 import { generateMetadata as generateSEOMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = generateSEOMetadata({
-  title: 'AI-Powered Trade Plan Generator - Automated Trading Strategies | TradeCraft Pro',
-  description: 'Generate personalized trade plans with AI-powered risk management, entry/exit strategies, and technical analysis. Professional trading plans for any stock or timeframe.',
+  title: 'Free Trade Plan Generator - AI Stock Analysis Tool | TradeCraft Pro',
+  description: 'Generate free trade plans for any stock with AI-powered analysis. Get entry points, stop losses, profit targets, and risk management. Used by 10,000+ traders.',
   keywords: [
-    'trade plan generator',
-    'trading strategy',
-    'risk management',
-    'entry exit strategy',
+    'free trade plan generator',
+    'AI stock analysis tool',
+    'automated trade plans',
+    'stock entry exit calculator',
+    'trading strategy generator',
+    'risk management calculator',
     'stop loss calculator',
-    'position sizing',
-    'trading plan template',
+    'position sizing calculator',
     'swing trading plans',
-    'day trading strategy',
-    'technical analysis',
-    'trade management',
-    'automated trading plans',
-    'trading risk calculator',
+    'technical analysis tool',
+    'stock screener',
+    'trading plan template',
     'profit target calculator',
-    'trading psychology'
+    'day trading strategy',
+    'momentum trading strategy'
   ],
   canonicalUrl: 'https://www.tradingsetup.pro/trade-plan',
   ogImage: 'https://www.tradingsetup.pro/og-trade-plan.jpg',

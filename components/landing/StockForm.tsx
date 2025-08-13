@@ -59,7 +59,7 @@ export function StockForm() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     setValidationError('');
-    
+
     try {
       // SECURITY: Check authentication before proceeding
       if (!session || !session.user?.email) {
@@ -71,13 +71,13 @@ export function StockForm() {
       }
 
       const isValid = await validateStockSymbol(values.stockSymbol);
-      
+
       if (!isValid) {
         setValidationError('Invalid stock symbol. Please enter a valid NYSE or NASDAQ symbol.');
         setIsLoading(false);
         return;
       }
-      
+
       // Navigate to SEO-optimized trade plan page
       router.push(`/trade-plan/${values.stockSymbol.toUpperCase()}`);
     } catch (error) {
@@ -171,8 +171,8 @@ export function StockForm() {
           )}
         />
 
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           className="w-full bg-gradient-to-r from-sky-400 to-blue-500 hover:from-blue-500 hover:to-sky-400 text-white font-semibold text-lg py-3 rounded-xl shadow-md transition-all duration-200 transform hover:scale-105 flex items-center justify-center gap-2 min-h-[48px]"
           disabled={isLoading}
           aria-label="Generate Trade Plan"
