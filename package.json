@@ -25,6 +25,8 @@
     "validate:cache": "node scripts/validate-cache-headers.js"
   },
   "dependencies": {
+    "@azure/identity": "^4.11.1",
+    "@azure/openai": "^2.0.0",
     "@hookform/resolvers": "^3.9.0",
     "@next/swc-wasm-nodejs": "13.5.1",
     "@radix-ui/react-accordion": "^1.2.0",

@@ -35,6 +35,12 @@ export const metadata: Metadata = generateSEOMetadata({
 
 const blogPosts = [
   {
+    href: '/blog/essential-technical-analysis-books-for-traders',
+    title: 'Essential Technical Analysis Books for Traders: Complete Reading List 2025',
+    description: 'Discover the must-read technical analysis books recommended by professional traders. From beginner basics to advanced strategies, build your trading library with these expert-approved resources.',
+    image: '/blog/technical-analysis-books.jpg',
+  },
+  {
     href: '/blog/how-to-achieve-consistently-super-performance-in-stock-market',
     title: 'How to Achieve Consistently Super Performance in the Stock Market',
     description: 'Master the proven strategies and discipline required for consistent super performance. Learn risk management, market timing, and trading psychology.',

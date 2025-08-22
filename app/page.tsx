@@ -50,6 +50,13 @@ export const metadata: Metadata = generateSEOMetadata({
 
 const blogPosts = [
 {
+slug: 'essential-technical-analysis-books-for-traders',
+title: 'Essential Technical Analysis Books for Traders: Complete Reading List 2025',
+summary:
+'Discover the must-read technical analysis books recommended by professional traders. From beginner basics to advanced strategies, build your trading library with these expert-approved resources.',
+date: '2025-01-22',
+},
+{
 slug: 'how-to-achieve-consistently-super-performance-in-stock-market',
 title: 'How to Achieve Consistently Super Performance in the Stock Market',
 summary:

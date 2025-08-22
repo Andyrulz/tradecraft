@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
+import { ChatWidget } from '@/components/ui/ChatWidget';
 import { cn } from '@/lib/utils';
 import { Inter } from 'next/font/google';
 
@@ -35,6 +36,7 @@ export function LayoutClient({ children }: LayoutClientProps) {
       )}>
         <Footer />
       </div>
+      <ChatWidget />
     </body>
   );
 }

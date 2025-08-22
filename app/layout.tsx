@@ -103,17 +103,18 @@ export default function RootLayout({
               y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
           })(window, document, "clarity", "script", "s3caiqodiu");
         `}</Script>
+        
+        {/* Global Structured Data */}
+        <StructuredData data={generateWebsiteStructuredData()} />
+        <StructuredData data={generateOrganizationStructuredData()} />
       </head>
-      
-      {/* Global Structured Data */}
-      <StructuredData data={generateWebsiteStructuredData()} />
-      <StructuredData data={generateOrganizationStructuredData()} />
-      
-      <AuthSessionProvider>
-        <LayoutClient>
-          {children}
-        </LayoutClient>
-      </AuthSessionProvider>
+      <body className={inter.className}>
+        <AuthSessionProvider>
+          <LayoutClient>
+            {children}
+          </LayoutClient>
+        </AuthSessionProvider>
+      </body>
     </html>
   );
 }
